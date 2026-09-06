@@ -1,0 +1,69 @@
+{
+  "_comment": "Deterministic traffic fixture around LSZH for atc_repl --traffic-fixture and Catch2 tests. Lat/lon are raw inputs; bearing, clock, distance and altitude_diff are recomputed by the loader so the geometry helpers stay exercised. Target D sits at ~50 NM and must be filtered out by the 40-NM cutoff.",
+  "user": {
+    "lat": 47.4583,
+    "lon": 8.5483,
+    "alt_msl_ft": 1500.0,
+    "heading_true": 280.0,
+    "nearest_airport_id": "LSZH",
+    "airport_elevation_ft": 1416.0
+  },
+  "targets": [
+    {
+      "callsign": "DLH123",
+      "modeS_id": 11259137,
+      "lat": 47.5417,
+      "lon": 8.5483,
+      "alt_msl_ft": 4500.0,
+      "track_deg": 270.0,
+      "groundspeed_kts": 220.0,
+      "vertical_speed_fpm": 0.0,
+      "wake": "Heavy"
+    },
+    {
+      "callsign": "SWR42",
+      "modeS_id": 11259138,
+      "lat": 47.4583,
+      "lon": 8.8416,
+      "alt_msl_ft": 6500.0,
+      "track_deg": 90.0,
+      "groundspeed_kts": 180.0,
+      "vertical_speed_fpm": 600.0,
+      "wake": "Medium"
+    },
+    {
+      "callsign": "HBABC",
+      "modeS_id": 11259139,
+      "lat": 47.0417,
+      "lon": 8.5483,
+      "alt_msl_ft": 1500.0,
+      "track_deg": 360.0,
+      "groundspeed_kts": 95.0,
+      "vertical_speed_fpm": 0.0,
+      "wake": "Light"
+    },
+    {
+      "_comment": "Target D is intentionally beyond 40 NM; the loader must drop it so the fixture-based test covers the cutoff.",
+      "callsign": "FAR123",
+      "modeS_id": 11259140,
+      "lat": 47.4583,
+      "lon": 7.3263,
+      "alt_msl_ft": 8000.0,
+      "track_deg": 90.0,
+      "groundspeed_kts": 240.0,
+      "vertical_speed_fpm": 0.0,
+      "wake": "Medium"
+    },
+    {
+      "callsign": "GLF99",
+      "modeS_id": 11259141,
+      "lat": 47.3640,
+      "lon": 8.4100,
+      "alt_msl_ft": 3000.0,
+      "track_deg": 45.0,
+      "groundspeed_kts": 130.0,
+      "vertical_speed_fpm": -300.0,
+      "wake": "Light"
+    }
+  ]
+}

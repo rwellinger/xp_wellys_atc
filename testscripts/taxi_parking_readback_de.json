@@ -1,0 +1,28 @@
+{
+  "_comment": "EDNY DE regression from the Friedrichshafen test flight (2026-06-15): after landing the Tower clears the pilot to taxi to the GAT apron ('rollen Sie zum GAT-Vorfeld ueber Alpha'). The pilot's first-person read-back 'Rolle GAT-Vorfeld ueber Alpha' misses both the READBACK rule ('rollen sie' Tower imperative) and the REQUEST_TAXI_PARKING rule ('rollen zum vorfeld'), so it lands as UNKNOWN and used to bounce off the LM as _INVALID ('Uebermittlung gestoert, wiederholen Sie'). The post-landing adjustment {UNKNOWN, text_contains vorfeld/parking, at_airport_after_landing} -> READBACK now accepts the clearance read-back silently. Driven on the ground from LANDING_CLEARED so at_airport_after_landing stays true.",
+  "name": "EDNY DE post-landing taxi-to-apron read-back",
+  "region": "DE",
+  "context": {
+    "airport": "EDNY",
+    "airport_name": "Friedrichshafen",
+    "towered": true,
+    "tower_only": true,
+    "on_ground": true,
+    "com": 120.080,
+    "freq_type": "TOWER",
+    "runway": "06",
+    "callsign": "November One Two Three Alpha Bravo"
+  },
+  "say": [
+    { "note": "Setup: prime LANDING_CLEARED so the next 'Piste 06 frei' is a genuine post-landing runway-vacated call.",
+      "set_state": "LANDING_CLEARED" },
+    { "note": "1 - Pilot vacates the runway. Tower-only field: same controller clears the taxi to the GAT apron.",
+      "text": "Piste 06 frei November One Two Three Alpha Bravo",
+      "expect": "GAT-Vorfeld",
+      "expect_state": "IDLE" },
+    { "note": "2 - Pilot reads the taxi clearance back in first person ('Rolle ... Vorfeld ueber Alpha'). Classified UNKNOWN by the rules, the post-landing adjustment promotes it to READBACK -> silent accept. Before the fix this looped on 'Uebermittlung gestoert, wiederholen Sie'.",
+      "text": "Rolle GAT Vorfeld ueber Alpha November One Two Three Alpha Bravo",
+      "expect": "",
+      "expect_state": "IDLE" }
+  ]
+}

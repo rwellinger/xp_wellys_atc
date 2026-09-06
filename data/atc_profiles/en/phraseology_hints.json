@@ -1,0 +1,193 @@
+{
+  "_comment": "Phraseology-hint matrix. First matching rule wins. Missing fields match anything ('any' is also accepted explicitly). 'phase' and 'frequency_type' may be a single name or an array. 'tower_only' and 'post_landing' are booleans (missing = any). The READBACK override (atc_state_machine::is_readback_pending) and the cold-and-dark override (start_mode + com_radio_powered) are applied AFTER this lookup -- rules here describe only the stationary intent menu. EN profile; intent keys are language-neutral and identical to the de/ bundle.",
+
+  "_schema": {
+    "state": "ATCState name (IDLE, GROUND_CONTACT, ...) or 'any'",
+    "phase": "FlightPhase name (PARKED, TAXI, ...), array or 'any'",
+    "facility": "'towered', 'uncontrolled', 'afis' or 'any'",
+    "frequency_type": "FrequencyType (GROUND, TOWER, ...), array or 'any'",
+    "tower_only": "true | false (missing = any)",
+    "post_landing": "true | false (missing = any)",
+    "intents": "Array of intent keys; empty array = no hints (UI shows tune hint)"
+  },
+
+  "rules": [
+
+    {
+      "comment": "IDLE after landing, on Ground frequency during roll-out / taxi to apron: only taxi-to-apron makes sense.",
+      "state": "IDLE", "phase": ["TAXI", "PARKED"], "facility": "towered",
+      "frequency_type": "GROUND", "post_landing": true,
+      "intents": ["REQUEST_TAXI_PARKING", "RADIO_CHECK"]
+    },
+    {
+      "comment": "Tower-only field after landing on Tower frequency: the same controller handles taxi. Offer both RUNWAY_VACATED (still rolling out) and REQUEST_TAXI_PARKING (after clearing the runway). The taxi_controller variable renders 'Tower' in the phraseology; the frequency filter is bypassed by the tower_only exception in the UI defense layer.",
+      "state": "IDLE", "phase": ["LANDING_ROLL", "TAXI", "PARKED"], "facility": "towered",
+      "frequency_type": "TOWER", "tower_only": true, "post_landing": true,
+      "intents": ["RUNWAY_VACATED", "REQUEST_TAXI_PARKING"]
+    },
+    {
+      "comment": "2-tier field after landing on Tower frequency: pilot owes RUNWAY_VACATED before switching back to Ground.",
+      "state": "IDLE", "phase": ["LANDING_ROLL", "TAXI"], "facility": "towered",
+      "frequency_type": "TOWER", "tower_only": false, "post_landing": true,
+      "intents": ["RUNWAY_VACATED"]
+    },
+
+    {
+      "comment": "IDLE cold start at the apron: pilot must establish contact with Ground.",
+      "state": "IDLE", "phase": "PARKED", "facility": "towered",
+      "frequency_type": "GROUND", "post_landing": false,
+      "intents": ["INITIAL_CALL_GROUND", "RADIO_CHECK"]
+    },
+    {
+      "comment": "Tower-only field, IDLE at the apron on Tower frequency: the initial call is a taxi request to Tower (collapse-to-tower happens via intent_category in the UI).",
+      "state": "IDLE", "phase": "PARKED", "facility": "towered",
+      "frequency_type": "TOWER", "tower_only": true, "post_landing": false,
+      "intents": ["INITIAL_CALL_GROUND", "RADIO_CHECK"]
+    },
+    {
+      "comment": "IDLE at the apron on Tower frequency at a 2-tier field: empty hint list so the UI shows 'Tune Ground first'.",
+      "state": "IDLE", "phase": "PARKED", "facility": "towered",
+      "frequency_type": "TOWER", "tower_only": false,
+      "intents": []
+    },
+    {
+      "comment": "IDLE at the apron, no usable frequency tuned: empty list, UI shows tune hint.",
+      "state": "IDLE", "phase": "PARKED", "facility": "towered",
+      "frequency_type": ["UNKNOWN", "ATIS", "DELIVERY", "UNICOM", "CTAF"],
+      "intents": []
+    },
+
+    {
+      "comment": "IDLE airborne near a field on Tower (lost contact / fresh approach / cross-country inbound): recovery via INITIAL_CALL_INBOUND. CRUISE covers the en-route inbound after airport change (symmetric to the AFIS rule and to flight_rules.json INITIAL_CALL_INBOUND.allowed_phases).",
+      "state": "IDLE", "phase": ["PATTERN", "FINAL_APPROACH", "CLIMB", "CRUISE"],
+      "facility": "towered", "frequency_type": "TOWER",
+      "intents": ["INITIAL_CALL_INBOUND", "INITIAL_CALL_INBOUND_VRP"]
+    },
+    {
+      "comment": "GROUND_CONTACT: pilot has greeted Ground, waiting for taxi clearance.",
+      "state": "GROUND_CONTACT", "phase": ["PARKED", "TAXI"], "facility": "towered",
+      "frequency_type": "GROUND",
+      "intents": ["REQUEST_TAXI"]
+    },
+    {
+      "comment": "GROUND_CONTACT after landing: REQUEST_TAXI_PARKING after greeting Ground for taxi to apron.",
+      "state": "GROUND_CONTACT", "phase": ["PARKED", "TAXI"], "facility": "towered",
+      "frequency_type": "GROUND", "post_landing": true,
+      "intents": ["REQUEST_TAXI_PARKING"]
+    },
+
+    {
+      "comment": "TAXI_CLEARED: pilot taxiing per clearance. The only legitimate prompt is a readback (handled by override). Empty list keeps the panel quiet.",
+      "state": "TAXI_CLEARED", "phase": ["PARKED", "TAXI"], "facility": "towered",
+      "intents": []
+    },
+
+    {
+      "comment": "TOWER_CONTACT at the holding point: pilot is ready for departure. Offer both pattern and cross-country variants.",
+      "state": "TOWER_CONTACT", "phase": ["PARKED", "TAXI"], "facility": "towered",
+      "frequency_type": "TOWER",
+      "intents": ["READY_FOR_DEPARTURE", "READY_FOR_DEPARTURE_VFR"]
+    },
+    {
+      "comment": "TOWER_CONTACT inbound from approach (rare but possible): REPORT_POSITION variants.",
+      "state": "TOWER_CONTACT", "phase": ["PATTERN", "FINAL_APPROACH"], "facility": "towered",
+      "frequency_type": "TOWER",
+      "intents": ["REPORT_POSITION_DOWNWIND", "REPORT_POSITION_BASE", "REPORT_POSITION_FINAL", "REQUEST_LANDING"]
+    },
+
+    {
+      "comment": "DEPARTURE_CLEARED on the ground / take-off roll: silent, wait for auto-correction. Applies to pattern and XC departures.",
+      "state": ["Pattern/DEPARTURE_CLEARED", "XC/DEPARTURE_CLEARED"], "phase": ["PARKED", "TAXI", "TAKEOFF_ROLL"],
+      "facility": "towered",
+      "intents": []
+    },
+    {
+      "comment": "DEPARTURE_CLEARED airborne (cross-country): pilot can request a frequency change or sign off.",
+      "state": "XC/DEPARTURE_CLEARED", "phase": ["CLIMB", "CRUISE"], "facility": "towered",
+      "frequency_type": "TOWER",
+      "intents": ["REQUEST_FREQUENCY", "LEAVING_FREQUENCY"]
+    },
+
+    {
+      "comment": "PATTERN_ENTRY in the pattern: position reports + landing variants.",
+      "state": "Pattern/PATTERN_ENTRY", "phase": "PATTERN", "facility": "towered",
+      "frequency_type": "TOWER",
+      "intents": ["REPORT_POSITION_DOWNWIND", "REPORT_POSITION_BASE", "REQUEST_LANDING", "REQUEST_TOUCH_AND_GO", "GO_AROUND"]
+    },
+    {
+      "comment": "PATTERN_ENTRY on final: report final + go-around.",
+      "state": "Pattern/PATTERN_ENTRY", "phase": "FINAL_APPROACH", "facility": "towered",
+      "frequency_type": "TOWER",
+      "intents": ["REPORT_POSITION_FINAL", "REQUEST_LANDING", "GO_AROUND"]
+    },
+
+    {
+      "comment": "LANDING_CLEARED airborne: pilot waits for readback (override) or needs GO_AROUND.",
+      "state": "Pattern/LANDING_CLEARED", "phase": ["PATTERN", "FINAL_APPROACH"], "facility": "towered",
+      "frequency_type": "TOWER",
+      "intents": ["GO_AROUND"]
+    },
+    {
+      "comment": "LANDING_CLEARED on roll-out: pilot owes RUNWAY_VACATED.",
+      "state": "Pattern/LANDING_CLEARED", "phase": ["LANDING_ROLL", "TAXI"], "facility": "towered",
+      "frequency_type": "TOWER",
+      "intents": ["RUNWAY_VACATED"]
+    },
+
+    {
+      "comment": "TOUCH_AND_GO_CLEARED in the pattern: same flow as PATTERN_ENTRY plus go-around option.",
+      "state": "Pattern/TOUCH_AND_GO_CLEARED", "phase": ["PATTERN", "FINAL_APPROACH"],
+      "facility": "towered", "frequency_type": "TOWER",
+      "intents": ["REPORT_POSITION_FINAL", "GO_AROUND"]
+    },
+
+    {
+      "comment": "EN_ROUTE near a tower-controlled field: switch to the inbound call.",
+      "state": "XC/EN_ROUTE", "phase": ["PATTERN", "FINAL_APPROACH"],
+      "facility": "towered", "frequency_type": "TOWER",
+      "intents": ["INITIAL_CALL_INBOUND", "INITIAL_CALL_INBOUND_VRP"]
+    },
+    {
+      "comment": "EN_ROUTE with no relevant frequency: empty -> UI shows tune hint.",
+      "state": "XC/EN_ROUTE",
+      "intents": []
+    },
+
+    {
+      "comment": "Uncontrolled IDLE at the apron: self-announce, optional radio check.",
+      "state": "IDLE", "phase": "PARKED", "facility": "uncontrolled",
+      "frequency_type": ["UNICOM", "CTAF"],
+      "intents": ["SELF_ANNOUNCE", "RADIO_CHECK"]
+    },
+    {
+      "comment": "Uncontrolled IDLE airborne near an uncontrolled field: announce inbound on the traffic frequency.",
+      "state": "IDLE", "phase": ["PATTERN", "FINAL_APPROACH", "CRUISE", "CLIMB"],
+      "facility": "uncontrolled", "frequency_type": ["UNICOM", "CTAF"],
+      "intents": ["SELF_ANNOUNCE", "INITIAL_CALL_INBOUND"]
+    },
+    {
+      "comment": "Uncontrolled UNICOM_ACTIVE: self-announce across the whole phase.",
+      "state": "UNICOM_ACTIVE", "facility": "uncontrolled",
+      "frequency_type": ["UNICOM", "CTAF"],
+      "intents": ["SELF_ANNOUNCE"]
+    },
+
+    {
+      "comment": "AFIS/Info or Radio unit on the ground: initial call to the Info/Radio unit, optional radio check, departure self-announce. Advisory, no clearances.",
+      "state": "IDLE", "phase": ["PARKED", "TAXI"], "facility": "afis",
+      "frequency_type": ["INFO", "RADIO"],
+      "intents": ["INITIAL_CALL_GROUND", "RADIO_CHECK", "SELF_ANNOUNCE_DEPARTURE"]
+    },
+    {
+      "comment": "AFIS/Info or Radio unit airborne: announce inbound, position reports, sign-off.",
+      "state": "IDLE", "phase": ["PATTERN", "FINAL_APPROACH", "CRUISE", "CLIMB"],
+      "facility": "afis", "frequency_type": ["INFO", "RADIO"],
+      "intents": ["INITIAL_CALL_INBOUND", "REPORT_POSITION_DOWNWIND", "REPORT_POSITION_BASE", "REPORT_POSITION_FINAL", "LEAVING_FREQUENCY"]
+    },
+
+    {
+      "comment": "Final fallback: empty list. UI shows a context-dependent tune hint.",
+      "intents": []
+    }
+  ]
+}

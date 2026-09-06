@@ -1,0 +1,3 @@
+build/
+models/
+test_audio/*.aiff

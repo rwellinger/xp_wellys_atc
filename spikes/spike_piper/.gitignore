@@ -1,0 +1,5 @@
+build/
+models/
+# libpiper's CMakeLists downloads the onnxruntime tarball into ./download/
+# (relative to CWD at configure time). Treat it as a build artefact.
+download/

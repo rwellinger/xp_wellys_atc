@@ -1,0 +1,402 @@
+{
+  "_comment": "Data-driven intent classification rules for DE/BZF phraseology. Loaded by src/atc/intent_rules.cpp. Schema: see intent_rules.hpp. DE-Region-specific rules: additive to EN keywords so BZF transcripts with mixed EN/DE words ('Friedrichshafen Tower' / 'in sight') still classify. Note: intent_parser::parse() runs de_phraseology::parse_spoken_number() before this layer, so ziffernweise BZF pronunciation ('eins null eins drei') already arrives as raw digits ('1013') -- rules below match on numeric form.",
+
+  "normalize": [
+    { "_note": "Known Whisper/Voxtral mishearings (DE VFR). See GitHub issues #9, #30. INVARIANT: only map non-words that are collision-free under a global substring replace (never a legitimate German word/token, e.g. 'drei'). Context-dependent mishearings ('drei'->'frei' only post-landing, 'Landung frei'->'Piste frei') live in the LLM classify prompt (atc_prompt_templates.json :: gpt_classify_prompt_de), not here.", "from": "fahrfeld",  "to": "vorfeld" },
+    { "from": "fahrtfeld", "to": "vorfeld" },
+    { "_note": "'Piste' mis-transcribed as the non-words 'Bisten'/'Pieste' — unblocks the rule parser directly so no LM round-trip is needed.", "from": "bisten", "to": "piste" },
+    { "from": "pieste", "to": "piste" }
+  ],
+
+  "rules": [
+    {
+      "_note": "Profanity / insults toward ATC. Highest priority so tone is caught even when other intent keywords are present.",
+      "intent": "INAPPROPRIATE_LANGUAGE",
+      "confidence": 0.99,
+      "any": [
+        "fuck", "shit", "bullshit", "asshole", "bitch", "bastard",
+        "damn it", "dammit", "piss off", "piss on", "dick head", "dickhead",
+        "mother", "wanker", "cunt",
+        "scheiss", "scheiße", "arschloch", "hurensohn", "wichser",
+        "fick", "verdammte", "drecks", "vollidiot", "depp",
+        { "all": [
+            { "any": ["idiot", "stupid", "moron", "incompetent", "useless",
+                      "dumm", "bloed", "blöd", "unfaehig", "unfähig"] },
+            { "any": ["you", "tower", "ground", "controller", "atc",
+                      "turm", "boden", "lotse", "fluglotse"] }
+        ]}
+      ]
+    },
+
+    {
+      "_note": "Pilot-issued correction phraseology. 'negativ' alone is BZF's 'no'; 'negativer kontakt' is a traffic-advisory reply and must NOT be claimed here.",
+      "intent": "NEGATIVE_CORRECTION",
+      "confidence": 0.95,
+      "none": ["negative contact", "no contact", "negativer kontakt", "kein kontakt"],
+      "any": [
+        { "starts_with": "negativ" },
+        ", negativ",
+        { "starts_with": "berichtige" },
+        { "starts_with": "berichtigung" },
+        ", berichtigung",
+        "vergessen sie",
+        "vergiss das",
+        "das ist falsch",
+        "ich meinte",
+        "ich sagte"
+      ]
+    },
+
+    { "intent": "UNABLE",      "confidence": 0.95, "any": ["nicht moeglich", "nicht möglich"] },
+    { "intent": "RADIO_CHECK", "confidence": 0.95, "any": ["funkpruefung", "funkprüfung", "funkprobe", "wie hoeren sie mich", "wie hören sie mich"] },
+    { "intent": "REQUEST_REPEAT", "confidence": 0.95, "any": ["wiederholen sie", "sagen sie nochmals", "sagen sie noch einmal", "say again", "noch einmal bitte", "noch mal bitte"] },
+    { "intent": "GO_AROUND",   "confidence": 0.95, "any": ["durchstarten", "durchstart", "fehlanflug"] },
+
+    { "_note": "NfL ANLAGE 7.4 a) RMZ-Einflug/-Durchflug. 'rmz'-Anker macht es kollisionsfrei zu INITIAL_CALL_INBOUND (verlangt has_facility turm).", "intent": "RMZ_ENTER", "confidence": 0.9, "any": ["werde in rmz einfliegen", "werde rmz durchfliegen", "in rmz einfliegen", "rmz einfliegen", "rmz durchfliegen"] },
+    { "_note": "NfL ANLAGE 7.4 b) RMZ-Verlassen. Kein 'frequenz'/'wiederhoeren' -> kollisionsfrei zu LEAVING_FREQUENCY.", "intent": "RMZ_LEAVE", "confidence": 0.9, "any": ["verlasse rmz", "rmz verlassen"] },
+
+    {
+      "_note": "Pilot-initiated frequency change announcement.",
+      "intent": "LEAVING_FREQUENCY",
+      "confidence": 0.85,
+      "any": [
+        "verlasse ihre frequenz",
+        "verlasse die frequenz",
+        "auf wiederhoeren",
+        "auf wiederhören",
+        { "any": ["frequenzwechsel"],
+          "none": ["erbitte", "genehmigt"] }
+      ]
+    },
+
+    {
+      "_note": "Traffic-advisory replies must come BEFORE SELF_ANNOUNCE.",
+      "intent": "TRAFFIC_IN_SIGHT",
+      "confidence": 0.92,
+      "any": ["verkehr in sicht", "in sicht"]
+    },
+    {
+      "intent": "TRAFFIC_NEGATIVE_CONTACT",
+      "confidence": 0.92,
+      "any": ["negativer kontakt", "kein kontakt", "kein verkehr"]
+    },
+
+    { "intent": "SELF_ANNOUNCE", "confidence": 0.90, "any": ["verkehr"] },
+
+    {
+      "_note": "Readback. DE phrases: 'verstanden', 'rollen Sie' (ATC instruction echo), 'Rollhalt'/'Haltepunkt', 'kontaktiere', 'Startfreigabe'/'Landefreigabe'. Also the compact Tower echo phrases 'Start frei' (take-off clearance readback) and 'Landung frei' (landing clearance readback) — Whisper renders the Tower's wording verbatim, so the pilot's repeat-back shows up as the same short tokens. A post-landing adjustment below demotes 'Landung frei' to RUNWAY_VACATED when at_airport_after_landing fires. The position/departure echo patterns require the Sie-imperative 'melden sie' (the Tower instruction being read back) — NOT the bare verb 'melde': a pilot's first-person report 'melde Endanflug/Gegenanflug/abflugbereit' is a REPORT_POSITION_*/READY_FOR_DEPARTURE act, not a readback, and must fall through to those rules.",
+      "intent": "READBACK",
+      "confidence": 0.90,
+      "any": [
+        "wilco",
+        "roger",
+        "verstanden",
+        "kontaktiere boden",
+        "kontaktiere turm",
+        "auf wiederhoeren",
+        "auf wiederhören",
+        "kontrollzone",
+        "in die zone",
+        "freigegeben in die",
+        "qnh",
+        "halte position",
+        "position halten",
+        "landung frei",
+        "start frei",
+        { "all": ["rollen sie", { "any": ["ueber", "über"] }] },
+        { "all": ["rollen sie", { "any": ["haltepunkt", "rollhalt"] }] },
+        { "all": [
+            { "any": ["freigegeben", "freigabe zum"] },
+            { "any": ["start", "landung"] }
+        ]},
+        { "all": [
+            { "any": ["startfreigabe", "landefreigabe"] }
+        ]},
+        { "all": [
+            { "any": ["frequenzwechsel"] },
+            { "any": ["genehmigt"] }
+        ]},
+        { "all": [
+            { "any": ["abflug"] },
+            { "any": ["melden sie"] }
+        ]},
+        { "all": [
+            { "any": ["gegenanflug", "queranflug", "endanflug"] },
+            { "any": ["melden sie"] }
+        ]},
+        { "ends_with": " links" },
+        { "ends_with": " rechts" },
+        { "ends_with": " mitte" },
+        { "ends_with_runway_token": true }
+      ]
+    },
+
+    {
+      "_note": "VFR cross-country departure: ready-for-departure plus a course/direction marker.",
+      "intent": "READY_FOR_DEPARTURE_VFR",
+      "confidence": 0.92,
+      "all": [
+        { "any": ["bereit", "abflugbereit", "startbereit"] },
+        { "any": ["abflug", "warteposition", "rollhalt", "haltepunkt"] },
+        { "any": ["nach norden", "nach sueden", "nach süden",
+                  "nach osten", "nach westen",
+                  "nordkurs", "suedkurs", "südkurs", "ostkurs", "westkurs",
+                  "ueberlandflug", "überlandflug",
+                  "nach"] }
+      ]
+    },
+
+    {
+      "intent": "READY_FOR_DEPARTURE",
+      "confidence": 0.90,
+      "all": [
+        { "any": ["bereit", "abflugbereit", "startbereit"] },
+        { "any": ["abflug", "warteposition", "rollhalt", "haltepunkt"] }
+      ]
+    },
+
+    {
+      "_note": "AFIS Abflug-Selbstansage. NfL silent -- extrapoliert aus Para 35/AFIS-Praxis. Frequenz-Gating (INFO/RADIO) via flight_rules.json intent_frequency. Steht nach READY_FOR_DEPARTURE, damit 'abflugbereit' (towered) dort gewinnt; der none-Guard haelt REQUEST_TAXI-Phrasen heraus.",
+      "intent": "SELF_ANNOUNCE_DEPARTURE",
+      "confidence": 0.88,
+      "any": [
+        "ich starte",
+        "starte jetzt",
+        "rolle auf piste",
+        "beginne startlauf",
+        { "all": ["piste", { "any": ["starte", "abflug"] }] }
+      ],
+      "none": ["erbitte", "rollfreigabe", "rollen"]
+    },
+
+    {
+      "intent": "REQUEST_TOUCH_AND_GO",
+      "confidence": 0.90,
+      "any": ["durchstartlandung", "durchstart und landung", "aufsetzen und durchstarten"],
+      "none": ["taxi", "rollen"]
+    },
+
+    {
+      "_note": "Parking/apron/etc. as the destination -- NOT pilot's location.",
+      "intent": "REQUEST_TAXI_PARKING",
+      "confidence": 0.90,
+      "any": [
+        "rollen zur abstellposition", "rollen zum vorfeld",
+        "rollen zum abstellplatz", "rollen zur ga"
+      ]
+    },
+
+    {
+      "_note": "Runway-vacated. DE: 'Piste frei' (free), 'Piste verlassen' (left), 'Piste geraeumt' (cleared). Pilots in real BZF traffic say 'Piste 06 frei' with the runway number in between, so we also accept 'piste' + 'frei' as separate tokens. 'landung'/'start' guards keep the Tower-echo readbacks ('Landung frei', 'Start frei') out — those are handled by READBACK above.",
+      "intent": "RUNWAY_VACATED",
+      "confidence": 0.90,
+      "any": [
+        "piste frei",
+        "piste verlassen",
+        "piste geraeumt",
+        "piste geräumt",
+        "habe die piste verlassen",
+        { "all": ["piste", "frei"],
+          "none": ["landung", "start"] },
+        { "all": ["piste", "verlassen"],
+          "none": ["landung", "start"] }
+      ]
+    },
+
+    {
+      "_note": "Plain 'request taxi' / 'rollen'. Exclude clearance readbacks ('rollen sie ueber X') and frequency-change readbacks that mention 'taxi'.",
+      "intent": "REQUEST_TAXI",
+      "confidence": 0.90,
+      "any": ["rollen", "rollfreigabe", "erbitte rollen"],
+      "none": [
+        "contact tower",
+        "kontaktiere boden", "kontaktiere turm",
+        { "all": ["rollen sie", "haltepunkt"] },
+        { "all": ["rollen sie", "rollhalt"] },
+        { "all": ["rollen sie", "ueber"] },
+        { "all": ["rollen sie", "über"] },
+        { "all": ["rollen", "qnh"] }
+      ]
+    },
+
+    {
+      "_note": "Position-Reports. 'melden sie' (Tower-Imperativ) und 'report' (EN-Imperativ) ausschliessen, damit der Pilot-Readback der Anweisung 'melden Sie Gegenanflug/Endanflug' nicht falsch als Position-Report klassifiziert wird. Echo der Tower-Anweisung gehoert zu READBACK. 'gegneranflug' und 'gegen anflug' fangen haeufige Whisper-Fehltranskriptionen von 'Gegenanflug' ab.",
+      "intent": "REPORT_POSITION_DOWNWIND",
+      "confidence": 0.90,
+      "all": [{ "any": ["gegenanflug", "gegneranflug", "gegen anflug"] }],
+      "none": ["abflug", "melden sie"]
+    },
+    {
+      "intent": "REPORT_POSITION_BASE",
+      "confidence": 0.90,
+      "all": [{ "any": ["queranflug", "quer anflug"] }],
+      "none": ["melden sie"]
+    },
+    {
+      "intent": "REPORT_POSITION_FINAL",
+      "confidence": 0.93,
+      "all": [{ "any": ["endanflug", "end anflug"] }],
+      "none": ["voller halt", "melden sie"]
+    },
+
+    {
+      "_note": "Inbound/landing request, but only when no facility keyword (Tower/Turm/Information/Radio) is present. A facility-addressed call with landing intent is the inbound INITIAL_CALL (handled by INITIAL_CALL_INBOUND below) -- excluding all facility keywords keeps that path reachable at AFIS/Info+Radio fields too, not just towered ones.",
+      "intent": "REQUEST_LANDING",
+      "confidence": 0.93,
+      "any": ["zur landung", "voller halt"],
+      "none": [
+        "durchstartlandung",
+        "aufsetzen und durchstarten",
+        { "has_facility": "tower" },
+        { "has_facility": "turm" },
+        { "has_facility": "information" },
+        { "has_facility": "radio" }
+      ]
+    },
+
+    {
+      "intent": "REQUEST_FREQUENCY",
+      "confidence": 0.80,
+      "any": [
+        "erbitte frequenz",
+        "erbitte frequenzwechsel"
+      ]
+    },
+
+    {
+      "intent": "INITIAL_CALL_GROUND",
+      "confidence": 0.85,
+      "any": [
+        { "has_facility": "boden" },
+        { "has_facility": "rollkontrolle" },
+        { "has_facility": "freigabe" }
+      ]
+    },
+
+    {
+      "_note": "Tower/Info/Radio call with inbound/landing intent -- beats INITIAL_CALL_TOWER below. NfL ANLAGE 1.4.13 a)/e): '[Luftfahrzeugtyp] (Position) (Flughoehe) ZUR LANDUNG' applies to pattern and cross-country inbound alike. At AFIS fields the pilot addresses 'Information'/'Radio' instead of 'Turm', so all three facility keywords qualify. The mandatory ['zur landung','voller halt'] guard keeps this collision-free with the bare INITIAL_CALL_GROUND 'information' rule below (which has no landing phrase) and with the 'Information <NATO>' ATIS letter.",
+      "intent": "INITIAL_CALL_INBOUND",
+      "confidence": 0.85,
+      "all": [
+        { "any": [
+            { "has_facility": "turm" },
+            { "has_facility": "information" },
+            { "has_facility": "radio" }
+        ] }
+      ],
+      "any": ["zur landung", "voller halt"]
+    },
+
+    {
+      "intent": "INITIAL_CALL_TOWER",
+      "confidence": 0.85,
+      "any": [
+        { "has_facility": "turm" }
+      ]
+    },
+
+    {
+      "_note": "AFIS/Info field initial call: pilot addresses '<Platz> Information' (no Boden/Turm). MUST stay after the Tower rules: unlike 'boden' (never spoken on a tower call), 'information' also appears as the ATIS letter 'Information <NATO>' in towered calls, so an earlier match here would hijack INITIAL_CALL_TOWER. has_facility is a standalone-word match; the on_ground adjustment demotes airborne misfires. NfL 2024 §34 b).",
+      "intent": "INITIAL_CALL_GROUND",
+      "confidence": 0.85,
+      "any": [
+        { "has_facility": "information" }
+      ]
+    },
+
+    {
+      "_note": "Generic initial call -- last resort.",
+      "intent": "INITIAL_CALL",
+      "confidence": 0.80,
+      "any": [
+        { "has_facility": "boden" },
+        { "has_facility": "turm" },
+        { "has_facility": "rollkontrolle" },
+        { "has_facility": "freigabe" }
+      ]
+    },
+
+    {
+      "_note": "Last-resort fallback for traffic-advisory replies. Single keyword 'looking' / 'halte ausschau' is ambiguous; confidence is low.",
+      "intent": "TRAFFIC_LOOKING",
+      "confidence": 0.70,
+      "any": ["halte ausschau", "suche verkehr"]
+    }
+  ],
+
+  "adjustments": [
+    {
+      "_note": "Upgrade INITIAL_CALL_INBOUND -> INITIAL_CALL_INBOUND_VRP when a VRP was named.",
+      "if": { "intent": "INITIAL_CALL_INBOUND", "vrp_name_set": true },
+      "set_intent": "INITIAL_CALL_INBOUND_VRP"
+    },
+    {
+      "_note": "Airborne intent while on ground -- likely a readback. Demote to READBACK.",
+      "if": { "intent_is_airborne_only": true, "on_ground": true },
+      "set_intent": "READBACK",
+      "set_confidence": 0.85
+    },
+    {
+      "_note": "Ground intent while airborne -- physically impossible.",
+      "if": { "intent_is_ground_only": true, "on_ground": false },
+      "set_confidence": 0.3
+    },
+    {
+      "_note": "SELF_ANNOUNCE only makes sense on UNICOM at non-towered fields.",
+      "if": { "intent": "SELF_ANNOUNCE", "is_towered": true },
+      "set_confidence": 0.3
+    },
+    {
+      "_note": "Pilot called 'tower' at a non-towered airport -- phraseology error.",
+      "if": { "intent_in": ["INITIAL_CALL", "INITIAL_CALL_TOWER", "INITIAL_CALL_INBOUND"],
+              "is_towered": false, "text_contains": "tower" },
+      "set_confidence": 0.4
+    },
+    {
+      "_note": "DE counterpart: pilot called 'turm' at a non-towered airport.",
+      "if": { "intent_in": ["INITIAL_CALL", "INITIAL_CALL_TOWER", "INITIAL_CALL_INBOUND"],
+              "is_towered": false, "text_contains": "turm" },
+      "set_confidence": 0.4
+    },
+    {
+      "_note": "Post-landing 'request taxi' / 'rollen' is a taxi-to-apron request as long as the pilot is still in the post-landing state window (on the ground, last landing in history, no new DEPARTURE_CLEARED yet). State window instead of the 120 s just_landed clock so a long roll-out plus slow taxi-back still hits the demotion. Mirrors the at_airport_after_landing choice in the 'Landung frei' demote rule below.",
+      "if": { "intent": "REQUEST_TAXI", "require_context_flag": "at_airport_after_landing" },
+      "set_intent": "REQUEST_TAXI_PARKING"
+    },
+    {
+      "_note": "Post-landing taxi-clearance read-back. The Tower's 'rollen Sie zum GAT-Vorfeld ueber Alpha' is echoed by the pilot as 'Rolle GAT-Vorfeld ueber Alpha' / 'Rolle zu GA Parking via Alpha'. That first-person phrasing misses both the READBACK rule ('rollen sie' Tower imperative) and the REQUEST_TAXI_PARKING rule ('rollen zum vorfeld'), so it lands as UNKNOWN and used to bounce off the LM as _INVALID. While in the post-landing window, an UNKNOWN utterance that names the apron/parking destination is the clearance read-back -- accept it silently as READBACK. A genuine fresh taxi-parking request classifies as REQUEST_TAXI_PARKING (not UNKNOWN), so it is untouched. One entry per destination token because text_contains is a single substring.",
+      "if": { "intent": "UNKNOWN", "text_contains": "vorfeld",
+              "require_context_flag": "at_airport_after_landing" },
+      "set_intent": "READBACK",
+      "set_confidence": 0.9
+    },
+    {
+      "if": { "intent": "UNKNOWN", "text_contains": "parking",
+              "require_context_flag": "at_airport_after_landing" },
+      "set_intent": "READBACK",
+      "set_confidence": 0.9
+    },
+    {
+      "if": { "intent": "UNKNOWN", "text_contains": "abstellpos",
+              "require_context_flag": "at_airport_after_landing" },
+      "set_intent": "READBACK",
+      "set_confidence": 0.9
+    },
+    {
+      "_note": "Post-landing Whisper mishearing: the Tower's 'Landung frei' clearance bleeds into the audio context and Whisper renders the pilot's 'Piste frei' vacated call as 'Landung frei' instead. While we are on the ground after a landing without a new departure cycle, treat the READBACK match on 'landung frei' as a fumbled vacated report and demote to RUNWAY_VACATED. State window (at_airport_after_landing) instead of the 120 s just_landed clock so a long roll-out plus taxi-back to a far exit still hits the demotion.",
+      "if": { "intent": "READBACK", "text_contains": "landung frei",
+              "require_context_flag": "at_airport_after_landing" },
+      "set_intent": "RUNWAY_VACATED"
+    },
+    {
+      "_note": "RUNWAY_VACATED is physically impossible without a prior airborne phase. STT often drops 'start' from 'Piste 06 startfrei' (the departure readback) -- with a readback pending, the malformed 'piste frei' was almost certainly the readback the pilot meant. Remap so the tower silently accepts it instead of looping the readback-reminder.",
+      "if": { "intent": "RUNWAY_VACATED", "was_airborne": false, "readback_pending": true },
+      "set_intent": "READBACK"
+    },
+    {
+      "_note": "Same physical impossibility (RUNWAY_VACATED without ever being airborne), but no readback pending -- demote confidence to 0.0 so the engine routes the utterance through the LM classify-with-repair path instead of forcing the vacated rule.",
+      "if": { "intent": "RUNWAY_VACATED", "was_airborne": false, "readback_pending": false },
+      "set_confidence": 0.0
+    }
+  ]
+}

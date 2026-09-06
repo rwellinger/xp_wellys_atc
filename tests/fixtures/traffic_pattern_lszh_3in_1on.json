@@ -1,0 +1,75 @@
+{
+  "_comment": "Phase-4 sequencing fixture. User on short final to LSZH RWY 14; 3 aircraft already in the pattern (two on final, one on downwind) and one stopped on the runway 600 m past the threshold. Active-runway block lets the traffic_phase_classifier promote targets to Pattern/Final. Geometry: RWY 14 threshold (47.4794, 8.5253), heading 137° true.",
+  "user": {
+    "lat": 47.5018,
+    "lon": 8.4992,
+    "alt_msl_ft": 2600.0,
+    "heading_true": 137.0,
+    "nearest_airport_id": "LSZH",
+    "airport_elevation_ft": 1416.0,
+    "active_runway": {
+      "runway_id": "14",
+      "airport_lat": 47.4583,
+      "airport_lon": 8.5483,
+      "threshold_lat": 47.4794,
+      "threshold_lon": 8.5253,
+      "heading_deg": 137.0,
+      "length_m": 3700.0,
+      "pattern_direction": "left"
+    }
+  },
+  "targets": [
+    {
+      "_comment": "Final #1 — 1 NM short of threshold, descending. Closest to landing.",
+      "callsign": "HBABC",
+      "icao_type": "C172",
+      "modeS_id": 11280001,
+      "lat": 47.4922,
+      "lon": 8.5108,
+      "alt_msl_ft": 1916.0,
+      "track_deg": 137.0,
+      "groundspeed_kts": 80.0,
+      "vertical_speed_fpm": -600.0,
+      "wake": "Light"
+    },
+    {
+      "_comment": "Final #2 — 2.5 NM short of threshold, descending.",
+      "callsign": "HBDEF",
+      "icao_type": "PA28",
+      "modeS_id": 11280002,
+      "lat": 47.5114,
+      "lon": 8.4889,
+      "alt_msl_ft": 2400.0,
+      "track_deg": 137.0,
+      "groundspeed_kts": 85.0,
+      "vertical_speed_fpm": -500.0,
+      "wake": "Light"
+    },
+    {
+      "_comment": "Downwind on the left — abeam threshold, opposite heading. Promotes to Pattern via classifier.",
+      "callsign": "HBGHI",
+      "icao_type": "C152",
+      "modeS_id": 11280003,
+      "lat": 47.4988,
+      "lon": 8.5430,
+      "alt_msl_ft": 2600.0,
+      "track_deg": 317.0,
+      "groundspeed_kts": 90.0,
+      "vertical_speed_fpm": 0.0,
+      "wake": "Light"
+    },
+    {
+      "_comment": "Stopped on the runway — 600 m past RWY 14 threshold, on centerline. Groundspeed 0 → classifier returns OnGround; sequencing treats it as a runway occupant.",
+      "callsign": "HBJKL",
+      "icao_type": "C172",
+      "modeS_id": 11280004,
+      "lat": 47.4754,
+      "lon": 8.5307,
+      "alt_msl_ft": 1416.0,
+      "track_deg": 137.0,
+      "groundspeed_kts": 0.0,
+      "vertical_speed_fpm": 0.0,
+      "wake": "Light"
+    }
+  ]
+}

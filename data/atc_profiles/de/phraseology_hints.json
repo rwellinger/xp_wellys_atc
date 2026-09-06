@@ -1,0 +1,193 @@
+{
+  "_comment": "Phraseology-Hint-Matrix. Erste passende Regel gewinnt. Felder die fehlen matchen alles ('any' wird auch explizit akzeptiert). 'phase' und 'frequency_type' koennen ein einzelner Name oder ein Array sein. 'tower_only' und 'post_landing' sind Booleans (fehlend = beliebig). Der READBACK-Override (atc_state_machine::is_readback_pending) und der Cold-and-Dark-Override (start_mode + com_radio_powered) werden NACH diesem Lookup angewendet — Regeln hier beschreiben nur das stationaere Intent-Menue.",
+
+  "_schema": {
+    "state": "ATCState-Name (IDLE, GROUND_CONTACT, ...) oder 'any'",
+    "phase": "FlightPhase-Name (PARKED, TAXI, ...), Array oder 'any'",
+    "facility": "'towered', 'uncontrolled', 'afis' oder 'any'",
+    "frequency_type": "FrequencyType (GROUND, TOWER, ...), Array oder 'any'",
+    "tower_only": "true | false (fehlend = beliebig)",
+    "post_landing": "true | false (fehlend = beliebig)",
+    "intents": "Array von Intent-Keys; leeres Array = keine Hints (UI zeigt Tune-Hint)"
+  },
+
+  "rules": [
+
+    {
+      "comment": "IDLE nach Landung, auf Ground-Frequenz waehrend Ausrollen / Rollen zum Vorfeld: nur Rollen-zum-Vorfeld sinnvoll.",
+      "state": "IDLE", "phase": ["TAXI", "PARKED"], "facility": "towered",
+      "frequency_type": "GROUND", "post_landing": true,
+      "intents": ["REQUEST_TAXI_PARKING", "RADIO_CHECK"]
+    },
+    {
+      "comment": "Tower-only Platz nach Landung auf Tower-Frequenz: derselbe Controller uebernimmt das Rollen. Sowohl RUNWAY_VACATED (noch am Ausrollen) als auch REQUEST_TAXI_PARKING (nach Verlassen der Piste) anbieten. Variable taxi_controller rendert 'Tower' in der Phraseologie, Frequenz-Filter wird durch die tower_only-Ausnahme im UI-Defense-Layer umgangen.",
+      "state": "IDLE", "phase": ["LANDING_ROLL", "TAXI", "PARKED"], "facility": "towered",
+      "frequency_type": "TOWER", "tower_only": true, "post_landing": true,
+      "intents": ["RUNWAY_VACATED", "REQUEST_TAXI_PARKING"]
+    },
+    {
+      "comment": "2-Tier Platz nach Landung auf Tower-Frequenz: Pilot schuldet RUNWAY_VACATED bevor er auf Ground zurueckwechselt.",
+      "state": "IDLE", "phase": ["LANDING_ROLL", "TAXI"], "facility": "towered",
+      "frequency_type": "TOWER", "tower_only": false, "post_landing": true,
+      "intents": ["RUNWAY_VACATED"]
+    },
+
+    {
+      "comment": "IDLE Cold Start am Vorfeld: Pilot muss Kontakt auf Ground aufnehmen.",
+      "state": "IDLE", "phase": "PARKED", "facility": "towered",
+      "frequency_type": "GROUND", "post_landing": false,
+      "intents": ["INITIAL_CALL_GROUND", "RADIO_CHECK"]
+    },
+    {
+      "comment": "Tower-only Platz, IDLE am Vorfeld auf Tower-Frequenz: Initial-Call ist Roll-Anfrage an Tower (collapse-to-tower passiert via intent_category in UI).",
+      "state": "IDLE", "phase": "PARKED", "facility": "towered",
+      "frequency_type": "TOWER", "tower_only": true, "post_landing": false,
+      "intents": ["INITIAL_CALL_GROUND", "RADIO_CHECK"]
+    },
+    {
+      "comment": "IDLE am Vorfeld auf Tower-Frequenz an einem 2-Tier-Platz: leere Hint-Liste, damit die UI 'Tune Ground first' anzeigt.",
+      "state": "IDLE", "phase": "PARKED", "facility": "towered",
+      "frequency_type": "TOWER", "tower_only": false,
+      "intents": []
+    },
+    {
+      "comment": "IDLE am Vorfeld, keine brauchbare Frequenz eingestellt: leere Liste, UI zeigt Tune-Hint.",
+      "state": "IDLE", "phase": "PARKED", "facility": "towered",
+      "frequency_type": ["UNKNOWN", "ATIS", "DELIVERY", "UNICOM", "CTAF"],
+      "intents": []
+    },
+
+    {
+      "comment": "IDLE in der Luft nahe Platz auf Tower (verlorener Kontakt / frischer Anflug / Cross-Country-Inbound): Wiederherstellung via INITIAL_CALL_INBOUND. CRUISE deckt den En-route-Inbound nach Flugplatzwechsel ab (symmetrisch zur AFIS-Regel und zu flight_rules.json INITIAL_CALL_INBOUND.allowed_phases).",
+      "state": "IDLE", "phase": ["PATTERN", "FINAL_APPROACH", "CLIMB", "CRUISE"],
+      "facility": "towered", "frequency_type": "TOWER",
+      "intents": ["INITIAL_CALL_INBOUND", "INITIAL_CALL_INBOUND_VRP"]
+    },
+    {
+      "comment": "GROUND_CONTACT: Pilot hat Ground begruesst, wartet auf Rollfreigabe.",
+      "state": "GROUND_CONTACT", "phase": ["PARKED", "TAXI"], "facility": "towered",
+      "frequency_type": "GROUND",
+      "intents": ["REQUEST_TAXI"]
+    },
+    {
+      "comment": "GROUND_CONTACT nach Landung: REQUEST_TAXI_PARKING nach Begruessung von Ground zum Rollen-zum-Vorfeld.",
+      "state": "GROUND_CONTACT", "phase": ["PARKED", "TAXI"], "facility": "towered",
+      "frequency_type": "GROUND", "post_landing": true,
+      "intents": ["REQUEST_TAXI_PARKING"]
+    },
+
+    {
+      "comment": "TAXI_CLEARED: Pilot rollt gemaess Freigabe. Einziger legitimer Prompt ist ein Readback (per Override behandelt). Leere Liste haelt das Panel ruhig.",
+      "state": "TAXI_CLEARED", "phase": ["PARKED", "TAXI"], "facility": "towered",
+      "intents": []
+    },
+
+    {
+      "comment": "TOWER_CONTACT am Rollhalt: Pilot ist startbereit. Sowohl Platzrunde als auch Cross-Country Varianten anbieten.",
+      "state": "TOWER_CONTACT", "phase": ["PARKED", "TAXI"], "facility": "towered",
+      "frequency_type": "TOWER",
+      "intents": ["READY_FOR_DEPARTURE", "READY_FOR_DEPARTURE_VFR"]
+    },
+    {
+      "comment": "TOWER_CONTACT inbound aus Anflug (selten aber moeglich): REPORT_POSITION-Varianten.",
+      "state": "TOWER_CONTACT", "phase": ["PATTERN", "FINAL_APPROACH"], "facility": "towered",
+      "frequency_type": "TOWER",
+      "intents": ["REPORT_POSITION_DOWNWIND", "REPORT_POSITION_BASE", "REPORT_POSITION_FINAL", "REQUEST_LANDING"]
+    },
+
+    {
+      "comment": "DEPARTURE_CLEARED am Boden / im Startlauf: still, warte auf Auto-Korrektur. Gilt fuer Platzrunde und XC-Abfluege.",
+      "state": ["Pattern/DEPARTURE_CLEARED", "XC/DEPARTURE_CLEARED"], "phase": ["PARKED", "TAXI", "TAKEOFF_ROLL"],
+      "facility": "towered",
+      "intents": []
+    },
+    {
+      "comment": "DEPARTURE_CLEARED in der Luft (Cross-Country): Pilot kann Frequenzwechsel anfordern oder sich abmelden.",
+      "state": "XC/DEPARTURE_CLEARED", "phase": ["CLIMB", "CRUISE"], "facility": "towered",
+      "frequency_type": "TOWER",
+      "intents": ["REQUEST_FREQUENCY", "LEAVING_FREQUENCY"]
+    },
+
+    {
+      "comment": "PATTERN_ENTRY in der Platzrunde: Positionsmeldungen + Lande-Varianten.",
+      "state": "Pattern/PATTERN_ENTRY", "phase": "PATTERN", "facility": "towered",
+      "frequency_type": "TOWER",
+      "intents": ["REPORT_POSITION_DOWNWIND", "REPORT_POSITION_BASE", "REQUEST_LANDING", "REQUEST_TOUCH_AND_GO", "GO_AROUND"]
+    },
+    {
+      "comment": "PATTERN_ENTRY im Endanflug: Endanflug melden + Durchstarten.",
+      "state": "Pattern/PATTERN_ENTRY", "phase": "FINAL_APPROACH", "facility": "towered",
+      "frequency_type": "TOWER",
+      "intents": ["REPORT_POSITION_FINAL", "REQUEST_LANDING", "GO_AROUND"]
+    },
+
+    {
+      "comment": "LANDING_CLEARED in der Luft: Pilot wartet auf Readback (Override) oder benoetigt GO_AROUND.",
+      "state": "Pattern/LANDING_CLEARED", "phase": ["PATTERN", "FINAL_APPROACH"], "facility": "towered",
+      "frequency_type": "TOWER",
+      "intents": ["GO_AROUND"]
+    },
+    {
+      "comment": "LANDING_CLEARED beim Ausrollen: Pilot schuldet RUNWAY_VACATED.",
+      "state": "Pattern/LANDING_CLEARED", "phase": ["LANDING_ROLL", "TAXI"], "facility": "towered",
+      "frequency_type": "TOWER",
+      "intents": ["RUNWAY_VACATED"]
+    },
+
+    {
+      "comment": "TOUCH_AND_GO_CLEARED in der Platzrunde: gleicher Flow wie PATTERN_ENTRY plus Durchstart-Option.",
+      "state": "Pattern/TOUCH_AND_GO_CLEARED", "phase": ["PATTERN", "FINAL_APPROACH"],
+      "facility": "towered", "frequency_type": "TOWER",
+      "intents": ["REPORT_POSITION_FINAL", "GO_AROUND"]
+    },
+
+    {
+      "comment": "EN_ROUTE nahe Tower-kontrolliertem Platz: auf Inbound-Call wechseln.",
+      "state": "XC/EN_ROUTE", "phase": ["PATTERN", "FINAL_APPROACH"],
+      "facility": "towered", "frequency_type": "TOWER",
+      "intents": ["INITIAL_CALL_INBOUND", "INITIAL_CALL_INBOUND_VRP"]
+    },
+    {
+      "comment": "EN_ROUTE ohne relevante Frequenz: leer -> UI zeigt Tune-Hint.",
+      "state": "XC/EN_ROUTE",
+      "intents": []
+    },
+
+    {
+      "comment": "Unkontrolliert IDLE am Vorfeld: Self-Announce, optionaler Radio-Check.",
+      "state": "IDLE", "phase": "PARKED", "facility": "uncontrolled",
+      "frequency_type": ["UNICOM", "CTAF"],
+      "intents": ["SELF_ANNOUNCE", "RADIO_CHECK"]
+    },
+    {
+      "comment": "Unkontrolliert IDLE in der Luft nahe eines unkontrollierten Platzes: Inbound auf Verkehrsfrequenz ansagen.",
+      "state": "IDLE", "phase": ["PATTERN", "FINAL_APPROACH", "CRUISE", "CLIMB"],
+      "facility": "uncontrolled", "frequency_type": ["UNICOM", "CTAF"],
+      "intents": ["SELF_ANNOUNCE", "INITIAL_CALL_INBOUND"]
+    },
+    {
+      "comment": "Unkontrolliert UNICOM_ACTIVE: Self-Announce ueber die gesamte Phase.",
+      "state": "UNICOM_ACTIVE", "facility": "uncontrolled",
+      "frequency_type": ["UNICOM", "CTAF"],
+      "intents": ["SELF_ANNOUNCE"]
+    },
+
+    {
+      "comment": "AFIS/Info- oder Radio-Stelle am Boden: Erstanruf an die Info-/Radio-Stelle, optionaler Radio-Check, Abflug-Selbstansage. Beratend, keine Freigaben.",
+      "state": "IDLE", "phase": ["PARKED", "TAXI"], "facility": "afis",
+      "frequency_type": ["INFO", "RADIO"],
+      "intents": ["INITIAL_CALL_GROUND", "RADIO_CHECK", "SELF_ANNOUNCE_DEPARTURE"]
+    },
+    {
+      "comment": "AFIS/Info- oder Radio-Stelle in der Luft: Einflug ansagen, Positionsmeldungen, Abmeldung.",
+      "state": "IDLE", "phase": ["PATTERN", "FINAL_APPROACH", "CRUISE", "CLIMB"],
+      "facility": "afis", "frequency_type": ["INFO", "RADIO"],
+      "intents": ["INITIAL_CALL_INBOUND", "REPORT_POSITION_DOWNWIND", "REPORT_POSITION_BASE", "REPORT_POSITION_FINAL", "LEAVING_FREQUENCY"]
+    },
+
+    {
+      "comment": "Finaler Fallback: leere Liste. UI zeigt kontextabhaengige Tune-Hint.",
+      "intents": []
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+* openair_db unit-test fixture — small hand-built OpenAir set.
+* Geometry is chosen so containment can be reasoned about exactly:
+*  - box CTR:     52:14..52:23 N, 010:26..010:40 E, GND-2500
+*  - circle RMZ:  centre 50:00:00 N 010:00:00 E, r 5 NM, GND-4500
+*  - MUC TMA:     centre 48:00:00 N 011:00:00 E, r 30 NM, 1000-FL100
+*  - MUC CTR:     centre 48:00:00 N 011:00:00 E, r 5 NM, GND-5000
+*  - letter CTR:  AC D upgraded via name, box 47:00..47:10 N 008:00..008:10 E
+*  - danger Q:    NOT indexed — must never match
+
+* box CTR (DP polygon)
+AC CTR
+AN TEST CTR
+AH 2500 MSL
+AL GND
+DP 52:23:00 N 010:26:00 E
+DP 52:23:00 N 010:40:00 E
+DP 52:14:00 N 010:40:00 E
+DP 52:14:00 N 010:26:00 E
+
+* circle RMZ
+AC RMZ
+AN TEST RMZ
+AH 4500 MSL
+AL GND
+V X=50:00:00 N 010:00:00 E
+DC 5.0
+
+* large TMA (nested outer)
+AC TMA
+AN MUC TMA
+AH FL100
+AL 1000 MSL
+V X=48:00:00 N 011:00:00 E
+DC 30.0
+
+* small CTR (nested inner, same centre)
+AC CTR
+AN MUC CTR
+AH 5000 MSL
+AL GND
+V X=48:00:00 N 011:00:00 E
+DC 5.0
+
+* letter-class D upgraded to CTR via the name
+AC D
+AN LETTER CTR
+AH 2500 MSL
+AL GND
+DP 47:10:00 N 008:00:00 E
+DP 47:10:00 N 008:10:00 E
+DP 47:00:00 N 008:10:00 E
+DP 47:00:00 N 008:00:00 E
+
+* danger area — parsed but never indexed
+AC Q
+AN TEST DANGER
+AH FL100
+AL GND
+V X=45:00:00 N 009:00:00 E
+DC 10.0

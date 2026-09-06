@@ -1,0 +1,368 @@
+{
+  "_comment": "Data-driven intent classification rules for EN/ICAO-VFR phraseology. Loaded by src/atc/intent_rules.cpp. Schema: see intent_rules.hpp. Facility keywords (tower/ground/information/radio/delivery) are supplied here as has_facility values -- the matcher does a standalone-word match, no hardcoded C++ list. Runway/position tokens (left/right/center/one..thirty six/niner) live in the shared runway_token_suffixes() C++ vector and already cover EN. Note: intent_parser::parse() runs en_phraseology::parse_spoken_number() before this layer, so ICAO digit-by-digit pronunciation ('one zero one tree') already arrives as raw digits ('1013') -- rules below match on numeric form.",
+
+  "normalize": [
+    { "_note": "Reserved for known Whisper/Voxtral mishearings (EN VFR), analogous to the DE table (GitHub issues #9, #30). INVARIANT: only map non-words that are collision-free under a global substring replace (never a legitimate English word/token). Empty for now; EN STT mishearing tuning is a follow-up." }
+  ],
+
+  "rules": [
+    {
+      "_note": "Profanity / insults toward ATC. Highest priority so tone is caught even when other intent keywords are present.",
+      "intent": "INAPPROPRIATE_LANGUAGE",
+      "confidence": 0.99,
+      "any": [
+        "fuck", "shit", "bullshit", "asshole", "bitch", "bastard",
+        "damn it", "dammit", "piss off", "piss on", "dick head", "dickhead",
+        "mother", "wanker", "cunt",
+        { "all": [
+            { "any": ["idiot", "stupid", "moron", "incompetent", "useless"] },
+            { "any": ["you", "tower", "ground", "controller", "atc"] }
+        ]}
+      ]
+    },
+
+    {
+      "_note": "Pilot-issued correction phraseology (ICAO CORRECTION / self-correction). 'negative' alone is ICAO's 'no'; 'negative contact' is a traffic-advisory reply and must NOT be claimed here.",
+      "intent": "NEGATIVE_CORRECTION",
+      "confidence": 0.95,
+      "none": ["negative contact", "no contact"],
+      "any": [
+        { "starts_with": "negative" },
+        ", negative",
+        { "starts_with": "correction" },
+        ", correction",
+        "disregard",
+        "belay that",
+        "i meant",
+        "i said",
+        "that is wrong",
+        "that's wrong"
+      ]
+    },
+
+    { "intent": "UNABLE",      "confidence": 0.95, "any": ["unable"] },
+    { "intent": "RADIO_CHECK", "confidence": 0.95, "any": ["radio check", "how do you read", "readability check"] },
+    { "intent": "REQUEST_REPEAT", "confidence": 0.95, "any": ["say again", "come again", "repeat please", "please repeat"] },
+    { "intent": "GO_AROUND",   "confidence": 0.95, "any": ["going around", "go around", "overshoot"] },
+
+    { "_note": "RMZ entry/transit (European radio mandatory zone). 'rmz' anchor keeps it collision-free with INITIAL_CALL_INBOUND.", "intent": "RMZ_ENTER", "confidence": 0.9, "any": ["will enter rmz", "will transit rmz", "entering rmz", "transit rmz", "rmz entry"] },
+    { "_note": "RMZ leaving. No 'frequency'/'good day' -> collision-free with LEAVING_FREQUENCY.", "intent": "RMZ_LEAVE", "confidence": 0.9, "any": ["leaving rmz", "clear of rmz", "rmz vacated"] },
+
+    {
+      "_note": "Pilot-initiated frequency change announcement (leaving frequency has no fixed ICAO phrase; convention).",
+      "intent": "LEAVING_FREQUENCY",
+      "confidence": 0.85,
+      "any": [
+        "leaving your frequency",
+        "leaving the frequency",
+        "leaving frequency",
+        { "any": ["frequency change"],
+          "none": ["request", "approved"] }
+      ]
+    },
+
+    {
+      "_note": "Traffic-advisory replies must come BEFORE SELF_ANNOUNCE.",
+      "intent": "TRAFFIC_IN_SIGHT",
+      "confidence": 0.92,
+      "any": ["traffic in sight", "in sight"]
+    },
+    {
+      "intent": "TRAFFIC_NEGATIVE_CONTACT",
+      "confidence": 0.92,
+      "any": ["negative contact", "no contact", "no traffic"]
+    },
+
+    { "intent": "SELF_ANNOUNCE", "confidence": 0.90, "any": ["traffic"] },
+
+    {
+      "_note": "Readback. EN phrases: 'wilco'/'roger', ATC-instruction echoes ('contact ground/tower', 'taxi to holding point', 'line up', 'hold short'), and the compact Tower echoes 'cleared to land'/'cleared for take-off' -- STT renders the Tower's wording verbatim, so the pilot's repeat-back shows up as the same tokens. The position/departure echo patterns require the imperative 'report' (the Tower instruction being read back) -- NOT the bare position word: a pilot's own report 'final'/'downwind'/'ready for departure' is a REPORT_POSITION_*/READY_FOR_DEPARTURE act, not a readback, and must fall through to those rules.",
+      "intent": "READBACK",
+      "confidence": 0.90,
+      "any": [
+        "wilco",
+        "roger",
+        "contact ground",
+        "contact tower",
+        "control zone",
+        "cleared to enter",
+        "qnh",
+        "hold position",
+        "holding short",
+        "holding",
+        "cleared to land",
+        "cleared for take-off",
+        "cleared for takeoff",
+        "line up",
+        { "all": ["taxi to", "holding point"] },
+        { "all": ["taxi", "via"] },
+        { "all": [
+            { "any": ["cleared", "cleared for", "cleared to"] },
+            { "any": ["take-off", "takeoff", "land", "landing"] }
+        ]},
+        { "all": [
+            { "any": ["frequency change"] },
+            { "any": ["approved"] }
+        ]},
+        { "all": [
+            { "any": ["report"] },
+            { "any": ["downwind", "base", "final", "departure"] }
+        ]},
+        { "ends_with": " left" },
+        { "ends_with": " right" },
+        { "ends_with": " center" },
+        { "ends_with_runway_token": true }
+      ]
+    },
+
+    {
+      "_note": "VFR cross-country departure: ready-for-departure plus a course/direction marker.",
+      "intent": "READY_FOR_DEPARTURE_VFR",
+      "confidence": 0.92,
+      "all": [
+        { "any": ["ready for departure", "ready", "holding point", "hold short"] },
+        { "any": ["departure", "holding point", "hold short", "line up"] },
+        { "any": ["to the north", "to the south", "to the east", "to the west",
+                  "northbound", "southbound", "eastbound", "westbound",
+                  "cross country", "en route", "outbound", "to"] }
+      ]
+    },
+
+    {
+      "intent": "READY_FOR_DEPARTURE",
+      "confidence": 0.90,
+      "all": [
+        { "any": ["ready for departure", "ready", "holding point", "hold short"] },
+        { "any": ["departure", "holding point", "hold short", "line up"] }
+      ]
+    },
+
+    {
+      "_note": "AFIS departure self-announce. Frequency gating (INFO/RADIO) via flight_rules.json intent_frequency. Sits after READY_FOR_DEPARTURE so 'ready for departure' (towered) wins there; the none-guard keeps taxi/landing phrases out.",
+      "intent": "SELF_ANNOUNCE_DEPARTURE",
+      "confidence": 0.88,
+      "any": [
+        "departing runway",
+        "taking off",
+        "rolling",
+        "commencing takeoff",
+        { "all": ["runway", { "any": ["departing", "takeoff", "take-off"] }] }
+      ],
+      "none": ["request", "ready for departure"]
+    },
+
+    {
+      "intent": "REQUEST_TOUCH_AND_GO",
+      "confidence": 0.90,
+      "any": ["touch and go", "touch-and-go"],
+      "none": ["taxi"]
+    },
+
+    {
+      "_note": "Parking/apron/ramp as the destination -- NOT pilot's location.",
+      "intent": "REQUEST_TAXI_PARKING",
+      "confidence": 0.90,
+      "any": [
+        "taxi to parking", "taxi to the apron", "taxi to apron",
+        "taxi to the ramp", "taxi to stand", "taxi to ga"
+      ]
+    },
+
+    {
+      "_note": "Runway-vacated. ICAO 'runway vacated'. Also accept 'runway'+'vacated' as separate tokens. 'cleared' guard keeps the Tower-echo readbacks ('cleared to land') out -- those are handled by READBACK above.",
+      "intent": "RUNWAY_VACATED",
+      "confidence": 0.90,
+      "any": [
+        "runway vacated",
+        "vacated the runway",
+        "clear of the runway",
+        "clear of runway",
+        "runway is clear",
+        { "all": ["runway", "vacated"],
+          "none": ["cleared"] }
+      ]
+    },
+
+    {
+      "_note": "Plain 'request taxi' / 'taxi'. Exclude clearance readbacks ('taxi to holding point', 'taxi ... via X') and the apron/parking taxi requests handled above.",
+      "intent": "REQUEST_TAXI",
+      "confidence": 0.90,
+      "any": ["request taxi", "taxi", "taxiing"],
+      "none": [
+        "contact tower",
+        "contact ground",
+        "taxi to parking", "taxi to the apron", "taxi to apron",
+        "taxi to the ramp", "taxi to ga",
+        "touch and go",
+        { "all": ["taxi to", "holding point"] },
+        { "all": ["taxi", "via"] },
+        { "all": ["taxi", "qnh"] }
+      ]
+    },
+
+    {
+      "_note": "Position-Reports. Exclude the imperative 'report' (the Tower instruction 'report downwind/base/final') so a pilot readback of that instruction is not misclassified as a position report -- the echo belongs to READBACK.",
+      "intent": "REPORT_POSITION_DOWNWIND",
+      "confidence": 0.90,
+      "all": [{ "any": ["downwind"] }],
+      "none": ["report"]
+    },
+    {
+      "intent": "REPORT_POSITION_BASE",
+      "confidence": 0.90,
+      "all": [{ "any": ["base leg", "base"] }],
+      "none": ["report"]
+    },
+    {
+      "intent": "REPORT_POSITION_FINAL",
+      "confidence": 0.93,
+      "all": [{ "any": ["final"] }],
+      "none": ["full stop", "report"]
+    },
+
+    {
+      "_note": "Inbound/landing request, but only when no facility keyword (tower/information/radio) is present. A facility-addressed call with landing intent is the inbound INITIAL_CALL (INITIAL_CALL_INBOUND below) -- excluding all facility keywords keeps that path reachable at AFIS/Info+Radio fields too, not just towered ones.",
+      "intent": "REQUEST_LANDING",
+      "confidence": 0.93,
+      "any": ["for landing", "full stop", "request landing"],
+      "none": [
+        "touch and go",
+        { "has_facility": "tower" },
+        { "has_facility": "information" },
+        { "has_facility": "radio" }
+      ]
+    },
+
+    {
+      "intent": "REQUEST_FREQUENCY",
+      "confidence": 0.80,
+      "any": [
+        "request frequency change",
+        "request change to",
+        "request frequency"
+      ]
+    },
+
+    {
+      "intent": "INITIAL_CALL_GROUND",
+      "confidence": 0.85,
+      "any": [
+        { "has_facility": "ground" },
+        { "has_facility": "delivery" }
+      ]
+    },
+
+    {
+      "_note": "Tower/Info/Radio call with inbound/landing intent -- beats INITIAL_CALL_TOWER below. ICAO Doc 4444 12.3.4.13(a)/(d): '[type] (position) (level) FOR LANDING' applies to pattern and cross-country inbound alike. At AFIS fields the pilot addresses 'Information'/'Radio' instead of 'Tower', so all three facility keywords qualify. The mandatory landing-phrase guard keeps this collision-free with the bare INITIAL_CALL_GROUND 'information' rule below (which has no landing phrase) and with the 'information <NATO>' ATIS letter.",
+      "intent": "INITIAL_CALL_INBOUND",
+      "confidence": 0.85,
+      "all": [
+        { "any": [
+            { "has_facility": "tower" },
+            { "has_facility": "information" },
+            { "has_facility": "radio" }
+        ] }
+      ],
+      "any": ["for landing", "full stop", "inbound"]
+    },
+
+    {
+      "intent": "INITIAL_CALL_TOWER",
+      "confidence": 0.85,
+      "any": [
+        { "has_facility": "tower" }
+      ]
+    },
+
+    {
+      "_note": "AFIS/Info field initial call: pilot addresses '<airport> Information' (no ground/tower). MUST stay after the Tower rules: 'information' also appears as the ATIS letter 'information <NATO>' in towered calls, so an earlier match here would hijack INITIAL_CALL_TOWER. has_facility is a standalone-word match; the on_ground adjustment demotes airborne misfires.",
+      "intent": "INITIAL_CALL_GROUND",
+      "confidence": 0.85,
+      "any": [
+        { "has_facility": "information" }
+      ]
+    },
+
+    {
+      "_note": "Generic initial call -- last resort.",
+      "intent": "INITIAL_CALL",
+      "confidence": 0.80,
+      "any": [
+        { "has_facility": "ground" },
+        { "has_facility": "tower" },
+        { "has_facility": "delivery" }
+      ]
+    },
+
+    {
+      "_note": "Last-resort fallback for traffic-advisory replies. Single keyword 'looking' is ambiguous; confidence is low.",
+      "intent": "TRAFFIC_LOOKING",
+      "confidence": 0.70,
+      "any": ["looking for traffic", "looking", "searching for traffic"]
+    }
+  ],
+
+  "adjustments": [
+    {
+      "_note": "Upgrade INITIAL_CALL_INBOUND -> INITIAL_CALL_INBOUND_VRP when a VRP was named.",
+      "if": { "intent": "INITIAL_CALL_INBOUND", "vrp_name_set": true },
+      "set_intent": "INITIAL_CALL_INBOUND_VRP"
+    },
+    {
+      "_note": "Airborne intent while on ground -- likely a readback. Demote to READBACK.",
+      "if": { "intent_is_airborne_only": true, "on_ground": true },
+      "set_intent": "READBACK",
+      "set_confidence": 0.85
+    },
+    {
+      "_note": "Ground intent while airborne -- physically impossible.",
+      "if": { "intent_is_ground_only": true, "on_ground": false },
+      "set_confidence": 0.3
+    },
+    {
+      "_note": "SELF_ANNOUNCE only makes sense on UNICOM/CTAF at non-towered fields.",
+      "if": { "intent": "SELF_ANNOUNCE", "is_towered": true },
+      "set_confidence": 0.3
+    },
+    {
+      "_note": "Pilot called 'tower' at a non-towered airport -- phraseology error.",
+      "if": { "intent_in": ["INITIAL_CALL", "INITIAL_CALL_TOWER", "INITIAL_CALL_INBOUND"],
+              "is_towered": false, "text_contains": "tower" },
+      "set_confidence": 0.4
+    },
+    {
+      "_note": "Post-landing 'request taxi' / 'taxi' is a taxi-to-apron request while the pilot is still in the post-landing state window (on the ground, last landing in history, no new DEPARTURE_CLEARED yet).",
+      "if": { "intent": "REQUEST_TAXI", "require_context_flag": "at_airport_after_landing" },
+      "set_intent": "REQUEST_TAXI_PARKING"
+    },
+    {
+      "_note": "Post-landing taxi-clearance read-back. The Tower's 'taxi to the GA apron via Alpha' is echoed by the pilot as 'taxi GA apron via Alpha'. That phrasing can miss both READBACK and REQUEST_TAXI_PARKING and land as UNKNOWN. While in the post-landing window, an UNKNOWN utterance that names the apron/parking/ramp destination is the clearance read-back -- accept it silently as READBACK. One entry per destination token because text_contains is a single substring.",
+      "if": { "intent": "UNKNOWN", "text_contains": "apron",
+              "require_context_flag": "at_airport_after_landing" },
+      "set_intent": "READBACK",
+      "set_confidence": 0.9
+    },
+    {
+      "if": { "intent": "UNKNOWN", "text_contains": "parking",
+              "require_context_flag": "at_airport_after_landing" },
+      "set_intent": "READBACK",
+      "set_confidence": 0.9
+    },
+    {
+      "if": { "intent": "UNKNOWN", "text_contains": "ramp",
+              "require_context_flag": "at_airport_after_landing" },
+      "set_intent": "READBACK",
+      "set_confidence": 0.9
+    },
+    {
+      "_note": "RUNWAY_VACATED is physically impossible without a prior airborne phase. With a readback pending, the malformed vacated call was almost certainly the readback the pilot meant. Remap so the tower silently accepts it instead of looping the readback-reminder.",
+      "if": { "intent": "RUNWAY_VACATED", "was_airborne": false, "readback_pending": true },
+      "set_intent": "READBACK"
+    },
+    {
+      "_note": "Same physical impossibility (RUNWAY_VACATED without ever being airborne), but no readback pending -- demote confidence to 0.0 so the engine routes the utterance through the LM classify-with-repair path instead of forcing the vacated rule.",
+      "if": { "intent": "RUNWAY_VACATED", "was_airborne": false, "readback_pending": false },
+      "set_confidence": 0.0
+    }
+  ]
+}

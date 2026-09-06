@@ -1,0 +1,27 @@
+{
+  "_comment": "Test fixture — simulates a user-supplied override file. EDDM gets a full VRP set that the plugin default lacks; EDNY gets overridden with a different alt_ft on Sierra to prove per-ICAO replacement (not field-level merge).",
+  "EDDM": {
+    "name": "Muenchen",
+    "pattern_direction": {
+      "08L": "left",
+      "26R": "right"
+    },
+    "vrps": [
+      { "name": "Whiskey", "lat": 48.355, "lon": 11.350, "alt_ft": 3500 }
+    ],
+    "arrival_routes": {
+      "08L": ["Whiskey"]
+    }
+  },
+  "EDNY": {
+    "name": "Friedrichshafen",
+    "pattern_direction": {
+      "06": "left",
+      "24": "right"
+    },
+    "vrps": [
+      { "name": "Sierra", "lat": 47.665, "lon": 9.530, "alt_ft": 2500 }
+    ],
+    "arrival_routes": {}
+  }
+}

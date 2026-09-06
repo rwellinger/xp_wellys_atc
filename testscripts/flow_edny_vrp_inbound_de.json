@@ -1,0 +1,24 @@
+{
+  "_comment": "M9 DoD anchor — German VFR inbound to EDNY (Friedrichshafen) via VRP 'Sierra'. The pilot identifies the VRP with the German position marker 'ueber' (NfL Sprechfunk 2024 standard form), which triggers intent_parser to switch INITIAL_CALL_INBOUND -> INITIAL_CALL_INBOUND_VRP. Tower responds with the German VRP-clearance template ('frei zum Einflug in die Kontrollzone ueber Sierra, Piste 24, melden Sie im Gegenanflug').",
+  "name": "DE VRP inbound — EDNY Friedrichshafen via Sierra",
+  "region": "DE",
+  "context": {
+    "airport": "EDNY",
+    "airport_name": "Friedrichshafen",
+    "towered": true,
+    "tower_only": false,
+    "on_ground": false,
+    "agl_ft": 1500,
+    "altitude_ft": 2000,
+    "groundspeed_kt": 95,
+    "com": 120.075,
+    "freq_type": "TOWER",
+    "runway": "24",
+    "callsign": "Delta Echo Whiskey Lima Yankee"
+  },
+  "say": [
+    { "note": "Step 1 — Pilot calls Turm from VRP Sierra inbound for landing. The 'turm' facility keyword routes to INITIAL_CALL_INBOUND (REQUEST_LANDING is vetoed by its has_facility guard), and 'zur Landung' carries the inbound intent. Marker 'ueber' tells the VRP parser to look at the next word; 'sierra' matches the registered EDNY VRP and the intent is upgraded to INITIAL_CALL_INBOUND_VRP.",
+      "text": "Friedrichshafen Turm, Delta Echo Whiskey Lima Yankee, ueber Sierra, zur Landung",
+      "expect": "ueber Sierra" }
+  ]
+}

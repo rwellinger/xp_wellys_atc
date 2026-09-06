@@ -1,0 +1,410 @@
+{
+  "_comment": "Visual Reporting Points and pattern directions per airport. Swiss airports (LSxx) data is aligned with the xp_swiss_vfr plugin (../../../xp_swiss_vfr/resources/airports/), which is sourced from AIP Switzerland, Skyguide VAC and Navigraph. VRP names are stored in phonetic spelling (November/Echo/Sierra/Whiskey/Zulu) so that Whisper transcripts and TTS playback work correctly; coordinates and altitudes match the canonical AIP/VAC codes (N/E/S/W/Z) of the source plugin. The plugin matches VRPs by name in the pilot's transcript; coordinates are stored for future use (UI display, nearest-VRP hints). pattern_direction overrides the global settings value when present.",
+
+  "LSGS": {
+    "name": "Sion",
+    "pattern_direction": {
+      "07": "right",
+      "25": "left"
+    },
+    "vrps": [
+      { "name": "November", "lat": 46.210, "lon": 7.310, "alt_ft": 3000 },
+      { "name": "Sierra",   "lat": 46.255, "lon": 7.400, "alt_ft": 3000 },
+      { "name": "Whiskey",  "lat": 46.230, "lon": 7.260, "alt_ft": 3000 }
+    ],
+    "arrival_routes": {
+      "07": ["Whiskey", "November"],
+      "25": ["Sierra", "November"]
+    }
+  },
+
+  "LSPN": {
+    "name": "Triengen",
+    "pattern_direction": {
+      "15": "left",
+      "33": "right"
+    },
+    "vrps": [
+      { "name": "November", "lat": 47.265000, "lon": 8.080000, "alt_ft": 2800 },
+      { "name": "Echo",     "lat": 47.215000, "lon": 8.135000, "alt_ft": 2800 },
+      { "name": "Sierra",   "lat": 47.190000, "lon": 8.090000, "alt_ft": 2800 },
+      { "name": "Whiskey",  "lat": 47.228000, "lon": 8.020000, "alt_ft": 2800 }
+    ],
+    "arrival_routes": {
+      "15": ["November", "Echo", "Sierra", "Whiskey"],
+      "33": ["November", "Echo", "Sierra", "Whiskey"]
+    }
+  },
+
+  "LSPV": {
+    "name": "Wangen-Lachen",
+    "pattern_direction": {
+      "08": "left",
+      "26": "right"
+    },
+    "vrps": [
+      { "name": "November", "lat": 47.245000, "lon": 8.870000, "alt_ft": 2500 },
+      { "name": "Echo",     "lat": 47.193000, "lon": 8.945000, "alt_ft": 2500 },
+      { "name": "Sierra",   "lat": 47.170000, "lon": 8.860000, "alt_ft": 2500 },
+      { "name": "Whiskey",  "lat": 47.198000, "lon": 8.785000, "alt_ft": 2500 }
+    ],
+    "arrival_routes": {
+      "08": ["November", "Echo", "Sierra", "Whiskey"],
+      "26": ["November", "Echo", "Sierra", "Whiskey"]
+    }
+  },
+
+  "LSZH": {
+    "name": "Zurich",
+    "_comment": "Pattern directions per AIP Switzerland LSZH AD 2.22. VFR pattern on LSZH is tightly tower-coordinated (major IFR airport) and the AIP VFR arrival/departure routes are point-to-point rather than canonical N/E/S/W VRPs — `vrps` and `arrival_routes` are intentionally omitted until the AIP route data is digitised.",
+    "pattern_direction": {
+      "14": "left",
+      "32": "right",
+      "_default": "left"
+    },
+    "vrps": [],
+    "arrival_routes": {}
+  },
+
+  "LSZB": {
+    "name": "Bern-Belp",
+    "_source": "Navigraph Charts (AIP Switzerland VFR), 2026-06",
+    "pattern_direction": {
+      "14": "left",
+      "32": "right"
+    },
+    "vrps": [
+      { "name": "November",      "lat": 47.01333, "lon": 7.55833, "alt_ft": 4500 },
+      { "name": "Echo",          "lat": 47.00000, "lon": 7.64667, "alt_ft": 4500 },
+      { "name": "Echo One",      "lat": 46.94500, "lon": 7.54667, "alt_ft": 4500 },
+      { "name": "Hotel Echo",    "lat": 46.91500, "lon": 7.56500, "alt_ft": 4500 },
+      { "name": "Sierra",        "lat": 46.84333, "lon": 7.49833, "alt_ft": 4500 },
+      { "name": "Zulu One",      "lat": 46.86667, "lon": 7.54667, "alt_ft": 4000 },
+      { "name": "Zulu",          "lat": 46.78000, "lon": 7.60333, "alt_ft": 4000 },
+      { "name": "Hotel Whiskey", "lat": 46.88500, "lon": 7.45167, "alt_ft": 4500 },
+      { "name": "Whiskey",       "lat": 46.93000, "lon": 7.39333, "alt_ft": 4500 }
+    ],
+    "arrival_routes": {
+      "14": ["November", "Echo", "Echo One", "Hotel Echo", "Zulu One", "Zulu"],
+      "32": ["Whiskey", "Hotel Whiskey", "Sierra", "Zulu One", "Zulu"]
+    }
+  },
+
+  "LSZC": {
+    "name": "Buochs",
+    "pattern_direction": {
+      "07": "right",
+      "25": "left"
+    },
+    "vrps": [
+      { "name": "November", "lat": 46.960, "lon": 8.395, "alt_ft": 2800 },
+      { "name": "Sierra",   "lat": 46.975, "lon": 8.330, "alt_ft": 2800 },
+      { "name": "Echo",     "lat": 46.985, "lon": 8.420, "alt_ft": 2800 }
+    ],
+    "arrival_routes": {
+      "07": ["Sierra", "November"],
+      "25": ["Echo", "November"]
+    }
+  },
+
+  "LSZF": {
+    "name": "Birrfeld",
+    "pattern_direction": {
+      "08": "left",
+      "26": "right"
+    },
+    "vrps": [
+      { "name": "November", "lat": 47.485000, "lon": 8.230000, "alt_ft": 2500 },
+      { "name": "Echo",     "lat": 47.450000, "lon": 8.310000, "alt_ft": 2500 },
+      { "name": "Sierra",   "lat": 47.395000, "lon": 8.225000, "alt_ft": 2500 },
+      { "name": "Whiskey",  "lat": 47.443000, "lon": 8.165000, "alt_ft": 2500 }
+    ],
+    "arrival_routes": {
+      "08": ["November", "Echo", "Sierra", "Whiskey"],
+      "26": ["November", "Echo", "Sierra", "Whiskey"]
+    }
+  },
+
+  "LSZG": {
+    "name": "Grenchen",
+    "_source": "Navigraph Charts (AIP Switzerland VFR), 2026-06. alt_ft reflects MNM (published minimum), not the TMA upper limit. pattern_direction inherited from M2 default (06=right, 24=left) — verify against AD 2.22 when convenient.",
+    "pattern_direction": {
+      "06": "right",
+      "24": "left"
+    },
+    "vrps": [
+      { "name": "Hotel Echo",    "lat": 47.21167, "lon": 7.48000, "alt_ft": 3000 },
+      { "name": "Echo",          "lat": 47.21000, "lon": 7.60000, "alt_ft": 3000 },
+      { "name": "Echo One",      "lat": 47.19333, "lon": 7.48333, "alt_ft": 3000 },
+      { "name": "Sierra",        "lat": 47.12333, "lon": 7.51167, "alt_ft": 3000 },
+      { "name": "Hotel Whiskey", "lat": 47.16833, "lon": 7.36500, "alt_ft": 3000 },
+      { "name": "Whiskey One",   "lat": 47.15500, "lon": 7.35667, "alt_ft": 3000 },
+      { "name": "Whiskey",       "lat": 47.13000, "lon": 7.23000, "alt_ft": 3000 }
+    ],
+    "arrival_routes": {
+      "06": ["Whiskey", "Whiskey One", "Hotel Whiskey", "Sierra"],
+      "24": ["Echo", "Echo One", "Hotel Echo"]
+    }
+  },
+
+  "LSZI": {
+    "name": "Fricktal-Schupfart",
+    "pattern_direction": {
+      "07": "left",
+      "25": "right"
+    },
+    "vrps": [
+      { "name": "Echo",    "lat": 47.510000, "lon": 8.025000, "alt_ft": 3000 },
+      { "name": "Whiskey", "lat": 47.520000, "lon": 7.890000, "alt_ft": 3000 },
+      { "name": "Sierra",  "lat": 47.470000, "lon": 7.940000, "alt_ft": 3000 }
+    ],
+    "arrival_routes": {
+      "07": ["Echo", "Whiskey", "Sierra"],
+      "25": ["Echo", "Whiskey", "Sierra"]
+    }
+  },
+
+  "LSZK": {
+    "name": "Speck-Fehraltorf",
+    "pattern_direction": {
+      "12": "left",
+      "30": "right"
+    },
+    "vrps": [
+      { "name": "November", "lat": 47.420000, "lon": 8.770000, "alt_ft": 2800 },
+      { "name": "Echo",     "lat": 47.345000, "lon": 8.795000, "alt_ft": 2800 },
+      { "name": "Sierra",   "lat": 47.325000, "lon": 8.770000, "alt_ft": 2800 },
+      { "name": "Whiskey",  "lat": 47.380000, "lon": 8.690000, "alt_ft": 2800 }
+    ],
+    "arrival_routes": {
+      "12": ["November", "Echo", "Sierra", "Whiskey"],
+      "30": ["November", "Echo", "Sierra", "Whiskey"]
+    }
+  },
+
+  "LSZO": {
+    "name": "Luzern-Beromuenster",
+    "pattern_direction": {
+      "15": "left",
+      "33": "right"
+    },
+    "vrps": [
+      { "name": "November", "lat": 47.235000, "lon": 8.210000, "alt_ft": 3500 },
+      { "name": "Echo",     "lat": 47.195000, "lon": 8.275000, "alt_ft": 3500 },
+      { "name": "Sierra",   "lat": 47.140000, "lon": 8.205000, "alt_ft": 3500 },
+      { "name": "Whiskey",  "lat": 47.190000, "lon": 8.135000, "alt_ft": 3500 }
+    ],
+    "arrival_routes": {
+      "15": ["November", "Echo", "Sierra", "Whiskey"],
+      "33": ["November", "Echo", "Sierra", "Whiskey"]
+    }
+  },
+
+  "LSZR": {
+    "name": "St. Gallen-Altenrhein",
+    "pattern_direction": {
+      "10": "left",
+      "28": "right"
+    },
+    "vrps": [
+      { "name": "Sierra",   "lat": 47.490, "lon": 9.555, "alt_ft": 2000 },
+      { "name": "November", "lat": 47.475, "lon": 9.610, "alt_ft": 2000 },
+      { "name": "Whiskey",  "lat": 47.480, "lon": 9.500, "alt_ft": 2000 }
+    ],
+    "arrival_routes": {
+      "10": ["November", "Sierra"],
+      "28": ["Whiskey", "Sierra"]
+    }
+  },
+
+  "EDFE": {
+    "name": "Egelsbach",
+    "pattern_direction": {
+      "08": "left",
+      "26": "right"
+    },
+    "vrps": [
+      { "name": "November", "lat": 49.970, "lon": 8.630, "alt_ft": 1300 },
+      { "name": "Sierra",   "lat": 49.955, "lon": 8.620, "alt_ft": 1300 },
+      { "name": "Echo",     "lat": 49.965, "lon": 8.660, "alt_ft": 1300 }
+    ],
+    "arrival_routes": {
+      "08": ["November", "Echo"],
+      "26": ["Sierra", "Echo"]
+    }
+  },
+
+  "EDKB": {
+    "name": "Bonn-Hangelar",
+    "pattern_direction": {
+      "11": "left",
+      "29": "right"
+    },
+    "vrps": [
+      { "name": "November", "lat": 50.780, "lon": 7.170, "alt_ft": 1500 },
+      { "name": "Sierra",   "lat": 50.760, "lon": 7.155, "alt_ft": 1500 },
+      { "name": "Mike",     "lat": 50.755, "lon": 7.200, "alt_ft": 1500 }
+    ],
+    "arrival_routes": {
+      "11": ["November", "Mike"],
+      "29": ["Sierra", "Mike"]
+    }
+  },
+
+  "EDMA": {
+    "name": "Augsburg",
+    "pattern_direction": "left",
+    "vrps": [
+      { "name": "Alpha",   "lat": 48.435, "lon": 10.945, "alt_ft": 2500 },
+      { "name": "Bravo",   "lat": 48.415, "lon": 10.865, "alt_ft": 2500 },
+      { "name": "Charlie", "lat": 48.445, "lon": 10.900, "alt_ft": 2500 }
+    ],
+    "arrival_routes": {
+      "07": ["Bravo", "Alpha"],
+      "25": ["Charlie", "Alpha"]
+    }
+  },
+
+  "EDTF": {
+    "name": "Freiburg",
+    "pattern_direction": "left",
+    "vrps": [
+      { "name": "November", "lat": 48.030, "lon": 7.820, "alt_ft": 1500 },
+      { "name": "Sierra",   "lat": 48.000, "lon": 7.830, "alt_ft": 1500 },
+      { "name": "Echo",     "lat": 48.020, "lon": 7.870, "alt_ft": 1500 }
+    ],
+    "arrival_routes": {
+      "16": ["November", "Sierra"],
+      "34": ["Echo", "November"]
+    }
+  },
+
+  "EDNY": {
+    "name": "Friedrichshafen",
+    "_source": "Navigraph Charts (AIP Germany VFR), 2026-06",
+    "pattern_direction": {
+      "06": "left",
+      "24": "left"
+    },
+    "vrps": [
+      { "name": "November", "lat": 47.71833, "lon": 9.42333, "alt_ft": 3000 },
+      { "name": "Oscar",    "lat": 47.74667, "lon": 9.56000, "alt_ft": 3000 },
+      { "name": "Sierra",   "lat": 47.60833, "lon": 9.58667, "alt_ft": 3000 },
+      { "name": "Whiskey",  "lat": 47.67833, "lon": 9.38667, "alt_ft": 3000 }
+    ],
+    "arrival_routes": {
+      "06": ["Whiskey", "November"],
+      "24": ["Sierra", "Oscar"]
+    }
+  },
+
+  "_de_class_c_stub_comment": "EDDM/EDDF/EDDH/EDLN/EDTL/EDDS/EDLW/EDDV/EDDB carry pattern_direction only — VRPs intentionally empty until verified against DFS AIP VFR (aip.dfs.de/BasicVFR). M9 sources (OpenAIP, SkyVector) were behind SPA/paywall during research. EDDF + EDDB additionally have no canonical public VFR reporting points (Class C, restricted VFR access). Pattern conventions: deutscher VFR-Standard ist left; parallel runways use L=left / R=right per common DE practice.",
+
+  "EDDM": {
+    "name": "Muenchen",
+    "_source": "Pattern-direction per DE L/R parallel-runway convention; VRPs pending AIP verification",
+    "pattern_direction": {
+      "08L": "left", "08R": "right",
+      "26L": "left", "26R": "right",
+      "_default": "left"
+    },
+    "vrps": [],
+    "arrival_routes": {}
+  },
+
+  "EDDF": {
+    "name": "Frankfurt",
+    "_source": "Class C, no public canonical VRPs for EDDF CTR (VFR via prior ATC coordination only)",
+    "pattern_direction": {
+      "07L": "left", "07C": "left", "07R": "right",
+      "25L": "left", "25C": "left", "25R": "right",
+      "18": "left",
+      "_default": "left"
+    },
+    "vrps": [],
+    "arrival_routes": {}
+  },
+
+  "EDDH": {
+    "name": "Hamburg",
+    "_source": "Navigraph Charts (AIP Germany VFR), 2026-06. pattern_direction inherited default left — verify against AD 2.22 when convenient.",
+    "pattern_direction": {
+      "_default": "left"
+    },
+    "vrps": [
+      { "name": "November One", "lat": 53.80667, "lon": 10.03167, "alt_ft": 2500 },
+      { "name": "November Two", "lat": 53.68333, "lon": 10.00167, "alt_ft": 2500 },
+      { "name": "Papa One",     "lat": 53.67167, "lon":  9.80667, "alt_ft": 2500 },
+      { "name": "Papa Two",     "lat": 53.61500, "lon":  9.91167, "alt_ft": 2500 },
+      { "name": "Hotel",        "lat": 53.57167, "lon":  9.67833, "alt_ft": 2500 },
+      { "name": "Delta",        "lat": 53.56000, "lon": 10.16000, "alt_ft": 2500 },
+      { "name": "Tango Two",    "lat": 53.52333, "lon": 10.00000, "alt_ft": 2500 },
+      { "name": "Tango One",    "lat": 53.45333, "lon":  9.99333, "alt_ft": 2500 }
+    ],
+    "arrival_routes": {}
+  },
+
+  "EDLN": {
+    "name": "Moenchengladbach",
+    "_source": "Pattern-direction default left (DE VFR norm); VRPs pending AIP verification",
+    "pattern_direction": {
+      "_default": "left"
+    },
+    "vrps": [],
+    "arrival_routes": {}
+  },
+
+  "EDTL": {
+    "name": "Lahr",
+    "_source": "Pattern-direction default left (DE VFR norm); VRPs pending AIP verification",
+    "pattern_direction": {
+      "_default": "left"
+    },
+    "vrps": [],
+    "arrival_routes": {}
+  },
+
+  "EDDS": {
+    "name": "Stuttgart",
+    "_source": "Pattern-direction default left (DE VFR norm); VRPs pending AIP verification",
+    "pattern_direction": {
+      "_default": "left"
+    },
+    "vrps": [],
+    "arrival_routes": {}
+  },
+
+  "EDLW": {
+    "name": "Dortmund",
+    "_source": "Pattern-direction default left (DE VFR norm); VRPs pending AIP verification",
+    "pattern_direction": {
+      "_default": "left"
+    },
+    "vrps": [],
+    "arrival_routes": {}
+  },
+
+  "EDDV": {
+    "name": "Hannover",
+    "_source": "Pattern-direction per DE L/R parallel-runway convention; VRPs pending AIP verification",
+    "pattern_direction": {
+      "09L": "left", "09R": "right",
+      "27L": "left", "27R": "right",
+      "_default": "left"
+    },
+    "vrps": [],
+    "arrival_routes": {}
+  },
+
+  "EDDB": {
+    "name": "Berlin Brandenburg",
+    "_source": "Class C, restricted VFR access; no canonical public VRP set; pattern per DE L/R parallel-runway convention",
+    "pattern_direction": {
+      "07L": "left", "07R": "right",
+      "25L": "left", "25R": "right",
+      "_default": "left"
+    },
+    "vrps": [],
+    "arrival_routes": {}
+  }
+}

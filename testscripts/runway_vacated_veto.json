@@ -1,0 +1,28 @@
+{
+  "_comment": "EDNY DE regression: the RUNWAY_VACATED-impossibility veto. Whisper sometimes drops 'start' from 'Piste 06 startfrei' (the departure readback), leaving a bare 'Piste 06 frei' that matches the RUNWAY_VACATED rule. Without the veto, the tower replied 'lesen Sie die Startfreigabe zurueck' and the deadlock looped over and over. The DE adjustment {RUNWAY_VACATED, was_airborne=false, readback_pending=true} -> READBACK rescues the malformed readback. Driven on the ground, so was_airborne stays false; readback_pending becomes true after the Tower's 'Start frei' clearance.",
+  "name": "EDNY DE RUNWAY_VACATED impossibility veto (Bullet F.1)",
+  "region": "DE",
+  "context": {
+    "airport": "EDNY",
+    "airport_name": "Friedrichshafen",
+    "towered": true,
+    "tower_only": false,
+    "on_ground": true,
+    "com": 120.075,
+    "freq_type": "TOWER",
+    "runway": "06",
+    "callsign": "Hotel Bravo Delta Sierra Victor"
+  },
+  "say": [
+    { "note": "Setup: prime TOWER_CONTACT so the next 'ready for departure' lands on the Tower template directly.",
+      "set_state": "TOWER_CONTACT" },
+    { "note": "1 - Tower: ready for departure -> Start frei (readback_pending=true after this). Phrasing mirrors the unit-test corpus that confirms the rule matches.",
+      "text": "Friedrichshafen Turm Hotel Bravo Delta Sierra Victor am Rollhalt Piste 06 abflugbereit",
+      "expect": "Start frei",
+      "expect_state": "Pattern/DEPARTURE_CLEARED" },
+    { "note": "2 - Pilot: Whisper-mangled readback 'Piste 06 frei' (start dropped). Without the veto this matches RUNWAY_VACATED and triggers the 'lesen Sie die Startfreigabe zurueck' loop. With was_airborne=false + readback_pending=true the adjustment demotes to READBACK -> silent ack in Pattern/DEPARTURE_CLEARED.",
+      "text": "Piste 06 frei Hotel Bravo Delta Sierra Victor",
+      "expect": "",
+      "expect_state": "Pattern/DEPARTURE_CLEARED" }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "_comment": "Phase-2 traffic-advisor integration fixture. User is south of LSZH heading 360 (north). One target sits ~5 NM north of the user, head-on (track 180), at +500 ft. The user is in established TOWER contact in the scenario, so the advisor's gate passes; the target sits inside the 2-8 NM forward arc with positive closure, so an advisory should fire. Target B is 6 o'clock and far behind — must NOT trigger.",
+  "user": {
+    "lat": 47.4583,
+    "lon": 8.5483,
+    "alt_msl_ft": 1500.0,
+    "heading_true": 360.0,
+    "nearest_airport_id": "LSZH",
+    "airport_elevation_ft": 1416.0
+  },
+  "targets": [
+    {
+      "callsign": "HBXYZ",
+      "modeS_id": 4884480,
+      "lat": 47.5417,
+      "lon": 8.5483,
+      "alt_msl_ft": 2000.0,
+      "track_deg": 180.0,
+      "groundspeed_kts": 110.0,
+      "vertical_speed_fpm": 0.0,
+      "wake": "Light"
+    },
+    {
+      "_comment": "6 o'clock — must be filtered out by the forward-arc gate.",
+      "callsign": "AFT77",
+      "modeS_id": 4884481,
+      "lat": 47.3083,
+      "lon": 8.5483,
+      "alt_msl_ft": 2000.0,
+      "track_deg": 360.0,
+      "groundspeed_kts": 80.0,
+      "vertical_speed_fpm": 0.0,
+      "wake": "Light"
+    }
+  ]
+}

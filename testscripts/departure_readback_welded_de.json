@@ -1,0 +1,28 @@
+{
+  "_comment": "EDNY DE regression (user flight 2026-06-16, OpenAI mode): after the Tower's departure clearance the pilot reads back 'Piste 06 startfrei ...'. Whisper welds 'Start frei' into 'startfrei', so the keyword parser returns UNKNOWN/0.00 and the old pipeline looped on 'Uebermittlung gestoert, wiederholen Sie' / 'Standardphraseologie verwenden'. The deterministic readback recognition matches the utterance char-robustly against the stored clearance components (runway 06 + callsign) and accepts it as a silent READBACK. No keyword list, no LM, backend-agnostic. Driven on the ground so was_airborne stays false; readback_pending becomes true after 'Start frei'.",
+  "name": "EDNY DE welded 'startfrei' departure readback recognition",
+  "region": "DE",
+  "context": {
+    "airport": "EDNY",
+    "airport_name": "Friedrichshafen",
+    "towered": true,
+    "tower_only": false,
+    "on_ground": true,
+    "com": 120.075,
+    "freq_type": "TOWER",
+    "runway": "06",
+    "callsign": "Hotel Bravo Whiskey Romeo Oscar"
+  },
+  "say": [
+    { "note": "Setup: prime TOWER_CONTACT so 'ready for departure' lands on the Tower template directly.",
+      "set_state": "TOWER_CONTACT" },
+    { "note": "1 - Tower: ready for departure -> Start frei. readback_pending becomes true; the stored clearance components are {callsign, runway 06}.",
+      "text": "Friedrichshafen Turm Hotel Bravo Whiskey Romeo Oscar am Rollhalt Piste 06 abflugbereit",
+      "expect": "Start frei",
+      "expect_state": "Pattern/DEPARTURE_CLEARED" },
+    { "note": "2 - Pilot reads back the welded 'Piste 06 startfrei ...'. Rule parser returns UNKNOWN; readback recognition covers callsign + runway -> silent READBACK. Must NOT loop the say-again reminder.",
+      "text": "Piste 06 startfrei Hotel Bravo Whiskey Romeo Oscar",
+      "expect_state": "Pattern/DEPARTURE_CLEARED",
+      "expect_not": "wiederholen" }
+  ]
+}

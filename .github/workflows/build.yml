@@ -1,0 +1,487 @@
+name: Build
+
+on:
+  # Manual trigger — `gh workflow run build.yml --ref <branch>` (make ci-remote).
+  # Runs the fast macOS sanity build + the Windows slice against the chosen ref
+  # WITHOUT cutting a release (the universal build + GitHub release stay tag-only).
+  # NOTE: CI always builds the PUSHED state of the ref, never your local worktree.
+  workflow_dispatch:
+  push:
+    branches:
+      # main: a push (incl. every PR merge) runs ONLY the FAST cloud-only sanity
+      # gate (build-macos-fast, ~4 min) as the merge's green check. Local
+      # inference is now PREBUILT (xp_wellys_libs bundle, downloaded by `make
+      # setup`), so there is no heavy arm64 compile to warm — the old
+      # `warm-deps` cache-warmer is gone. The full universal *release* build
+      # (build-macos-universal, ~5-8 min, prebuilt) does NOT run here — it is
+      # TAG-ONLY. (No `pull_request` trigger: a PR merge is a push to main, so
+      # the push event above already covers it — avoids an empty extra run.)
+      - main
+      # Feature-branch scaffolding for the Windows port: build the macOS fast
+      # sanity gate + the Windows slice on every push here so the Windows .xpl
+      # can be bring-up-tested before a release tag.
+      - windows_support
+    tags:
+      - 'v*'
+
+# Supersede an in-progress run when a newer push lands on the SAME ref, so
+# stale branch/main builds don't pile up (they were previously un-cancelable
+# and ran to the 6h default). Release TAGS are exempt (cancel-in-progress is
+# false for refs/tags/v*) so a running release publish is never killed
+# mid-way. main and each tag are distinct groups, so a main push never
+# cancels a concurrent tag build.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+
+jobs:
+  # ── Test gate (runs FIRST; the expensive builds need it) ────────────────────
+  # The Catch2 unit + scenario suite on the default arm64 tree, prebuilt libs.
+  # The costly builds — build-macos-universal (~8 min) and build-windows (~15 min
+  # with the bundle) — declare `needs: test`, so a red suite ABORTS them before
+  # any build minutes are spent. Runs on the same triggers those builds do
+  # (release tags, feature branches, workflow_dispatch); plain main merges are
+  # gated by build-macos-fast instead (build + test in one ~4 min job).
+  test:
+    runs-on: macos-15 # pinned — matches the maintainer's test system
+    timeout-minutes: 15
+    if: (github.event_name == 'push' && github.ref != 'refs/heads/main') || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup dependencies
+        # Prebuilt xp_wellys_libs bundle (SHA256-verified) + SDK / ImGui / json /
+        # Catch2 vendor deps. No submodules.
+        run: make setup
+
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2.23
+        with:
+          key: ${{ runner.os }}-arm64-test
+          max-size: 500M
+          variant: ccache
+
+      - name: Run tests
+        # Builds the default arm64 tree with BUILD_TESTS=ON and runs the Catch2
+        # + scenario suite (--order rand --rng-seed 42). The regression gate.
+        run: |
+          make test
+          ccache --show-stats
+
+  # ── Fast macOS sanity gate (all non-tag pushes, incl. main merges) ──────────
+  # Cloud-only arm64 build + tests: no submodules, no whisper/llama/Piper/
+  # espeak-ng/onnxruntime, so it finishes in ~4 min instead of ~50. Crucially
+  # it has NO `needs: build-windows`, so it runs IN PARALLEL with everything
+  # else. This is the merge's fast green check: it runs on every non-tag push,
+  # INCLUDING pushes to main (i.e. PR merges) and windows_support, plus
+  # workflow_dispatch. Release tags take build-macos-universal instead.
+  build-macos-fast:
+    # Pinned to macos-15 (Sequoia, Apple Silicon) — the maintainer's test
+    # system. macos-latest migrated to macOS 26 on 2026-06-15; pinning keeps
+    # CI on the same OS generation + arch the native arm64 Universal build
+    # (onnxruntime/espeak-ng/whisper/llama, deployment target 13.3) is
+    # verified against, so a silent runner bump cannot break a release.
+    runs-on: macos-15
+    timeout-minutes: 20
+    # Every non-tag push (main, windows_support) + workflow_dispatch. On main
+    # this is the merge's ~4 min green check. Release tags take
+    # build-macos-universal.
+    # SKIPPED for the `make release` version-bump commit ("release X.Y.Z"): that
+    # commit is pushed to main seconds before its tag, and the tag run's
+    # build-macos-universal already tests the identical tree via `make test`, so
+    # re-running this on the release commit is pure redundancy.
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && !startsWith(github.ref, 'refs/tags/v') && !startsWith(github.event.head_commit.message, 'release ')
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup dependencies (cloud-only — no submodules)
+        run: make setup-cloud
+
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2.23
+        with:
+          key: ${{ runner.os }}-${{ github.job }}-debug
+          max-size: 1500M
+          variant: ccache
+
+      - name: Fast sanity build + tests (cloud-only)
+        # One cloud-only arm64 configure builds the tests, REPL and plugin and
+        # runs the unit + scenario suites.
+        run: |
+          make ci-fast
+          ccache --show-stats
+
+  # ── Full universal macOS RELEASE build (tags only) ──────────────────────────
+  # Builds the universal .xpl + dylibs + espeak-ng-data and uploads them as an
+  # artifact for the final `release` job. Local inference comes PREBUILT from
+  # the xp_wellys_libs bundle (downloaded + SHA256-verified by `make setup`), so
+  # there are no submodules, no whisper/llama/ggml/Piper/espeak compile, and no
+  # espeak/onnx cache to manage — a deterministic ~5-8 min build, cold or warm.
+  # Runs on release TAGS and on manual `workflow_dispatch` — the latter is a
+  # pre-release DRY RUN: it builds + uploads the artifact so you can confirm the
+  # full universal build works before cutting a tag, but the `release` job stays
+  # tag-only so nothing is published. NO `needs: build-windows` — runs IN
+  # PARALLEL with the Windows slice; the artifacts are folded together in
+  # `release` (tags only).
+  build-macos-universal:
+    needs: test # abort the release build if the suite is red
+    runs-on: macos-15 # pinned — see build-macos-fast (matches test system)
+    timeout-minutes: 25 # only the plugin's own ~40 TUs compile; libs are prebuilt
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup dependencies
+        # Downloads + SHA256-verifies the prebuilt xp_wellys_libs bundle
+        # (version pinned in PREBUILT_LIBS_VERSION) plus the SDK / ImGui / json /
+        # Catch2 vendor deps. No submodules.
+        run: make setup
+
+      - name: Set up ccache
+        # Caches only the plugin's own translation units now (the heavy libs are
+        # prebuilt), so a small static key is plenty.
+        uses: hendrikmuhs/ccache-action@v1.2.23
+        with:
+          key: ${{ runner.os }}-arm64-plugin
+          max-size: 500M
+          variant: ccache
+
+      - name: Build (universal)
+        # `make build` always produces a universal .xpl: two CMake configures
+        # lipo'd into one build/xp_wellys_vfr_atc.xpl that carries an arm64 slice
+        # (whisper + llama + Piper + OpenAI) and an x86_64 slice (OpenAI-only).
+        # Tag pushes flip -DRELEASE=ON so VERSION.txt gets baked into both
+        # slices. libpiper.dylib + libonnxruntime.* are staged into build/
+        # from the arm64 slice so the existing release-bundle step finds
+        # them unchanged.
+        run: |
+          RELEASE_FLAG=""
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then RELEASE_FLAG="-DRELEASE=ON"; fi
+          make build RELEASE_FLAG="$RELEASE_FLAG"
+          ccache --show-stats
+
+      - name: Upload macOS artifact
+        # Raw universal .xpl (dev rpaths intact, unsigned) + the arm64 dylibs
+        # + espeak-ng-data. The final `release` job downloads this, does the
+        # rpath fixup + codesign, and folds it together with the Windows slice
+        # into the drop-in ZIP. upload-artifact roots the archive at the
+        # common ancestor (build/), so the paths land as xp_wellys_vfr_atc.xpl,
+        # libpiper.dylib, ... , espeak_ng-install/share/espeak-ng-data/.
+        uses: actions/upload-artifact@v4
+        with:
+          name: xp_wellys_vfr_atc-mac
+          path: |
+            build/xp_wellys_vfr_atc.xpl
+            build/libpiper.dylib
+            build/libonnxruntime.1.22.0.dylib
+            build/libonnxruntime.dylib
+            build/espeak_ng-install/share/espeak-ng-data
+          if-no-files-found: error
+
+  # ── Windows slice (all three backends: local + OpenAI + Mistral) ────────────
+  # GitHub Actions is the Windows compiler — no local MSVC toolchain needed.
+  # The slice runs the FULL local stack alongside the cloud backends:
+  # XPWELLYS_USE_LOCAL_INFERENCE=ON + XPWELLYS_USE_LOCAL_TTS=ON against the
+  # prebuilt xp_wellys_libs win-x64-full bundle (>= v0.4.0) — whisper + llama on
+  # ggml/Vulkan, Piper TTS on CPU, OpenAI/Mistral over static libcurl from
+  # vcpkg. (It was cloud-STT/LM + local-TTS-only up to issue #74; the local
+  # stack landed with the Vulkan work.)
+  # The per-arch .xpl MUST carry the plugin name, not win.xpl (X-Plane 12 on
+  # Windows silently skips a generically named file). The artifact carries
+  # piper.dll + onnxruntime.dll (+ providers_shared) next to the .xpl and
+  # espeak-ng-data under Resources/ — no longer DLL-free, the deliberate
+  # tradeoff for the accent-free German voice. whisper/llama/ggml are STATIC
+  # archives inside the .xpl and Vulkan needs no redist, so those three DLLs
+  # are the complete runtime set the bundle contributes. Note they are built
+  # against the DYNAMIC CRT: the target machine needs the MSVC 2015-2022
+  # redistributable (MSVCP140/VCRUNTIME140) — see docs/README.md.
+  build-windows:
+    needs: test # abort the ~15-30 min Windows build if the suite is red
+    runs-on: windows-latest
+    timeout-minutes: 45
+    # Windows slice is release-bundle work: it runs on release TAGS (the
+    # `release` job needs it), on windows_support pushes (feature-branch
+    # bring-up) and on workflow_dispatch — but NOT on plain main merges, so a
+    # normal PR merge never pays the ~30 min Windows build.
+    if: (github.event_name == 'push' && github.ref != 'refs/heads/main') || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v5
+        # No submodules: cloud-only build pulls in none of the local
+        # inference third-party trees.
+
+      - name: Set up MSVC developer environment
+        # Puts cl.exe + the Windows SDK on PATH so CMake's Ninja generator
+        # finds the toolchain directly, sidestepping the flaky Visual
+        # Studio generator instance lookup on the hosted image.
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Install libcurl (vcpkg, static, Schannel TLS)
+        shell: pwsh
+        run: vcpkg install curl:x64-windows-static
+
+      - name: Setup dependencies (SDK headers + Win libs, ImGui, json)
+        # PowerShell, not Git Bash: the bash on windows-latest ships GNU
+        # tar, which cannot extract .zip. Expand-Archive handles both zips.
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          New-Item -ItemType Directory -Force -Path sdk/XPLM, sdk/XPWidgets, sdk/Libraries/Win, vendor/imgui/backends | Out-Null
+
+          Write-Host "Downloading X-Plane SDK..."
+          curl.exe -fsSL "https://developer.x-plane.com/wp-content/plugins/code-sample-generation/sdk_zip_files/XPSDK430.zip" -o sdk.zip
+          Expand-Archive -Path sdk.zip -DestinationPath sdk_extracted -Force
+          Get-ChildItem sdk_extracted -Recurse -Filter *.h   | Where-Object { $_.FullName -match '\\CHeaders\\XPLM\\' }   | Copy-Item -Destination sdk/XPLM/
+          Get-ChildItem sdk_extracted -Recurse -Filter *.h   | Where-Object { $_.FullName -match '\\CHeaders\\Widgets\\' } | Copy-Item -Destination sdk/XPWidgets/
+          Get-ChildItem sdk_extracted -Recurse -Filter *.lib | Where-Object { $_.FullName -match '\\Libraries\\Win\\' }    | Copy-Item -Destination sdk/Libraries/Win/
+
+          Write-Host "Downloading Dear ImGui v1.92.8..."
+          curl.exe -fsSL "https://github.com/ocornut/imgui/archive/refs/tags/v1.92.8.zip" -o imgui.zip
+          Expand-Archive -Path imgui.zip -DestinationPath imgui_extracted -Force
+          $SRC = "imgui_extracted/imgui-1.92.8"
+          Copy-Item "$SRC/imgui.h","$SRC/imgui.cpp" vendor/imgui/
+          Copy-Item "$SRC/imgui_draw.cpp","$SRC/imgui_tables.cpp","$SRC/imgui_widgets.cpp" vendor/imgui/
+          Copy-Item "$SRC/imgui_internal.h","$SRC/imconfig.h" vendor/imgui/
+          Copy-Item "$SRC/imstb_textedit.h","$SRC/imstb_rectpack.h","$SRC/imstb_truetype.h" vendor/imgui/
+          Copy-Item "$SRC/backends/imgui_impl_opengl2.h","$SRC/backends/imgui_impl_opengl2.cpp" vendor/imgui/backends/
+
+          Write-Host "Downloading nlohmann/json v3.12.0..."
+          curl.exe -fsSL "https://github.com/nlohmann/json/releases/download/v3.12.0/json.hpp" -o vendor/json.hpp
+
+          Write-Host "Downloading miniaudio v0.11.25..."
+          curl.exe -fsSL "https://raw.githubusercontent.com/mackron/miniaudio/0.11.25/miniaudio.h" -o vendor/miniaudio.h
+
+      - name: Download prebuilt xp_wellys_libs bundle (win-x64, full)
+        # The Windows slice runs the FULL local stack: whisper + llama (ggml with
+        # the Vulkan GPU backend) + Piper. Version pinned by
+        # PREBUILT_LIBS_VERSION, published by the xp_wellys_libs repo.
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ver = (Get-Content PREBUILT_LIBS_VERSION).Trim()
+          New-Item -ItemType Directory -Force -Path vendor/prebuilt/xp_wellys_libs | Out-Null
+          $url = "https://github.com/rwellinger/xp_wellys_libs/releases/download/v$ver/xp_wellys_libs-win-x64-$ver.tar.gz"
+          Write-Host "Downloading $url"
+          curl.exe -fsSL $url -o bundle.tar.gz
+          tar -xzf bundle.tar.gz -C vendor/prebuilt/xp_wellys_libs
+          Remove-Item bundle.tar.gz
+
+          # Verify against the bundle's own manifest, the same way the macOS path
+          # does (Makefile). These are static archives linked straight into the
+          # .xpl, so extracting them unverified is the one place in this build
+          # where a corrupted or swapped download would go unnoticed.
+          $root = "vendor/prebuilt/xp_wellys_libs"
+          $bad = 0
+          foreach ($line in Get-Content "$root/manifest.txt") {
+            if ($line -match '^([0-9a-f]{64})  (.+)$') {
+              $want = $Matches[1]; $file = $Matches[2]
+              $path = Join-Path "$root/lib" $file
+              if (-not (Test-Path $path)) { Write-Host "MISSING $file"; $bad++; continue }
+              $got = (Get-FileHash -Algorithm SHA256 $path).Hash.ToLower()
+              if ($got -ne $want) { Write-Host "SHA256 MISMATCH $file"; $bad++ }
+            }
+          }
+          if ($bad -gt 0) { throw "$bad bundle file(s) failed SHA256 verification" }
+          Write-Host "Bundle SHA256 verification OK"
+          Write-Host "--- bundle lib/ ---"
+          Get-ChildItem vendor/prebuilt/xp_wellys_libs/lib | Format-Table Name,Length
+
+      - name: Configure (CMake, Ninja + MSVC, full local stack)
+        shell: pwsh
+        # CMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded is not just about vcpkg's
+        # static curl: the bundle's archives are built /MT and xp_wellys_libs.cmake
+        # fails the configure outright if we are not. XPWELLYS_USE_LOCAL_TTS is
+        # forced ON by USE_LOCAL_INFERENCE, but stays explicit for readability.
+        run: |
+          cmake -B build-win -G Ninja `
+            -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" `
+            -DVCPKG_TARGET_TRIPLET=x64-windows-static `
+            -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded `
+            -DXPWELLYS_USE_LOCAL_INFERENCE=ON `
+            -DXPWELLYS_USE_LOCAL_TTS=ON `
+            -DBUILD_TESTS=OFF `
+            -Wno-dev
+
+      - name: Build (Release)
+        shell: pwsh
+        run: cmake --build build-win --target xp_wellys_vfr_atc --parallel
+
+      - name: Stage drop-in bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          STAGE=dist/xp_wellys_vfr_atc
+          mkdir -p "$STAGE/win_x64" "$STAGE/Resources/espeak-ng-data" "$STAGE/data/atc_profiles/de" "$STAGE/data/atc_profiles/en" "$STAGE/data/vrps" "$STAGE/data/airspaces"
+          cp build-win/xp_wellys_vfr_atc.xpl "$STAGE/win_x64/"
+          # The Piper runtime DLLs sit next to the .xpl (the Windows loader
+          # resolves them there); espeak-ng-data goes under Resources/ where
+          # model_paths::espeakng_data_dir() looks for it. The models themselves
+          # (whisper, llama, the de_DE-thorsten voice) are downloaded in-sim via
+          # the Models tab, not shipped. whisper/llama/ggml are STATIC archives
+          # inside the .xpl and Vulkan needs no redist, so this glob is still
+          # just Piper + onnxruntime — the local stack adds no DLL of its own.
+          cp build-win/*.dll "$STAGE/win_x64/"
+          cp -r build-win/espeak-ng-data/. "$STAGE/Resources/espeak-ng-data/"
+          cp data/atc_prompt_templates.json "$STAGE/data/"
+          cp data/models_catalog.json       "$STAGE/data/"
+          cp data/settings.json             "$STAGE/data/"
+          # Both profile bundles in full (glob picks up conformance.json).
+          # The active one is chosen at runtime via atc_language().
+          cp data/atc_profiles/de/*.json    "$STAGE/data/atc_profiles/de/"
+          cp data/atc_profiles/en/*.json    "$STAGE/data/atc_profiles/en/"
+          cp data/vrps/airport_vrps.json    "$STAGE/data/vrps/"
+          cp data/airspaces/de_airspace.txt "$STAGE/data/airspaces/"
+          cp -r docs "$STAGE/docs"
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: xp_wellys_vfr_atc-win
+          path: dist/xp_wellys_vfr_atc
+          if-no-files-found: error
+
+  # ── Release: package both slices into one drop-in ZIP + publish ─────────────
+  # The final end-job (tags only). Waits for BOTH platform builds, downloads
+  # their artifacts, folds them into a single drop-in tree, codesigns the mac
+  # slice, generates the SkunkCrafts control files, creates the GitHub release
+  # and force-pushes the update tree to the `release` branch. Runs on macOS
+  # because the mac-slice rpath fixup + codesign need otool/install_name_tool/
+  # codesign. build-macos-universal + build-windows run in parallel; only this
+  # step serializes on both — and only on a release tag.
+  release:
+    runs-on: macos-15 # pinned — see build-macos-fast (matches test system)
+    timeout-minutes: 20
+    needs: [build-macos-universal, build-windows]
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        # Repo only — for data/*.json, docs/ and tools/skunkcrafts/generate.py.
+        # The compiled binaries arrive via the two artifacts below.
+
+      - name: Download macOS slice
+        uses: actions/download-artifact@v4
+        with:
+          name: xp_wellys_vfr_atc-mac
+          path: mac-dist
+
+      - name: Download Windows slice
+        uses: actions/download-artifact@v4
+        with:
+          name: xp_wellys_vfr_atc-win
+          path: win-dist
+
+      - name: Stage release bundle
+        run: |
+          set -euo pipefail
+          STAGE=dist/xp_wellys_vfr_atc
+          mkdir -p "$STAGE/mac_x64"
+          mkdir -p "$STAGE/win_x64"
+          mkdir -p "$STAGE/Resources/espeak-ng-data"
+          mkdir -p "$STAGE/Resources/models"
+          mkdir -p "$STAGE/data/atc_profiles/de"
+          mkdir -p "$STAGE/data/atc_profiles/en"
+          mkdir -p "$STAGE/data/vrps"
+          mkdir -p "$STAGE/data/airspaces"
+
+          # Windows slice: the .xpl + its Piper runtime DLLs (piper.dll +
+          # onnxruntime.dll + providers_shared) next to it (issue #74). espeak-ng-data
+          # is architecture-independent and staged once under Resources/ from the
+          # mac slice below, so it is shared by both platforms.
+          cp win-dist/win_x64/xp_wellys_vfr_atc.xpl "$STAGE/win_x64/"
+          cp win-dist/win_x64/*.dll                 "$STAGE/win_x64/"
+
+          # macOS universal slice + its runtime dylibs (from the artifact).
+          cp mac-dist/xp_wellys_vfr_atc.xpl        "$STAGE/mac_x64/"
+          cp mac-dist/libpiper.dylib                 "$STAGE/mac_x64/"
+          cp mac-dist/libonnxruntime.1.22.0.dylib    "$STAGE/mac_x64/"
+          cp mac-dist/libonnxruntime.dylib           "$STAGE/mac_x64/"
+
+          for rp in $(otool -l "$STAGE/mac_x64/xp_wellys_vfr_atc.xpl" \
+                      | awk '/LC_RPATH/{flag=1; next} flag && /path/ {print $2; flag=0}'); do
+            install_name_tool -delete_rpath "$rp" "$STAGE/mac_x64/xp_wellys_vfr_atc.xpl" 2>/dev/null || true
+          done
+          install_name_tool -add_rpath "@loader_path" "$STAGE/mac_x64/xp_wellys_vfr_atc.xpl"
+
+          codesign --force --deep --sign - "$STAGE/mac_x64/libonnxruntime.1.22.0.dylib"
+          codesign --force --deep --sign - "$STAGE/mac_x64/libpiper.dylib"
+          codesign --force --deep --sign - "$STAGE/mac_x64/xp_wellys_vfr_atc.xpl"
+
+          rsync -a --delete \
+            mac-dist/espeak_ng-install/share/espeak-ng-data/ \
+            "$STAGE/Resources/espeak-ng-data/"
+
+          cp data/atc_prompt_templates.json         "$STAGE/data/"
+          cp data/models_catalog.json               "$STAGE/data/"
+          cp data/settings.json                     "$STAGE/data/"
+          # Both profile bundles in full (glob picks up conformance.json).
+          # The active one is chosen at runtime via atc_language(); a
+          # missing en/ bundle made EN mode show raw ui_strings keys.
+          cp data/atc_profiles/de/*.json                 "$STAGE/data/atc_profiles/de/"
+          cp data/atc_profiles/en/*.json                 "$STAGE/data/atc_profiles/en/"
+          cp data/vrps/airport_vrps.json                 "$STAGE/data/vrps/"
+          cp data/airspaces/de_airspace.txt              "$STAGE/data/airspaces/"
+
+          cp -r docs "$STAGE/docs"
+
+          # Generate the SkunkCrafts Updater control files into the staged
+          # tree BEFORE zipping, so the GitHub-release ZIP also carries
+          # skunkcrafts_updater.cfg — manual installers then become
+          # updater-discoverable. The in-sim-downloaded models (~2 GB) are
+          # excluded by generate.py (untracked => left untouched, never
+          # deleted); settings.json is marked once-only. Version from the
+          # tag (v1.2.3 -> 1.2.3).
+          python3 tools/skunkcrafts/generate.py \
+            --tree "$STAGE" --version "${GITHUB_REF_NAME#v}"
+
+          cd dist && zip -r xp_wellys_vfr_atc.zip xp_wellys_vfr_atc/
+
+      - name: Locate hand-written release notes
+        id: notes
+        # docs/release-notes/<tag>.md, if present, becomes the body; the
+        # auto-generated commit list is appended below it. Absent is fine and
+        # deliberately NOT an error — a hotfix tag does not need prose — but it
+        # is logged, because a typo in the filename would otherwise silently
+        # publish a release with nothing but a commit list.
+        run: |
+          f="docs/release-notes/${GITHUB_REF_NAME}.md"
+          if [ -f "$f" ]; then
+            echo "using $f"
+            echo "path=$f" >> "$GITHUB_OUTPUT"
+          else
+            echo "no $f — publishing with auto-generated notes only"
+          fi
+
+      - name: Create release with assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/xp_wellys_vfr_atc.zip
+          body_path: ${{ steps.notes.outputs.path }}
+          generate_release_notes: true
+
+      - name: Publish SkunkCrafts update tree
+        # Force-push the staged plugin tree to the `release` branch that the
+        # skunkcrafts_updater.cfg `module` URL serves via raw.githubusercontent.
+        # Single orphan commit each release => the branch never accumulates
+        # history (binaries don't bloat the repo over time). The empty
+        # Resources/models dir is dropped (git ignores empty dirs anyway and
+        # the models are not updater-managed).
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          STAGE=dist/xp_wellys_vfr_atc
+          rm -rf "$STAGE/Resources/models"
+          pushd "$STAGE"
+          git init -q
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "release ${GITHUB_REF_NAME}"
+          git branch -M release
+          git push --force \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" release
+          popd

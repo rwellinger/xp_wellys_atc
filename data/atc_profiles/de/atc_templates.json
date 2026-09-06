@@ -1,0 +1,586 @@
+{
+  "_comment": "ATC-Antworttemplates nach Flugplatztyp (towered/uncontrolled), ATC-State und Pilot-Intent. Jeder Eintrag definiert: response (Templatetext mit {variable}-Platzhaltern), next_state (State-Machine-Uebergang), requires_readback (ob der Pilot die Freigabe zurueckliest). _INVALID ist der Fallback, wenn kein passender Intent fuer den aktuellen State gefunden wird. Variablen werden zur Laufzeit von atc_state_machine::build_vars() aus XPlaneContext-Daten gefuellt. ASCII-only — ImGui-Font + XPLMDebugString rendern UTF-8-Sonderzeichen als '?'.",
+  "fallbacks": {
+    "_comment": "Controller-Fallback-Saetze fuer unverstaendliche Eingaben. Gerendert von engine.cpp::build_unclear_response() mit vorangestelltem Callsign + Komma.",
+    "say_again": "wiederholen Sie.",
+    "garbled_say_again": "Uebermittlung gestoert, wiederholen Sie.",
+    "say_again_use_standard_phraseology": "wiederholen Sie, Standardphraseologie verwenden."
+  },
+  "bzf_strict": {
+    "_comment": "BZF-Strict-Mode korrektive Tower-Responses. Aktiv nur wenn settings::bzf_strict_mode() == true UND atc_profile() == 'DE'. Tower prueft jeden READBACK gegen die Pflicht-Readback-Elemente aus dem vorigen Tower-Response (NfL Sprechfunk 2024 §25 b) Nr. 1: Betriebspiste, Hoehenmessereinstellung QNH, SSR-Code, Funkkanal, etc.). NfL-Wortlaut: unvollstaendiges Readback -> 'WIEDERHOLEN SIE WOERTLICH' (Glossar READ BACK, Pruefungsfrage 65) ohne den Wert zu nennen (Key 'read_back'); falscher Wert -> Lotse berichtigt die Unstimmigkeit aktiv (§25 b) Nr. 3) und nennt den Sollwert je Element ('negativ_lead' + '<label> <soll>' + 'read_back_tail'). Die 'label_*' liefern die gesprochene Elementbezeichnung. Gerendert via atc_templates::lookup_bzf_strict() mit {callsign}-Substitution. ASCII-only. Die 'missing_*'-Keys bedienen die aeltere build_correction_response(missing)-Overload und bleiben aus Kompatibilitaet erhalten.",
+    "read_back": "{callsign}, WIEDERHOLEN SIE WOERTLICH.",
+    "negativ_lead": "{callsign}, NEGATIV,",
+    "read_back_tail": "WIEDERHOLEN SIE WOERTLICH.",
+    "label_runway": "Piste",
+    "label_qnh": "QNH",
+    "label_frequency": "Frequenz",
+    "label_squawk": "Squawk",
+    "missing_qnh": "{callsign}, wiederholen Sie vollstaendig mit QNH.",
+    "missing_runway": "{callsign}, wiederholen Sie vollstaendig mit Pistennummer.",
+    "missing_frequency": "{callsign}, wiederholen Sie vollstaendig mit Frequenz.",
+    "missing_squawk": "{callsign}, wiederholen Sie vollstaendig mit Squawk.",
+    "missing_callsign": "{callsign}, lesen Sie immer mit vollem Rufzeichen zurueck.",
+    "missing_multi": "{callsign}, wiederholen Sie die vollstaendige Freigabe."
+  },
+  "towered": {
+    "IDLE": {
+      "INITIAL_CALL_GROUND": {
+        "response": "{callsign}, {airport} {taxi_controller}, guten Tag, {position_remark}Information {atis_letter}, Piste {runway}, QNH {qnh}.",
+        "next_state": "GROUND_CONTACT",
+        "requires_readback": false
+      },
+      "INITIAL_CALL_TOWER": {
+        "response": "{callsign}, {airport} Tower, kommen.",
+        "next_state": "TOWER_CONTACT",
+        "requires_readback": false
+      },
+      "INITIAL_CALL_INBOUND": {
+        "response": "{callsign}, {airport} Tower, einfliegen in den Gegenanflug Piste {runway}, melden Sie Mitte Gegenanflug.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": true
+      },
+      "INITIAL_CALL_INBOUND_VRP": {
+        "response": "{callsign}, {airport} Tower, frei zum Einflug in die Kontrollzone ueber {entry_vrp}, Piste {runway}, melden Sie im Gegenanflug.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": true
+      },
+      "REQUEST_TAXI": {
+        "response": "{callsign}, {airport} {taxi_controller}, guten Tag, {position_remark}Information {atis_letter}, rollen Sie zum Rollhalt Piste {runway} ueber Alpha, QNH {qnh}.",
+        "next_state": "TAXI_CLEARED",
+        "requires_readback": true
+      },
+      "REQUEST_TAXI_PARKING": {
+        "response": "{callsign}, {airport} {taxi_controller}, rollen Sie zum GAT-Vorfeld ueber Alpha.",
+        "next_state": "IDLE",
+        "requires_readback": true
+      },
+      "READBACK": {
+        "response": "",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "READY_FOR_DEPARTURE": {
+        "response": "{callsign}, {airport} Tower, Piste {runway}, Start frei, Wind {wind}, melden Sie im Gegenanflug.",
+        "next_state": "Pattern/DEPARTURE_CLEARED",
+        "requires_readback": true
+      },
+      "READY_FOR_DEPARTURE_VFR": {
+        "response": "{callsign}, {airport} Tower, Piste {runway}, Start frei, Wind {wind}, Frequenzwechsel nach Start genehmigt.",
+        "next_state": "XC/DEPARTURE_CLEARED",
+        "requires_readback": true
+      },
+      "RADIO_CHECK": {
+        "response": "{callsign}, {airport} Tower, Hoere Sie fuenf.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "RUNWAY_VACATED": {
+        "response": "{callsign}, verstanden, kontaktieren Sie Rollkontrolle auf {ground_frequency}, auf Wiederhoeren.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "RUNWAY_VACATED_TOWER_ONLY": {
+        "response": "{callsign}, verstanden, rollen Sie zum GAT-Vorfeld ueber Alpha.",
+        "next_state": "IDLE",
+        "requires_readback": true
+      },
+      "LEAVING_FREQUENCY": {
+        "response": "{callsign}, Verlassen der Frequenz genehmigt, auf Wiederhoeren.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, wiederholen Sie Ihre Anfrage.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      }
+    },
+    "GROUND_CONTACT": {
+      "REQUEST_TAXI": {
+        "response": "{callsign}, rollen Sie zum Rollhalt Piste {runway} ueber Alpha, QNH {qnh}.",
+        "next_state": "TAXI_CLEARED",
+        "requires_readback": true
+      },
+      "READBACK": {
+        "response": "",
+        "next_state": "GROUND_CONTACT",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, melden Sie sich rollbereit.",
+        "next_state": "GROUND_CONTACT",
+        "requires_readback": false
+      }
+    },
+    "TAXI_CLEARED": {
+      "READY_FOR_DEPARTURE": {
+        "response": "{callsign}, verstanden, kontaktieren Sie Tower auf {tower_frequency}.",
+        "next_state": "TOWER_CONTACT",
+        "requires_readback": false
+      },
+      "READY_FOR_DEPARTURE_VFR": {
+        "response": "{callsign}, verstanden, kontaktieren Sie Tower auf {tower_frequency}.",
+        "next_state": "TOWER_CONTACT",
+        "requires_readback": false
+      },
+      "INITIAL_CALL_TOWER": {
+        "response": "{callsign}, {airport} Tower, Piste {runway}, halten Sie kurz vor der Piste, Nummer eins.",
+        "next_state": "TOWER_CONTACT",
+        "requires_readback": false
+      },
+      "READBACK": {
+        "response": "",
+        "next_state": "TAXI_CLEARED",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, rollen Sie weiter zum Rollhalt.",
+        "next_state": "TAXI_CLEARED",
+        "requires_readback": false
+      }
+    },
+    "TOWER_CONTACT": {
+      "READY_FOR_DEPARTURE": {
+        "response": "{callsign}, Piste {runway}, Start frei, Wind {wind}, melden Sie im Gegenanflug.",
+        "next_state": "Pattern/DEPARTURE_CLEARED",
+        "requires_readback": true
+      },
+      "READY_FOR_DEPARTURE_VFR": {
+        "response": "{callsign}, Piste {runway}, Start frei, Wind {wind}, Frequenzwechsel nach Start genehmigt.",
+        "next_state": "XC/DEPARTURE_CLEARED",
+        "requires_readback": true
+      },
+      "REQUEST_TAXI": {
+        "response": "{callsign}, kontaktieren Sie Rollkontrolle zum Rollen.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "REQUEST_TAXI_TOWER_ONLY": {
+        "response": "{callsign}, rollen Sie zum Rollhalt Piste {runway} ueber Alpha, QNH {qnh}.",
+        "next_state": "TAXI_CLEARED",
+        "requires_readback": true
+      },
+      "REQUEST_LANDING": {
+        "response": "{callsign}, Nummer eins, Piste {runway}, melden Sie Endanflug.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REPORT_POSITION": {
+        "response": "{callsign}, Nummer eins, Piste {runway}, melden Sie Endanflug.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REQUEST_TOUCH_AND_GO": {
+        "response": "{callsign}, Piste {runway}, frei zum Aufsetzen und Durchstarten, Wind {wind}.",
+        "next_state": "Pattern/TOUCH_AND_GO_CLEARED",
+        "requires_readback": true
+      },
+      "READBACK": {
+        "response": "",
+        "next_state": "TOWER_CONTACT",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, wiederholen Sie Ihre Anfrage.",
+        "next_state": "TOWER_CONTACT",
+        "requires_readback": false
+      }
+    },
+    "Pattern/DEPARTURE_CLEARED": {
+      "READBACK": {
+        "response": "",
+        "next_state": "Pattern/DEPARTURE_CLEARED",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_DOWNWIND": {
+        "response": "{callsign}, Nummer eins, Piste {runway}, weiter Anflug, melden Sie Endanflug.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_BASE": {
+        "response": "{callsign}, Nummer eins, Piste {runway}, weiter Anflug.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_FINAL": {
+        "response": "{callsign}, Piste {runway}, Landung frei, Wind {wind}.",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": true
+      },
+      "REPORT_POSITION": {
+        "response": "{callsign}, verstanden, melden Sie Gegenanflug Piste {runway}.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, lesen Sie die Startfreigabe zurueck.",
+        "next_state": "Pattern/DEPARTURE_CLEARED",
+        "requires_readback": false
+      }
+    },
+    "XC/DEPARTURE_CLEARED": {
+      "READBACK": {
+        "response": "",
+        "next_state": "XC/DEPARTURE_CLEARED",
+        "requires_readback": false
+      },
+      "REQUEST_FREQUENCY": {
+        "response": "{callsign}, Frequenzwechsel genehmigt, auf Wiederhoeren.",
+        "next_state": "XC/EN_ROUTE",
+        "requires_readback": false
+      },
+      "LEAVING_FREQUENCY": {
+        "response": "{callsign}, Verlassen der Frequenz genehmigt, auf Wiederhoeren.",
+        "next_state": "XC/EN_ROUTE",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, Frequenzwechsel nach Start genehmigt.",
+        "next_state": "XC/DEPARTURE_CLEARED",
+        "requires_readback": false
+      }
+    },
+    "Pattern/PATTERN_ENTRY": {
+      "READBACK": {
+        "response": "",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_DOWNWIND": {
+        "response": "{callsign}, Nummer eins, Piste {runway}, weiter Anflug, melden Sie Endanflug.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_BASE": {
+        "response": "{callsign}, Nummer eins, Piste {runway}, weiter Anflug.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_FINAL": {
+        "response": "{callsign}, Piste {runway}, Landung frei, Wind {wind}.",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": true
+      },
+      "REQUEST_LANDING": {
+        "response": "{callsign}, Piste {runway}, Landung frei, Wind {wind}.",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": true
+      },
+      "REQUEST_TOUCH_AND_GO": {
+        "response": "{callsign}, Piste {runway}, frei zum Aufsetzen und Durchstarten, Wind {wind}.",
+        "next_state": "Pattern/TOUCH_AND_GO_CLEARED",
+        "requires_readback": true
+      },
+      "GO_AROUND": {
+        "response": "{callsign}, verstanden, fliegen Sie Pistenkurs, Steigflug auf Platzrundenhoehe, neu einfliegen in den Gegenanflug Piste {runway}.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": true
+      },
+      "_INVALID": {
+        "response": "{callsign}, melden Sie Ihre Position.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      }
+    },
+    "Pattern/TOUCH_AND_GO_CLEARED": {
+      "READBACK": {
+        "response": "",
+        "next_state": "Pattern/TOUCH_AND_GO_CLEARED",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_DOWNWIND": {
+        "response": "{callsign}, Nummer eins, Piste {runway}, weiter Anflug, melden Sie Endanflug.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_BASE": {
+        "response": "{callsign}, Nummer eins, Piste {runway}, weiter Anflug.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_FINAL": {
+        "response": "{callsign}, Piste {runway}, Landung frei, Wind {wind}.",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": true
+      },
+      "REQUEST_LANDING": {
+        "response": "{callsign}, Piste {runway}, Landung frei, Wind {wind}.",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": true
+      },
+      "REQUEST_TOUCH_AND_GO": {
+        "response": "{callsign}, Piste {runway}, frei zum Aufsetzen und Durchstarten, Wind {wind}.",
+        "next_state": "Pattern/TOUCH_AND_GO_CLEARED",
+        "requires_readback": true
+      },
+      "RUNWAY_VACATED": {
+        "response": "{callsign}, kontaktieren Sie Rollkontrolle auf {frequency}, auf Wiederhoeren.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "RUNWAY_VACATED_TOWER_ONLY": {
+        "response": "{callsign}, verstanden, rollen Sie zum GAT-Vorfeld ueber Alpha.",
+        "next_state": "IDLE",
+        "requires_readback": true
+      },
+      "REQUEST_TAXI": {
+        "response": "{callsign}, kontaktieren Sie Rollkontrolle auf {frequency} zum Rollen.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "GO_AROUND": {
+        "response": "{callsign}, verstanden, fliegen Sie Pistenkurs, neu einfliegen in den Gegenanflug Piste {runway}.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": true
+      },
+      "_INVALID": {
+        "response": "{callsign}, melden Sie Ihre Position.",
+        "next_state": "Pattern/TOUCH_AND_GO_CLEARED",
+        "requires_readback": false
+      }
+    },
+    "Pattern/LANDING_CLEARED": {
+      "RUNWAY_VACATED": {
+        "response": "{callsign}, kontaktieren Sie Rollkontrolle auf {frequency}, auf Wiederhoeren.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "RUNWAY_VACATED_TOWER_ONLY": {
+        "response": "{callsign}, verstanden, rollen Sie zum GAT-Vorfeld ueber Alpha.",
+        "next_state": "IDLE",
+        "requires_readback": true
+      },
+      "REQUEST_TAXI_PARKING": {
+        "response": "{callsign}, Piste verlassen, rollen Sie zum GAT-Vorfeld ueber Alpha, auf Wiederhoeren.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "GO_AROUND": {
+        "response": "{callsign}, verstanden, fliegen Sie Pistenkurs, Steigflug auf Platzrundenhoehe, neu einfliegen in den Gegenanflug Piste {runway}.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": true
+      },
+      "READBACK": {
+        "response": "",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": false
+      },
+      "number_to_land_follow": {
+        "_comment": "Phase-4-Sequenzierung Overlay. Ersetzt die schlichte Landefreigabe, wenn der Pilot nicht Nummer eins ist. Variablen werden durch landing_sequence::compute_landing_sequence() gesetzt.",
+        "response": "{callsign}, Nummer {seq_number}, folgen Sie der {seq_type} im {seq_position}, Landung frei Piste {runway}.",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": true
+      },
+      "continue_approach_traffic_runway": {
+        "_comment": "Phase-4-Sequenzierung Overlay. Ersetzt die Landefreigabe, wenn ein stehendes/rollendes Ziel auf der aktiven Pistenmittellinie steht.",
+        "response": "{callsign}, weiter Anflug, Verkehr auf der Piste.",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, Landung frei Piste {runway}, bestaetigen Sie.",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": false
+      }
+    },
+    "XC/EN_ROUTE": {
+      "_INVALID": {
+        "response": "",
+        "next_state": "XC/EN_ROUTE",
+        "requires_readback": false
+      }
+    },
+    "TRAFFIC_DIALOG": {
+      "_comment": "Phase-2-Traffic-Dialog. Seitenkanal parallel zum Haupt-ATCState-Flow — Eintraege hier werden ausschliesslich von traffic_dialog und atc_state_machine::render_traffic_advisory() gerendert. next_state-Werte sind ohne Funktion (traffic_dialog haelt eigenen State), nur fuer Schema-Kompatibilitaet beibehalten.",
+      "traffic_advisory": {
+        "response": "{callsign}, Verkehr, {clock} Uhr, {distance} Meilen, {direction}, {altitude_info}, {type}.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "TRAFFIC_IN_SIGHT": {
+        "response": "{callsign}, verstanden, halten Sie visuelle Staffelung.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "TRAFFIC_NEGATIVE_CONTACT": {
+        "response": "{callsign}, verstanden, Verkehr jetzt {clock} Uhr, {distance} Meilen.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "TRAFFIC_LOOKING": {
+        "response": "{callsign}, verstanden, Verkehr jetzt {clock} Uhr, {distance} Meilen.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "taxi_hold_position": {
+        "response": "{callsign}, halten Sie an, kreuzender Verkehr.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "taxi_caution": {
+        "response": "{callsign}, Vorsicht, Verkehr rollt {side} von Ihnen.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "taxi_give_way": {
+        "response": "{callsign}, geben Sie Vorrang der {type} {side} von Ihnen.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "go_around_traffic_runway": {
+        "_comment": "Phase-4 unaufgeforderter Controller-Ruf. Feuert wenn der Nutzer in Pattern/LANDING_CLEARED innerhalb 1 NM der Schwelle ist und auf der aktiven Piste ein Ziel steht. Reine Render-Aktion: kein ATCState-Wechsel, kein traffic_dialog-Ack erwartet.",
+        "response": "{callsign}, durchstarten, Verkehr auf der Piste, Steigflug Pistenkurs 3000 Fuss.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, melden Sie Verkehr in Sicht oder kein Kontakt.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      }
+    }
+  },
+  "uncontrolled": {
+    "IDLE": {
+      "INITIAL_CALL_INBOUND": {
+        "response": "Verkehr {airport}, {callsign} im Anflug, melde Einflug in die Platzrunde.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "SELF_ANNOUNCE": {
+        "response": "Verkehr {airport}, {callsign} {position}.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "RADIO_CHECK": {
+        "response": "Keine Antwort auf der Verkehrsfrequenz. Frequenz scheint aktiv.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "Verkehr {airport}, {callsign} auf Frequenz.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      }
+    },
+    "INFO": {
+      "_comment": "AFIS/Info-Stelle (NfL 2024 Para 34 b / 35): Verkehrsinformation, keine Freigaben, kein Readback. {station} = '<Platz> Information'.",
+      "INITIAL_CALL_INBOUND": {
+        "response": "{callsign}, {station}, Piste {runway} in Betrieb, QNH {qnh}, kein gemeldeter Verkehr, melden Sie Gegenanflug.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "INITIAL_CALL_GROUND": {
+        "response": "{callsign}, {station}, Piste {runway} in Betrieb, QNH {qnh}, Rollen auf eigene Verantwortung.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "SELF_ANNOUNCE": {
+        "response": "{callsign}, {station}, verstanden.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "SELF_ANNOUNCE_DEPARTURE": {
+        "_comment": "NfL silent -- AFIS bestaetigt Abflug-Selbstansagen nicht aktiv (Para 35-Praxis). Leeres response -> stille Transition.",
+        "response": "",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_DOWNWIND": {
+        "response": "{callsign}, {station}, verstanden, Piste {runway}, kein gemeldeter Verkehr.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_BASE": {
+        "response": "{callsign}, {station}, verstanden.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_FINAL": {
+        "response": "{callsign}, {station}, Wind {wind}, Landung auf eigene Verantwortung.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "_comment_rmz": "RMZ-Phrasen NfL 2024 ANLAGE 7.4 a)/b). INFO/AFIS ist advisorisch (Para 35), keine Freigabe, kein Readback. ATC-Antwortwortlaut von NfL nicht vorgegeben -> extrapoliert im Info-Stil. RMZ_ENTER bleibt IDLE (Folgemeldungen Gegenanflug/Base/Final advisorisch im INFO-Block); RMZ_LEAVE -> EN_ROUTE (Transit-Pilot setzt Ueberlandflug fort).",
+      "RMZ_ENTER": {
+        "response": "{callsign}, {station}, Piste {runway} in Betrieb, QNH {qnh}, kein gemeldeter Verkehr, melden Sie Gegenanflug.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "RMZ_LEAVE": {
+        "response": "{callsign}, {station}, verstanden, auf Wiederhoeren.",
+        "next_state": "EN_ROUTE",
+        "requires_readback": false
+      },
+      "LEAVING_FREQUENCY": {
+        "response": "{callsign}, {station}, verstanden, auf Wiederhoeren.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "RADIO_CHECK": {
+        "response": "{callsign}, {station}, ich hoere Sie laut und deutlich.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, {station}, verstanden.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      }
+    },
+    "RADIO": {
+      "_comment": "Funkstelle mit Flugleiter (Radio): beratend wie Info, {station} = '<Platz> Radio'. Keine Freigaben, kein Readback.",
+      "INITIAL_CALL_INBOUND": {
+        "response": "{callsign}, {station}, Piste {runway} in Betrieb, QNH {qnh}, melden Sie Gegenanflug.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "INITIAL_CALL_GROUND": {
+        "response": "{callsign}, {station}, Piste {runway} in Betrieb, QNH {qnh}, Rollen auf eigene Verantwortung.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "SELF_ANNOUNCE": {
+        "response": "{callsign}, {station}, verstanden.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "SELF_ANNOUNCE_DEPARTURE": {
+        "_comment": "NfL silent -- AFIS bestaetigt Abflug-Selbstansagen nicht aktiv (Para 35-Praxis). Leeres response -> stille Transition.",
+        "response": "",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_DOWNWIND": {
+        "response": "{callsign}, {station}, verstanden, kein gemeldeter Verkehr.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_BASE": {
+        "response": "{callsign}, {station}, verstanden.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_FINAL": {
+        "response": "{callsign}, {station}, Wind {wind}, Landung auf eigene Verantwortung.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "LEAVING_FREQUENCY": {
+        "response": "{callsign}, {station}, verstanden, auf Wiederhoeren.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "RADIO_CHECK": {
+        "response": "{callsign}, {station}, ich hoere Sie laut und deutlich.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, {station}, verstanden.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      }
+    }
+  }
+}

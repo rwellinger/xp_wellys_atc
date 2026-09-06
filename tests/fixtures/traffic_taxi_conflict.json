@@ -1,0 +1,37 @@
+{
+  "_comment": "Phase-3 deterministic ground-conflict fixture around LSZH. User is taxiing north at 10 kts. Target A crosses ahead from west to east (triggers taxi_hold_position). Target B sits parked on the apron well off-axis (must NOT trigger). Loader recomputes derived geometry; phase is set by the classifier from alt_agl + dynamics.",
+  "user": {
+    "lat": 47.4583,
+    "lon": 8.5483,
+    "alt_msl_ft": 1416.0,
+    "heading_true": 360.0,
+    "nearest_airport_id": "LSZH",
+    "airport_elevation_ft": 1416.0
+  },
+  "targets": [
+    {
+      "_comment": "Target A: ~100 m ahead, ~20 m west of user, moving east at 15 kts. alt_msl matches field elevation -> alt_agl ~0 ft, gs in Taxi band -> phase=Taxi.",
+      "callsign": "TAXI1",
+      "modeS_id": 41001,
+      "lat": 47.45920,
+      "lon": 8.54803,
+      "alt_msl_ft": 1416.0,
+      "track_deg": 90.0,
+      "groundspeed_kts": 15.0,
+      "vertical_speed_fpm": 0.0,
+      "wake": "Light"
+    },
+    {
+      "_comment": "Target B: 500 m east of user, stationary on the apron. phase=OnGround (gs < 5). Out of ground-conflict range AND wrong phase, so the advisor must skip it entirely.",
+      "callsign": "PARK1",
+      "modeS_id": 41002,
+      "lat": 47.4583,
+      "lon": 8.55492,
+      "alt_msl_ft": 1416.0,
+      "track_deg": 0.0,
+      "groundspeed_kts": 0.0,
+      "vertical_speed_fpm": 0.0,
+      "wake": "Light"
+    }
+  ]
+}
