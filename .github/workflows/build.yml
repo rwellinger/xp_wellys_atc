@@ -6,23 +6,15 @@ on:
   # WITHOUT cutting a release (the universal build + GitHub release stay tag-only).
   # NOTE: CI always builds the PUSHED state of the ref, never your local worktree.
   workflow_dispatch:
-  push:
-    branches:
-      # main: a push (incl. every PR merge) runs ONLY the FAST cloud-only sanity
-      # gate (build-macos-fast, ~4 min) as the merge's green check. Local
-      # inference is now PREBUILT (xp_wellys_libs bundle, downloaded by `make
-      # setup`), so there is no heavy arm64 compile to warm — the old
-      # `warm-deps` cache-warmer is gone. The full universal *release* build
-      # (build-macos-universal, ~5-8 min, prebuilt) does NOT run here — it is
-      # TAG-ONLY. (No `pull_request` trigger: a PR merge is a push to main, so
-      # the push event above already covers it — avoids an empty extra run.)
-      - main
-      # Feature-branch scaffolding for the Windows port: build the macOS fast
-      # sanity gate + the Windows slice on every push here so the Windows .xpl
-      # can be bring-up-tested before a release tag.
-      - windows_support
-    tags:
-      - 'v*'
+  # CI DEAKTIVIERT — das Projekt wird derzeit nur lokal gebaut (`make all`).
+  # Die automatischen `push`-Trigger (main, windows_support, Release-Tags 'v*')
+  # sind bewusst entfernt, damit keine Cloud-Build-Minuten mehr anfallen.
+  # Zum Reaktivieren diesen Block durch den alten `push:`-Trigger ersetzen:
+  #   push:
+  #     branches: [main, windows_support]
+  #     tags: ['v*']
+  # Bis dahin laeuft der Workflow ausschliesslich manuell ueber
+  # `gh workflow run build.yml --ref <branch>` (workflow_dispatch oben).
 
 # Supersede an in-progress run when a newer push lands on the SAME ref, so
 # stale branch/main builds don't pile up (they were previously un-cancelable
