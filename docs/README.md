@@ -1,34 +1,27 @@
-# Welly's ATC — Technical Documentation
+# xp_wellys_vfr_atc — Technical Documentation
 
-> ← Back to the [product overview](../README.md)
+Internal development project. Technical details: backend modes, building
+from source, local inference models, configuration, architecture and
+development workflow. Scope overview in [`../README.md`](../README.md),
+binding working rules in [`../CLAUDE.md`](../CLAUDE.md).
 
-This file gathers the **technical details** of Welly's ATC: installation,
-backend modes, building from source, local inference models,
-configuration, architecture and development workflow. A concise product
-description (what the plugin covers, scope boundaries, training focus and
-disclaimer) is in the [product README](../README.md).
-
-AI-powered voice ATC plugin for VFR flights in X-Plane 12.
-
-Talk to ATC over push-to-talk through your microphone. The plugin
-transcribes your speech (locally with whisper.cpp, via the OpenAI Whisper
-API or via Mistral's Voxtral STT — your choice), interprets your intent
-through a rule-based ATC state machine — with a low-confidence fallback to
-a local Llama-3.2-3B classifier, OpenAI's `gpt-4o-mini` or Mistral Small —
-and plays the ATC responses back, synthesized locally with Piper or over
+AI-powered voice ATC for VFR flights in X-Plane 12. Push-to-talk speech is
+transcribed (whisper.cpp locally, OpenAI Whisper API or Mistral Voxtral
+STT), interpreted by a rule-based ATC state machine — with a
+low-confidence fallback to a local Llama-3.2-3B classifier, `gpt-4o-mini`
+or Mistral Small — and the ATC response is synthesized back via Piper or
 the OpenAI / Mistral TTS API.
 
 **Measured pipeline latency** (warm, M4, local inference, end-to-end
 spike): STT 321 ms · LM 634 ms · TTS 200 ms · **total ≈ 1.16 s per
-request** — well below the 3 s acceptance target. The cloud modes (OpenAI /
-Mistral) are typically slower: 2–3 s warm, dominated by API latency.
+request**. The cloud modes are typically 2–3 s warm, dominated by API
+latency.
 
 ## Table of Contents
 
 - [Features](#features)
-- [Hardware requirements](#hardware-requirements)
-- [Software requirements](#software-requirements)
-- [Quick start](#quick-start-prebuilt-release)
+- [Platforms & requirements](#platforms--requirements)
+- [Installed bundle layout](#installed-bundle-layout)
 - [Backend modes](#backend-modes)
 - [Radio-failure recovery (TTS failure protection)](#radio-failure-recovery-tts-failure-protection)
 - [Building from source](#building-from-source)
@@ -38,7 +31,6 @@ Mistral) are typically slower: 2–3 s warm, dominated by API latency.
 - [Make targets](#make-targets)
 - [Domain foundations (BZF / NfL)](#domain-foundations-bzf--nfl)
 - [Known limitations](#known-limitations)
-- [FAQ](#faq)
 - [Project structure](#project-structure)
 - [Third-party dependencies](#third-party-dependencies)
 - [Development workflow](#development-workflow)
@@ -129,9 +121,9 @@ Mistral) are typically slower: 2–3 s warm, dominated by API latency.
   hints, transcript history, a Models tab for download / re-verification
   and an optional Traffic tab (debug) listing the 10 nearest aircraft
 
-## Hardware requirements
+## Platforms & requirements
 
-On **macOS** the plugin ships as a **Universal Binary** — one `.xpl`, two
+On **macOS** the plugin builds as a **Universal Binary** — one `.xpl`, two
 slices. X-Plane automatically loads the matching one. For **Windows**
 there is a separate build (`win_x64/xp_wellys_vfr_atc.xpl`).
 
@@ -179,75 +171,49 @@ wrong. Rule out the redistributable first; it is the cheaper check.
 | GPU | Apple Silicon: any Metal-capable GPU on the same chip. Windows: a Vulkan-capable GPU — note the models share VRAM with X-Plane's renderer | not used |
 | Network | not used at runtime (one-time model download from HuggingFace) | required — every PTT release triggers HTTPS calls to `api.openai.com` or `api.mistral.ai` |
 
-Both cloud modes cost money per request (STT + LM + TTS APIs). Mistral is
-typically cheaper per token than OpenAI (`mistral-small` ≈ 33% cheaper
-input / 50% cheaper output than `gpt-4o-mini`). STT and TTS are roughly at
-price parity. The latency of both clouds is typically 2–3 s warm vs.
-1–1.5 s warm for local inference.
-
-## Software requirements
+### Software
 
 | Item | Requirement |
 |---|---|
 | macOS | **13.3 or newer** (onnxruntime 1.22.0 requires this on the arm64 slice; the x86_64 slice inherits the same deployment target so the lipo'd binary stays consistent) |
 | Windows | **Windows 11 (x64)**, verified. All three backends; the cloud API key lives in the Windows Credential Manager. Local mode needs a Vulkan-capable GPU for acceleration (falls back to CPU otherwise). The artifact carries `piper.dll` + `onnxruntime.dll` next to the `.xpl` — libcurl and whisper/llama/ggml are linked statically. |
 | X-Plane | X-Plane 12 (12.0 or newer) |
-| OpenAI / Mistral account | Only if you want to use a cloud mode — needs an API key with billing enabled at the respective provider. The Local mode has no cloud dependency. |
+| OpenAI / Mistral account | Only for the cloud modes — API key with billing enabled. Local mode has no cloud dependency. |
 | To build from source | CMake 3.26+, Homebrew LLVM (`brew install llvm`), Xcode Command Line Tools |
 
-## Quick start (prebuilt release)
+## Installed bundle layout
 
-1. Download `xp_wellys_vfr_atc-vX.Y.Z.zip` from the GitHub releases page.
-   The macOS `.xpl` inside is a Universal Binary for arm64 and x86_64; the
-   Windows `.xpl` is in the `win_x64/` folder.
-2. Unzip into `X-Plane 12/Resources/plugins/`. Result:
-   ```
-   X-Plane 12/Resources/plugins/xp_wellys_vfr_atc/
-     ├── mac_x64/
-     │     ├── xp_wellys_vfr_atc.xpl       (universal: arm64 + x86_64)
-     │     ├── libpiper.dylib          (used by the arm64 slice only)
-     │     ├── libonnxruntime.1.22.0.dylib
-     │     └── libonnxruntime.dylib
-     ├── win_x64/
-     │     ├── xp_wellys_vfr_atc.xpl       (Windows x64)
-     │     ├── piper.dll
-     │     ├── onnxruntime.dll
-     │     └── onnxruntime_providers_shared.dll
-     ├── Resources/
-     │     └── espeak-ng-data/   (~19 MB, used by local TTS on both platforms)
-     └── data/
-           └── (ATC profile bundle, prompt templates, VRP database, etc.)
-   ```
-   On **Windows**, X-Plane 12 loads the `win_x64/` folder. The folder name
-   and the file name `xp_wellys_vfr_atc.xpl` must stay exactly like this —
-   a generically named `win.xpl` is **silently not** loaded by X-Plane 12
-   on Windows.
-3. Start X-Plane. Open the plugin window via *Plugins → Welly's ATC*.
-4. **Pick your backend** in the **Settings** tab:
-   - **Local** (Apple Silicon and Windows x64, default): the **Models** tab
-     shows the rows in red. Click **Download all missing** — the plugin
-     downloads ~2.0 GB from HuggingFace over HTTPS. Resumable; cancelable;
-     SHA256-verified after each file. Once all rows show **Ready** (green),
-     the PTT-disabled banner in the Status tab disappears.
-   - **OpenAI Cloud** (any Mac **and Windows**): paste your OpenAI API key
-     into the **OpenAI API Key** field in the settings (use the `[Paste]`
-     button — Cmd+V is unreliable in X-Plane's ImGui context). Click
-     **Save Key**. The key is stored on macOS in the Keychain under the
-     service `com.xp_wellys_devfr_atc.openai`, on Windows in the
-     **Credential Manager**. PTT is active immediately; no model download.
-   - **Mistral Cloud** (any Mac **and Windows**): paste your Mistral API
-     key into the **Mistral API key** field (same `[Paste]` pattern).
-     Click **Save Key##mistral**. The key is stored under a separate entry
-     `com.xp_wellys_devfr_atc.mistral` (macOS Keychain or Windows
-     Credential Manager), so the OpenAI key (if present) stays untouched
-     and you can switch providers without re-pasting. PTT is active
-     immediately.
-   - **Windows Local mode** is available **from v0.8**. Earlier Windows
-     builds were cloud-only and silently rewrote `backend_mode: local` to
-     `openai` at startup.
-5. Fly. The banner in the Status tab shows the active mode, and `Log.txt`
-   carries a single-line `BACKEND MODE: ...` banner on every load, so you
-   can prove after the fact which side served the session.
+`make install` code-signs the build and copies it into
+`X-Plane 12/Resources/plugins/`. Resulting tree:
+
+```
+X-Plane 12/Resources/plugins/xp_wellys_vfr_atc/
+  ├── mac_x64/
+  │     ├── xp_wellys_vfr_atc.xpl       (universal: arm64 + x86_64)
+  │     ├── libpiper.dylib              (used by the arm64 slice only)
+  │     ├── libonnxruntime.1.22.0.dylib
+  │     └── libonnxruntime.dylib
+  ├── win_x64/
+  │     ├── xp_wellys_vfr_atc.xpl       (Windows x64)
+  │     ├── piper.dll
+  │     ├── onnxruntime.dll
+  │     └── onnxruntime_providers_shared.dll
+  ├── Resources/
+  │     └── espeak-ng-data/   (~19 MB, used by local TTS on both platforms)
+  └── data/
+        └── (ATC profile bundle, prompt templates, VRP database, etc.)
+```
+
+On **Windows**, X-Plane 12 loads the `win_x64/` folder. The folder name and
+the file name `xp_wellys_vfr_atc.xpl` must stay exactly like this — a
+generically named `win.xpl` is **silently not** loaded by X-Plane 12.
+
+The active backend is picked in the Settings tab at runtime. Local mode
+needs the models (see [Local inference models](#local-inference-models));
+the cloud modes need an API key pasted via the `[Paste]` button (Cmd+V is
+unreliable in X-Plane's ImGui context) and stored in the macOS Keychain /
+Windows Credential Manager. `Log.txt` carries a single-line
+`BACKEND MODE: ...` banner on every load.
 
 ## Backend modes
 
@@ -454,17 +420,15 @@ gh workflow run build.yml --ref main
 The plugin ships **without** the model files (~2.0 GB together). They live
 under `<plugin>/Resources/models/` and are downloaded on the first launch
 via the **Models** tab. Every download is HTTPS, resumable (`Range`
-header), streamed directly onto the installation volume (no temp detour
-via the system disk — important for users who run X-Plane on an external
-SSD) and SHA256-verified before it is renamed from `<file>.part` to the
+header), streamed directly onto the installation volume (no temp detour via the
+system disk) and SHA256-verified before it is renamed from `<file>.part` to the
 final file name.
 
-### Manual fallback (restrictive networks)
+### Model files
 
-If the plugin downloader cannot reach HuggingFace (corporate proxy,
-captive portal, etc.), download these files manually and place them in
-`<plugin>/Resources/models/`. The plugin re-verifies on the next launch
-and picks them up automatically if the hashes match.
+Pinned files, hashes and sources. Can also be dropped into
+`<plugin>/Resources/models/` by hand — the Models tab re-verifies on the
+next launch and picks them up if the hashes match.
 
 | Model | Language | Size | SHA256 | URL |
 |---|---|---:|---|---|
@@ -476,10 +440,6 @@ and picks them up automatically if the hashes match.
 The Whisper model is the multilingual variant (`ggml-small-q5_1.bin`),
 since the DE profile needs German transcription. Llama is multilingual and
 is shared. The Piper voice is the German `de_DE-thorsten-medium`.
-
-After you place the files, reopen the plugin window — the Models tab runs
-the SHA256 verification in the background and flips the rows to **Ready**
-as soon as each hash matches.
 
 ### SHA256 verification procedure (DE models)
 
@@ -508,13 +468,6 @@ Enter the hashes + sizes in:
 - `src/persistence/model_manifest.cpp` `manifest()` (multilingual Whisper:
   one hash + one size)
 - The table above
-
-### Expected download time on first launch
-
-5–30 minutes on typical home internet; the bottleneck is HuggingFace's
-download throughput, not the plugin. The downloader resumes over
-HTTP `Range` if the connection drops, so a Wi-Fi hiccup in the middle of
-the Llama download does not restart the 1.88 GB pull from scratch.
 
 ## Configuration
 
@@ -666,20 +619,15 @@ which can be bound to any key or joystick button.
 
 ## Usage
 
-1. Tune COM1/COM2 in X-Plane to the appropriate frequency (or click a
-   frequency in the ATC panel to set it as standby, then flip-flop).
-2. Hold the PTT key and speak your call — the **phraseology hints** panel
-   shows you what to say (hover for the full phraseology).
-3. Release PTT — the plugin transcribes, processes through the state
-   machine and plays the ATC response back.
-4. Check the ImGui overlay for transcript history and current ATC state.
-5. If you get stuck in a loop, click **Disregard** to reset.
+Tune COM1/COM2 (or click a frequency in the ATC panel to set it as
+standby), hold PTT and speak, release — the plugin transcribes, runs the
+state machine and plays the response. The ImGui overlay shows transcript
+history and current ATC state; **Disregard** resets a stuck flow.
 
-**No headset?** Turn on `debug_text_input` in the settings — an InputText
-field appears below the transcript in the Status tab. Typed text goes
-directly into the engine (STT is skipped), but LM, state machine and TTS
-keep running, so the tower response is spoken normally over the active
-backend. The shorthand `REG` expands to your phonetic callsign.
+**Without a headset:** turn on `debug_text_input` — an InputText field
+appears below the transcript in the Status tab. Typed text goes directly
+into the engine (STT is skipped); LM, state machine and TTS keep running.
+The shorthand `REG` expands to the phonetic callsign.
 
 ## Make targets
 
@@ -729,9 +677,7 @@ shipped; see [`docs/icao/README.md`](icao/README.md).
 
 ### DE profile & BZF phraseology
 
-The DE profile follows the NfL Sprechfunk 2024 (DACH-VFR phraseology). No
-official certification, no exam substitute — corrections from BZF holders
-expressly welcome. The authoritative primary sources (DFS NfL 2024, BNetzA
+The DE profile follows the NfL Sprechfunk 2024 (DACH-VFR phraseology). The authoritative primary sources (DFS NfL 2024, BNetzA
 exam questions, NfL Teil B) and the coverage matrix are under
 [`docs/bzf/`](bzf/README.md) — see [Domain foundations](#domain-foundations-bzf--nfl).
 
@@ -756,7 +702,7 @@ exam questions, NfL Teil B) and the coverage matrix are under
 
 | Limitation | Impact | Effort |
 |---|---|---|
-| **No IFR — by design** | This plugin models VFR radio only: no IFR clearances, no flight-plan filing, no FMS/routing, no SID/STAR. There is genuinely no IFR flow in the code (the word "ifr" appears only as a TTS acronym and as a recognition token in the intention keyword lists — recognition surface, not a feature). | Not planned here. IFR is a separate product with its own plugin: **[Welly's IFR ATC](https://github.com/rwellinger/xp_welly_llm_atc)** — clearance delivery, SID/STAR from X-Plane's CIFP data, SimBrief route integration, en-route sector handoffs, approach and landing. English/ICAO only (no NfL/BZF profile) and needs extra data installed (SimBrief OFP, OpenAir airspace file). The two plugins install side by side. |
+| **No IFR — by design** | This plugin models VFR radio only: no IFR clearances, no flight-plan filing, no FMS/routing, no SID/STAR. There is genuinely no IFR flow in the code (the word "ifr" appears only as a TTS acronym and as a recognition token in the intention keyword lists — recognition surface, not a feature). | Not planned. |
 | **No local inference on Intel Macs** | The x86_64 macOS slice runs the plugin in OpenAI or Mistral cloud mode only (API key + billing needed) — no local offline mode. Apple Silicon (Metal) and Windows x64 (Vulkan) both have it. | Unlikely to change: GitHub retired the Intel `macos-13` runners, so the prebuilt bundle for that slice cannot be produced in CI at all. Intel Macs are a shrinking niche and lose nothing but the offline option. |
 | **German & English, no FR/IT** | VFR phraseology comes as a German (NfL/BZF, default) and an English (ICAO) profile, switchable via `atc_language`. The interface language is independently selectable (`ui_language`). Further languages (French/Italian for western Switzerland or Ticino) are not planned | By design — the focus stays on DACH VFR |
 | **OpenAI voices speak German with a US accent** | In `backend_mode=openai` Whisper transcribes correctly and the LM answers correctly in German, but the `tts-1` voices (`alloy`, `echo`, `fable`, `onyx`, `nova`, `shimmer`) are English-trained and render German with an audible US accent — NATO letters in particular sound anglophone (e.g. "Tschaar-lie" instead of "Tschar-li"). Acceptable for casual practice, unrealistic for BZF/AZF training. | Solved for Local mode by Piper `de_DE-thorsten`. For cloud users, **Mistral Cloud** is the alternative — Voxtral TTS is natively multilingual and speaks German without a US accent. |
@@ -766,66 +712,6 @@ exam questions, NfL Teil B) and the coverage matrix are under
 | **No wake-turbulence separation** — the sequencing in v2.2 only picks by distance, no light/medium/heavy split | Acceptable for GA patterns; missing for mixed weight classes | Phase 5 on the roadmap |
 | **No callsign validation** | ATC accepts any callsign | Low priority in single-player |
 | **Large hub airports (LSZH, LSGG, …) not officially supported** — the pilot can depart/arrive, but the delivery workflow (slot/VFR clearance), RWY-specific tower routing and AIP VFR reporting points are not modeled | Generic hints at large hubs do not match the real procedures | High — would need per-airfield AIP research + a new delivery intent + slot setting + multi-tower disambiguation |
-
-## FAQ
-
-**Does the plugin support IFR or flight planning?**
-No — this plugin is VFR-only. No IFR clearances, no flight-plan filing, no
-FMS/routing integration. IFR is a separate product with its own plugin:
-**[Welly's IFR ATC](https://github.com/rwellinger/xp_welly_llm_atc)** —
-clearance delivery, SID/STAR from CIFP, SimBrief route integration, sector
-handoffs, approach and landing (English/ICAO only). The two install side by
-side; pick by what you fly.
-
-**Will there be a virtual co-pilot or checklist reader?**
-Not currently planned. The plugin is a single-pilot pilot↔ATC voice
-interface; intercom and checklists are not implemented.
-
-**Is it compatible with all XP12 aircraft and add-ons?**
-In principle yes. The plugin is aircraft-agnostic and uses only standard
-X-Plane DataRefs — no aircraft-specific code paths, no compatibility list.
-It works with the default fleet (C172, etc.) and any add-on that provides
-the standard `sim/cockpit/radios/*` DataRefs. For exotic aircraft without
-`com_power`, set `skip_radio_power_check: true` in `settings.json`.
-Laminar's default ATC can be suppressed via `disable_default_atc`.
-
-**Can I fly on the yoke without focusing the plugin window?**
-Yes — that is the intent. Bind push-to-talk once to a yoke button or a key
-(X-Plane command `xp_wellys_devfr_atc/ptt`). After that, every interaction
-is voice: press PTT, speak, release, hear the ATC response. The plugin
-window needs no keyboard focus in flight, and every inference runs on
-background threads, so X-Plane never stutters.
-
-**Does the plugin read my COM1/COM2 frequencies automatically?**
-Yes. Active and standby frequencies of both COM radios are read live from
-X-Plane DataRefs. The plugin also detects which radio is active and
-classifies the frequency type (ATIS / Ground / Tower / Approach / UNICOM)
-automatically against the apt.dat frequency database. No manual frequency
-entry.
-
-**Does the plugin set the transponder / squawk code?**
-No — spoken only. ATC can say "Squawk 7000", but the plugin does not read
-or write the transponder DataRefs. You set the squawk manually.
-
-**How does it compare to BeyondATC or SayIntentions?**
-Strengths: 100% offline option on Apple Silicon (no subscription, no
-cloud, no constant internet required — at the user's discretion), ~1.16 s
-warm pipeline latency in Local mode, German NfL DACH-VFR phraseology with
-realistic tower reactions to pilot mistakes. Two cloud options — **OpenAI**
-and **Mistral** — are available as paid opt-ins (your own key). Mistral
-usually costs less per token and is the cleaner choice for German ATC,
-since Voxtral TTS speaks German natively.
-Today's limits: VFR-only (IFR is the separate
-[Welly's IFR ATC](https://github.com/rwellinger/xp_welly_llm_atc) plugin),
-no routing, no wake-turbulence separation (sequencing in v2.2 is
-distance-based only — Phase 5 on the roadmap), no transponder data link,
-no co-pilot.
-
-**Is there an introductory video?**
-Not yet.
-
-**How does it compare to OpenSquawk?**
-Not yet evaluated.
 
 ## Project structure
 
