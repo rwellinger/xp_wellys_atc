@@ -7,6 +7,12 @@ Kein Release, keine Distribution, keine Nutzer ausser mir.
 
 ---
 
+|⚠️ Note about x-plane.org ⚠️ |
+| --- |
+| I no longer support x-plane.org. These plugins are not available there any more. GitHub is the only place where they are released and updated. |
+
+
+
 ## Scope
 
 - **VFR only.** Kein IFR, kein Flugplan, kein FMS/Routing.
