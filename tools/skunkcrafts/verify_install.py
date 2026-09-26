@@ -34,7 +34,7 @@ import zlib
 from pathlib import Path
 
 DEFAULT_MODULE = (
-    "https://raw.githubusercontent.com/rwellinger/xp_wellys_vfr_atc"
+    "https://raw.githubusercontent.com/rwellinger/xp_wellys_atc"
     "/refs/heads/release/"
 )
 

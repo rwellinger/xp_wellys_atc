@@ -127,7 +127,7 @@ BSD-style, BSL-1.0, freely redistributable SDK).
 ## Source availability
 
 This plugin is open source. The full source is at
-`https://github.com/rwellinger/xp_wellys_vfr_atc`. In line with GPLv3,
+`https://github.com/rwellinger/xp_wellys_atc`. In line with GPLv3,
 binary releases include or link to the source repository in the
 release notes.
 
