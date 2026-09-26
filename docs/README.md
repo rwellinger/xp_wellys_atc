@@ -65,8 +65,10 @@ latency.
   classifier (JSON mode), `voxtral-mini-tts-2603` with 30 preset voices of
   British, American and French speakers across 7–9 emotional registers
   (default per role: `gb_oliver_neutral` for ATIS, `en_paul_confident` for
-  Tower, `en_paul_neutral` for Ground). Voxtral TTS is multilingual and
-  speaks German without a US accent. Separate Keychain entry, so the
+  Tower, `en_paul_neutral` for Ground). Voxtral TTS is multilingual, but
+  has **no German preset voice** — German text gets a pronounced US
+  accent, even stronger than with OpenAI (Issue #63). For clean German use
+  Local mode (Piper `thorsten`). Separate Keychain entry, so the
   OpenAI and Mistral keys coexist; switching modes never requires
   re-pasting.
 - **Two language profiles — DE (NfL/BZF) & EN (ICAO)** — the ATC
@@ -524,7 +526,7 @@ restart; the phraseology language from the next plugin start (Issue #56).
 | `mistral_stt_model` | `voxtral-mini-2507` | Voxtral STT model ID. |
 | `mistral_lm_model` | `mistral-small-latest` | Mistral Chat Completions model ID for the intent classifier. JSON mode automatic. `ministral-3b-latest` / `ministral-8b-latest` also work and are cheaper. |
 | `mistral_tts_model` | `voxtral-mini-tts-2603` | Voxtral TTS model ID. |
-| `mistral_tts_voice_atis` / `mistral_tts_voice_tower` / `mistral_tts_voice_ground` | `gb_oliver_neutral` / `en_paul_confident` / `en_paul_neutral` | Voxtral preset voice per role. The UI dropdown lists 30 voices of British (`gb_oliver_*`, `gb_jane_*`), American (`en_paul_*`) and French (`fr_marie_*`) speakers across 7–9 emotional registers. Voxtral TTS is multilingual and speaks German without a US accent. Your own voice clones from the Mistral dashboard can be set by editing this field directly in `settings.json`. |
+| `mistral_tts_voice_atis` / `mistral_tts_voice_tower` / `mistral_tts_voice_ground` | `gb_oliver_neutral` / `en_paul_confident` / `en_paul_neutral` | Voxtral preset voice per role. The UI dropdown lists 30 voices of British (`gb_oliver_*`, `gb_jane_*`), American (`en_paul_*`) and French (`fr_marie_*`) speakers across 7–9 emotional registers. There is no German preset — German text is rendered with a strong US accent (Issue #63). Your own voice clones from the Mistral dashboard can be set by editing this field directly in `settings.json`. |
 
 The ATC response templates live in
 `data/atc_profiles/de/atc_templates.json`. Flight-phase thresholds, ATC
@@ -666,13 +668,14 @@ conformance checks
 be substantiated against `dfs_nfl_sprechfunk_2024.txt` (secondary: BNetzA
 exam questions and NfL Teil B).
 
-**English (ICAO-VFR):** The planned English profile (Epic #35) has its own
+**English (ICAO-VFR):** The English profile (Epic #35) has its own
 source foundation under [`docs/icao/`](icao/README.md) — ICAO Doc 4444
 Ch. 12, Annex 10 Vol II §5.2 and EASA SERA (CAP 413 illustrative only). The
 [`icao_coverage.md`](icao/icao_coverage.md) maps every intent onto the
 English standard phrase. English VFR radio is **not a translation** of the
-NfL, but a self-contained phraseology. The `en` profile is not yet
-shipped; see [`docs/icao/README.md`](icao/README.md).
+NfL, but a self-contained phraseology. The `en` profile ships with the
+plugin (`data/atc_profiles/en/`) and is selected via `atc_language = en`;
+see [`docs/icao/README.md`](icao/README.md).
 
 ## Known limitations
 
@@ -706,7 +709,7 @@ exam questions, NfL Teil B) and the coverage matrix are under
 | **No IFR — by design** | This plugin models VFR radio only: no IFR clearances, no flight-plan filing, no FMS/routing, no SID/STAR. There is genuinely no IFR flow in the code (the word "ifr" appears only as a TTS acronym and as a recognition token in the intention keyword lists — recognition surface, not a feature). | Not planned. |
 | **No local inference on Intel Macs** | The x86_64 macOS slice runs the plugin in OpenAI or Mistral cloud mode only (API key + billing needed) — no local offline mode. Apple Silicon (Metal) and Windows x64 (Vulkan) both have it. | Unlikely to change: GitHub retired the Intel `macos-13` runners, so the prebuilt bundle for that slice cannot be produced in CI at all. Intel Macs are a shrinking niche and lose nothing but the offline option. |
 | **German & English, no FR/IT** | VFR phraseology comes as a German (NfL/BZF, default) and an English (ICAO) profile, switchable via `atc_language`. The interface language is independently selectable (`ui_language`). Further languages (French/Italian for western Switzerland or Ticino) are not planned | By design — the focus stays on DACH VFR |
-| **OpenAI voices speak German with a US accent** | In `backend_mode=openai` Whisper transcribes correctly and the LM answers correctly in German, but the `tts-1` voices (`alloy`, `echo`, `fable`, `onyx`, `nova`, `shimmer`) are English-trained and render German with an audible US accent — NATO letters in particular sound anglophone (e.g. "Tschaar-lie" instead of "Tschar-li"). Acceptable for casual practice, unrealistic for BZF/AZF training. | Solved for Local mode by Piper `de_DE-thorsten`. For cloud users, **Mistral Cloud** is the alternative — Voxtral TTS is natively multilingual and speaks German without a US accent. |
+| **Cloud voices speak German with a US accent** | In `backend_mode=openai` Whisper transcribes correctly and the LM answers correctly in German, but the `tts-1` voices (`alloy`, `echo`, `fable`, `onyx`, `nova`, `shimmer`) are English-trained and render German with an audible US accent — NATO letters in particular sound anglophone (e.g. "Tschaar-lie" instead of "Tschar-li"). **Mistral is even worse**: Voxtral has no German preset voice (only US-EN, GB-EN and FR presets), so the accent is stronger still (Issue #63). Acceptable for casual practice, unrealistic for BZF/AZF training. | Solved only in Local mode by Piper `de_DE-thorsten`. Neither cloud backend currently offers accent-free German. |
 | **Local STT mishears spelled callsigns** | In Local mode the small `ggml-small-q5_1` Whisper often mishears German NATO spelling sequences as real words ("Whiskey Romeo Oscar" → "Wisskrieg"/"Wiesbaecki"), which breaks intent recognition. The phraseology itself is recognized well — only the callsign suffers. Consequence: **BZF strict mode** can wrongly reject correct readbacks with Local (and Mistral). The `initial_prompt` is already pre-conditioned with the own callsign (`atc_session.cpp`), which raises the hit rate but does not fully lift the model limit. | Local mode: leave strict mode off (the Settings tab warns when strict is active). A larger Whisper (`large-v3-turbo`, ~547 MB) was tested and rejected — too slow, sim stalls on approach. **OpenAI** is much more robust on spelled callsigns and the recommendation if strict mode is wanted. |
 | **Single-voice TTS** | All ATC speakers (Tower, Ground, ATIS) use the same Piper voice in Local mode; ATIS speaks more slowly via `length_scale=1.18` | Low — could ship more voices and add a per-frequency selector |
 | **"via Alpha" hardcoded** — the taxiway name is always Alpha | Unrealistic at airfields with a different taxiway layout | High — would need taxiway data from apt.dat or WED |

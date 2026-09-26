@@ -1,30 +1,30 @@
 # xp_wellys_atc
 
-C++17-Plugin für X-Plane 12, das VFR-Sprechfunk (STT → Intent → TTS)
-simuliert.
+C++17 plugin for X-Plane 12 that simulates VFR radio communication
+(STT → intent → TTS).
 
-Download und Projektseite:
+Download and project website:
 [thwelly.ch/xplane-plugins/xp-wellys-vfr-atc](https://thwelly.ch/xplane-plugins/xp-wellys-vfr-atc/)
 
 ## Scope
 
-- **VFR only.** Kein IFR, kein Flugplan, kein FMS/Routing.
-- **Zwei Phraseologie-Profile**, zur Laufzeit umschaltbar
+- **VFR only.** No IFR, no flight plan, no FMS/routing.
+- **Two phraseology profiles**, switchable at runtime
   (`settings::atc_language()`):
-  - `de` (Standard) — NfL Sprechfunk 2024, DACH-VFR, optionaler
-    BZF-Strict-Mode.
-  - `en` — ICAO VFR (Annex 10 Vol II / Doc 4444 / SERA), eigenständig,
-    keine Übersetzung des DE-Profils.
-- **Abläufe:** Platzrunde (Entry, Downwind, Base, Final, Landing,
-  Touch-and-Go, Go-Around, Landing-Sequencing), Cross-Country
-  (Departure-Clearance, Frequenzwechsel, Handoff, Inbound),
-  Flugplatztypen unkontrolliert (UNICOM/CTAF) / Tower / Tower+Ground /
+  - `de` (default) — NfL Sprechfunk 2024, DACH VFR, optional
+    BZF strict mode.
+  - `en` — ICAO VFR (Annex 10 Vol II / Doc 4444 / SERA), self-contained,
+    not a translation of the DE profile.
+- **Flows:** traffic pattern (entry, downwind, base, final, landing,
+  touch-and-go, go-around, landing sequencing), cross-country
+  (departure clearance, frequency change, handoff, inbound),
+  airfield types uncontrolled (UNICOM/CTAF) / Tower / Tower+Ground /
   AFIS.
-- **Nebenläufig:** automatische ATIS-Ansage aus Sim-Wetter,
-  Verkehrshinweise aus TCAS-DataRefs, kontextabhängige
-  Phraseologie-Hinweise im UI.
+- **Concurrent:** automatic ATIS broadcast from sim weather,
+  traffic advisories from TCAS DataRefs, context-aware
+  phraseology hints in the UI.
 
-## Plattformen
+## Platforms
 
 | Slice | Backends | GPU |
 |---|---|---|
@@ -32,47 +32,47 @@ Download und Projektseite:
 | macOS x86_64 | OpenAI, Mistral | — |
 | Windows x64 | Local, OpenAI, Mistral | Vulkan |
 
-`backend_mode` ist eine Laufzeit-Einstellung; dasselbe Binary bedient
-alle kompilierten Backends. Der x86_64-Slice schreibt `local` → `openai`
-beim Start still um.
+`backend_mode` is a runtime setting; the same binary serves all
+compiled-in backends. The x86_64 slice silently rewrites `local` → `openai`
+at startup.
 
-Windows: Vulkan statt CUDA (keine Redist-DLLs). Der Build braucht die
-MSVC-Redistributable nur wegen `piper.dll` / `onnxruntime.dll`; fehlt
-sie, schlägt erst die erste TTS-Wiedergabe mit `0xC06D007E` fehl (Piper
-ist delay-loaded).
+Windows: Vulkan instead of CUDA (no redist DLLs). The build needs the
+MSVC Redistributable only because of `piper.dll` / `onnxruntime.dll`; if it
+is missing, only the first TTS playback fails with `0xC06D007E` (Piper
+is delay-loaded).
 
 ## Backends
 
-| Modus | STT | LM | TTS |
+| Mode | STT | LM | TTS |
 |---|---|---|---|
 | Local | whisper.cpp `small-q5_1` | llama.cpp Llama 3.2 3B Q4_K_M | Piper `de_DE-thorsten-medium` |
 | OpenAI | `whisper-1` | `gpt-4o-mini` (JSON) | `tts-1` |
 | Mistral | `voxtral-mini-2507` | `mistral-small-latest` (JSON) | `voxtral-mini-tts-2603` |
 
-Die LM-Stufe läuft nur bei Intent-Konfidenz < 0.7. Modelle (~2,0 GB) sind
-nicht gebündelt, sondern werden in-sim von HuggingFace geladen.
+The LM stage runs only at intent confidence < 0.7. Models (~2.0 GB) are
+not bundled; they are downloaded in-sim from HuggingFace.
 
-Deutsche Aussprache ist nur im Local-Modus akzentfrei (Piper
-`thorsten`); OpenAI hat keine deutsche Stimme, Voxtral kein deutsches
-Preset (Issue #63).
+German pronunciation is accent-free only in Local mode (Piper
+`thorsten`); OpenAI has no German voice, Voxtral no German
+preset (Issue #63).
 
 ## Build
 
 ```bash
-make setup     # SDK, ImGui, json, Catch2, Spike-Submodule
-make build     # Universal-Release-Build -> build/xp_wellys_vfr_atc.xpl
-make install   # Code-Signing + Installation ins X-Plane-Plugins-Verzeichnis
+make setup     # SDK, ImGui, json, Catch2, spike submodules
+make build     # Universal release build -> build/xp_wellys_vfr_atc.xpl
+make install   # Code signing + installation into the X-Plane plugins directory
 make all       # clean + format + build + lint + test
-make repl      # headless atc_repl (kein X-Plane / Audio / Modelle)
-make test      # Catch2-Unit- + Szenario-Tests
-make sanitize  # ASan/UBSan-Build der Engine-OBJECT-Lib
+make repl      # headless atc_repl (no X-Plane / audio / models)
+make test      # Catch2 unit + scenario tests
+make sanitize  # ASan/UBSan build of the engine OBJECT lib
 ```
 
-Details, Architektur, Konfiguration und Entwicklungs-Workflow:
+Details, architecture, configuration and development workflow:
 [`docs/README.md`](docs/README.md).
-Verbindliche Leitlinien für die Arbeit am Code: [`CLAUDE.md`](CLAUDE.md).
+Binding guidelines for working on the code: [`CLAUDE.md`](CLAUDE.md).
 
-## Lizenz
+## License
 
-GPL-3.0-or-later (verlangt von espeak-ng, statisch in `libpiper` gelinkt).
-Third-Party-Aufschlüsselung in [`THIRD_PARTY.md`](THIRD_PARTY.md).
+GPL-3.0-or-later (required by espeak-ng, statically linked into `libpiper`).
+Third-party breakdown in [`THIRD_PARTY.md`](THIRD_PARTY.md).
