@@ -1,9 +1,10 @@
 # xp_wellys_vfr_atc — Technical Documentation
 
-Internal development project. Technical details: backend modes, building
-from source, local inference models, configuration, architecture and
-development workflow. Scope overview in [`../README.md`](../README.md),
-binding working rules in [`../CLAUDE.md`](../CLAUDE.md).
+Technical details: backend modes, building from source, local inference
+models, configuration, architecture and development workflow. Scope
+overview in [`../README.md`](../README.md), binding working rules in
+[`../CLAUDE.md`](../CLAUDE.md). Releases are published on
+[thwelly.ch/xplane-plugins/xp-wellys-vfr-atc](https://thwelly.ch/xplane-plugins/xp-wellys-vfr-atc/).
 
 AI-powered voice ATC for VFR flights in X-Plane 12. Push-to-talk speech is
 transcribed (whisper.cpp locally, OpenAI Whisper API or Mistral Voxtral

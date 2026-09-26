@@ -1,17 +1,10 @@
 # xp_wellys_atc
 
-Internes Entwicklungsprojekt. C++17-Plugin für X-Plane 12, das
-VFR-Sprechfunk (STT → Intent → TTS) simuliert.
+C++17-Plugin für X-Plane 12, das VFR-Sprechfunk (STT → Intent → TTS)
+simuliert.
 
-Kein Release, keine Distribution, keine Nutzer ausser mir.
-
----
-
-|⚠️ Note about x-plane.org ⚠️ |
-| --- |
-| I no longer support x-plane.org. These plugins are not available there any more. GitHub is the only place where they are released and updated. |
-
-
+Download und Projektseite:
+[thwelly.ch/xplane-plugins/xp-wellys-vfr-atc](https://thwelly.ch/xplane-plugins/xp-wellys-vfr-atc/)
 
 ## Scope
 
