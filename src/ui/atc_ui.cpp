@@ -2104,6 +2104,7 @@ static void draw_settings_tab() {
   ImGui::Text("%s", ui_strings::tr("about.title_dev"));
 #endif
   ImGui::Text("%s", ui_strings::tr("about.tagline"));
+  ImGui::TextDisabled("%s", ui_strings::tr("about.website"));
   ImGui::TextDisabled("%s", ui_strings::tr("about.repo"));
 }
 

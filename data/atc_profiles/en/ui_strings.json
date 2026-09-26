@@ -237,6 +237,7 @@
   "about.title_format": "Welly's ATC v%s",
   "about.title_dev": "Welly's ATC (dev build)",
   "about.tagline": "AI-assisted ATC for X-Plane 12 VFR",
+  "about.website": "thwelly.ch/xplane-plugins/xp-wellys-vfr-atc",
   "about.repo": "github.com/rwellinger/xp_wellys_atc",
 
   "intent.initial_call_ground": "Initial call (Ground)",
