@@ -1,0 +1,586 @@
+{
+  "_comment": "ATC response templates by airport type (towered/uncontrolled), ATC state and pilot intent. ICAO-VFR English (Doc 4444 Ch. 12 phrase templates, Annex 10 Vol II Sec 5.2 procedure words). Each entry defines: response (template text with {variable} placeholders), next_state (state-machine transition), requires_readback (whether the pilot reads the clearance back). _INVALID is the fallback when no matching intent is found for the current state. Variables are filled at runtime by atc_state_machine::build_vars() from XPlaneContext data. Keys are kept identical to the de/ bundle. ASCII-only -- the ImGui font + XPLMDebugString render UTF-8 special characters as '?'. Note: the word TAKE-OFF appears only in the take-off clearance (Doc 4444 7.9.3.3); departure/airborne phrasing is used elsewhere.",
+  "fallbacks": {
+    "_comment": "Controller fallback lines for unintelligible input. Rendered by engine.cpp::build_unclear_response() with a prepended callsign + comma.",
+    "say_again": "say again.",
+    "garbled_say_again": "transmission garbled, say again.",
+    "say_again_use_standard_phraseology": "say again, use standard phraseology."
+  },
+  "bzf_strict": {
+    "_comment": "BZF-strict-mode corrective tower responses. In the EN profile bzf_strict is NOT active (atc_templates::lookup_bzf_strict() gates on atc_profile() == 'DE'); these keys are retained for schema parity only and are rendered in ICAO wording (Annex 10 Vol II 5.2.1.9.4: READ BACK / NEGATIVE I SAY AGAIN). The ICAO/SERA readback conformance decision for EN is Issue #42. ASCII-only.",
+    "read_back": "{callsign}, READ BACK.",
+    "negativ_lead": "{callsign}, NEGATIVE,",
+    "read_back_tail": "I SAY AGAIN, READ BACK.",
+    "label_runway": "runway",
+    "label_qnh": "QNH",
+    "label_frequency": "frequency",
+    "label_squawk": "squawk",
+    "missing_qnh": "{callsign}, read back in full with QNH.",
+    "missing_runway": "{callsign}, read back in full with runway number.",
+    "missing_frequency": "{callsign}, read back in full with frequency.",
+    "missing_squawk": "{callsign}, read back in full with squawk.",
+    "missing_callsign": "{callsign}, always read back with full call sign.",
+    "missing_multi": "{callsign}, read back the full clearance."
+  },
+  "towered": {
+    "IDLE": {
+      "INITIAL_CALL_GROUND": {
+        "response": "{callsign}, {airport} {taxi_controller}, good day, {position_remark}information {atis_letter}, runway {runway}, QNH {qnh}.",
+        "next_state": "GROUND_CONTACT",
+        "requires_readback": false
+      },
+      "INITIAL_CALL_TOWER": {
+        "response": "{callsign}, {airport} Tower, pass your message.",
+        "next_state": "TOWER_CONTACT",
+        "requires_readback": false
+      },
+      "INITIAL_CALL_INBOUND": {
+        "response": "{callsign}, {airport} Tower, join downwind runway {runway}, report mid downwind.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": true
+      },
+      "INITIAL_CALL_INBOUND_VRP": {
+        "response": "{callsign}, {airport} Tower, cleared to enter control zone via {entry_vrp}, runway {runway}, report downwind.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": true
+      },
+      "REQUEST_TAXI": {
+        "response": "{callsign}, {airport} {taxi_controller}, good day, {position_remark}information {atis_letter}, taxi to holding point runway {runway} via Alpha, QNH {qnh}.",
+        "next_state": "TAXI_CLEARED",
+        "requires_readback": true
+      },
+      "REQUEST_TAXI_PARKING": {
+        "response": "{callsign}, {airport} {taxi_controller}, taxi to the GA apron via Alpha.",
+        "next_state": "IDLE",
+        "requires_readback": true
+      },
+      "READBACK": {
+        "response": "",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "READY_FOR_DEPARTURE": {
+        "response": "{callsign}, {airport} Tower, runway {runway}, cleared for take-off, wind {wind}, report downwind.",
+        "next_state": "Pattern/DEPARTURE_CLEARED",
+        "requires_readback": true
+      },
+      "READY_FOR_DEPARTURE_VFR": {
+        "response": "{callsign}, {airport} Tower, runway {runway}, cleared for take-off, wind {wind}, frequency change after departure approved.",
+        "next_state": "XC/DEPARTURE_CLEARED",
+        "requires_readback": true
+      },
+      "RADIO_CHECK": {
+        "response": "{callsign}, {airport} Tower, read you five.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "RUNWAY_VACATED": {
+        "response": "{callsign}, roger, contact Ground on {ground_frequency}, good day.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "RUNWAY_VACATED_TOWER_ONLY": {
+        "response": "{callsign}, roger, taxi to the GA apron via Alpha.",
+        "next_state": "IDLE",
+        "requires_readback": true
+      },
+      "LEAVING_FREQUENCY": {
+        "response": "{callsign}, frequency change approved, good day.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, say again your request.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      }
+    },
+    "GROUND_CONTACT": {
+      "REQUEST_TAXI": {
+        "response": "{callsign}, taxi to holding point runway {runway} via Alpha, QNH {qnh}.",
+        "next_state": "TAXI_CLEARED",
+        "requires_readback": true
+      },
+      "READBACK": {
+        "response": "",
+        "next_state": "GROUND_CONTACT",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, report ready to taxi.",
+        "next_state": "GROUND_CONTACT",
+        "requires_readback": false
+      }
+    },
+    "TAXI_CLEARED": {
+      "READY_FOR_DEPARTURE": {
+        "response": "{callsign}, roger, contact Tower on {tower_frequency}.",
+        "next_state": "TOWER_CONTACT",
+        "requires_readback": false
+      },
+      "READY_FOR_DEPARTURE_VFR": {
+        "response": "{callsign}, roger, contact Tower on {tower_frequency}.",
+        "next_state": "TOWER_CONTACT",
+        "requires_readback": false
+      },
+      "INITIAL_CALL_TOWER": {
+        "response": "{callsign}, {airport} Tower, runway {runway}, hold short of runway, number one.",
+        "next_state": "TOWER_CONTACT",
+        "requires_readback": false
+      },
+      "READBACK": {
+        "response": "",
+        "next_state": "TAXI_CLEARED",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, continue taxi to holding point.",
+        "next_state": "TAXI_CLEARED",
+        "requires_readback": false
+      }
+    },
+    "TOWER_CONTACT": {
+      "READY_FOR_DEPARTURE": {
+        "response": "{callsign}, runway {runway}, cleared for take-off, wind {wind}, report downwind.",
+        "next_state": "Pattern/DEPARTURE_CLEARED",
+        "requires_readback": true
+      },
+      "READY_FOR_DEPARTURE_VFR": {
+        "response": "{callsign}, runway {runway}, cleared for take-off, wind {wind}, frequency change after departure approved.",
+        "next_state": "XC/DEPARTURE_CLEARED",
+        "requires_readback": true
+      },
+      "REQUEST_TAXI": {
+        "response": "{callsign}, contact Ground for taxi.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "REQUEST_TAXI_TOWER_ONLY": {
+        "response": "{callsign}, taxi to holding point runway {runway} via Alpha, QNH {qnh}.",
+        "next_state": "TAXI_CLEARED",
+        "requires_readback": true
+      },
+      "REQUEST_LANDING": {
+        "response": "{callsign}, number one, runway {runway}, report final.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REPORT_POSITION": {
+        "response": "{callsign}, number one, runway {runway}, report final.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REQUEST_TOUCH_AND_GO": {
+        "response": "{callsign}, runway {runway}, cleared touch and go, wind {wind}.",
+        "next_state": "Pattern/TOUCH_AND_GO_CLEARED",
+        "requires_readback": true
+      },
+      "READBACK": {
+        "response": "",
+        "next_state": "TOWER_CONTACT",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, say again your request.",
+        "next_state": "TOWER_CONTACT",
+        "requires_readback": false
+      }
+    },
+    "Pattern/DEPARTURE_CLEARED": {
+      "READBACK": {
+        "response": "",
+        "next_state": "Pattern/DEPARTURE_CLEARED",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_DOWNWIND": {
+        "response": "{callsign}, number one, runway {runway}, continue approach, report final.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_BASE": {
+        "response": "{callsign}, number one, runway {runway}, continue approach.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_FINAL": {
+        "response": "{callsign}, runway {runway}, cleared to land, wind {wind}.",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": true
+      },
+      "REPORT_POSITION": {
+        "response": "{callsign}, roger, report downwind runway {runway}.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, read back the take-off clearance.",
+        "next_state": "Pattern/DEPARTURE_CLEARED",
+        "requires_readback": false
+      }
+    },
+    "XC/DEPARTURE_CLEARED": {
+      "READBACK": {
+        "response": "",
+        "next_state": "XC/DEPARTURE_CLEARED",
+        "requires_readback": false
+      },
+      "REQUEST_FREQUENCY": {
+        "response": "{callsign}, frequency change approved, good day.",
+        "next_state": "XC/EN_ROUTE",
+        "requires_readback": false
+      },
+      "LEAVING_FREQUENCY": {
+        "response": "{callsign}, frequency change approved, good day.",
+        "next_state": "XC/EN_ROUTE",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, frequency change after departure approved.",
+        "next_state": "XC/DEPARTURE_CLEARED",
+        "requires_readback": false
+      }
+    },
+    "Pattern/PATTERN_ENTRY": {
+      "READBACK": {
+        "response": "",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_DOWNWIND": {
+        "response": "{callsign}, number one, runway {runway}, continue approach, report final.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_BASE": {
+        "response": "{callsign}, number one, runway {runway}, continue approach.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_FINAL": {
+        "response": "{callsign}, runway {runway}, cleared to land, wind {wind}.",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": true
+      },
+      "REQUEST_LANDING": {
+        "response": "{callsign}, runway {runway}, cleared to land, wind {wind}.",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": true
+      },
+      "REQUEST_TOUCH_AND_GO": {
+        "response": "{callsign}, runway {runway}, cleared touch and go, wind {wind}.",
+        "next_state": "Pattern/TOUCH_AND_GO_CLEARED",
+        "requires_readback": true
+      },
+      "GO_AROUND": {
+        "response": "{callsign}, roger, fly runway heading, climb to pattern altitude, rejoin downwind runway {runway}.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": true
+      },
+      "_INVALID": {
+        "response": "{callsign}, report your position.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      }
+    },
+    "Pattern/TOUCH_AND_GO_CLEARED": {
+      "READBACK": {
+        "response": "",
+        "next_state": "Pattern/TOUCH_AND_GO_CLEARED",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_DOWNWIND": {
+        "response": "{callsign}, number one, runway {runway}, continue approach, report final.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_BASE": {
+        "response": "{callsign}, number one, runway {runway}, continue approach.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_FINAL": {
+        "response": "{callsign}, runway {runway}, cleared to land, wind {wind}.",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": true
+      },
+      "REQUEST_LANDING": {
+        "response": "{callsign}, runway {runway}, cleared to land, wind {wind}.",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": true
+      },
+      "REQUEST_TOUCH_AND_GO": {
+        "response": "{callsign}, runway {runway}, cleared touch and go, wind {wind}.",
+        "next_state": "Pattern/TOUCH_AND_GO_CLEARED",
+        "requires_readback": true
+      },
+      "RUNWAY_VACATED": {
+        "response": "{callsign}, contact Ground on {frequency}, good day.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "RUNWAY_VACATED_TOWER_ONLY": {
+        "response": "{callsign}, roger, taxi to the GA apron via Alpha.",
+        "next_state": "IDLE",
+        "requires_readback": true
+      },
+      "REQUEST_TAXI": {
+        "response": "{callsign}, contact Ground on {frequency} for taxi.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "GO_AROUND": {
+        "response": "{callsign}, roger, fly runway heading, rejoin downwind runway {runway}.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": true
+      },
+      "_INVALID": {
+        "response": "{callsign}, report your position.",
+        "next_state": "Pattern/TOUCH_AND_GO_CLEARED",
+        "requires_readback": false
+      }
+    },
+    "Pattern/LANDING_CLEARED": {
+      "RUNWAY_VACATED": {
+        "response": "{callsign}, contact Ground on {frequency}, good day.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "RUNWAY_VACATED_TOWER_ONLY": {
+        "response": "{callsign}, roger, taxi to the GA apron via Alpha.",
+        "next_state": "IDLE",
+        "requires_readback": true
+      },
+      "REQUEST_TAXI_PARKING": {
+        "response": "{callsign}, runway vacated, taxi to the GA apron via Alpha, good day.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "GO_AROUND": {
+        "response": "{callsign}, roger, fly runway heading, climb to pattern altitude, rejoin downwind runway {runway}.",
+        "next_state": "Pattern/PATTERN_ENTRY",
+        "requires_readback": true
+      },
+      "READBACK": {
+        "response": "",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": false
+      },
+      "number_to_land_follow": {
+        "_comment": "Phase-4 sequencing overlay. Replaces the plain landing clearance when the pilot is not number one. Variables are set by landing_sequence::compute_landing_sequence(). ICAO Doc 4444 12.3.4.14(b): NUMBER ... FOLLOW (traffic type and position).",
+        "response": "{callsign}, number {seq_number}, follow the {seq_type} on {seq_position}, cleared to land runway {runway}.",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": true
+      },
+      "continue_approach_traffic_runway": {
+        "_comment": "Phase-4 sequencing overlay. Replaces the landing clearance when a stationary/taxiing target is on the active runway centerline. ICAO Doc 4444 12.3.4.15(d): CONTINUE APPROACH.",
+        "response": "{callsign}, continue approach, traffic on the runway.",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, cleared to land runway {runway}, acknowledge.",
+        "next_state": "Pattern/LANDING_CLEARED",
+        "requires_readback": false
+      }
+    },
+    "XC/EN_ROUTE": {
+      "_INVALID": {
+        "response": "",
+        "next_state": "XC/EN_ROUTE",
+        "requires_readback": false
+      }
+    },
+    "TRAFFIC_DIALOG": {
+      "_comment": "Phase-2 traffic dialog. Side channel parallel to the main ATCState flow -- entries here are rendered exclusively by traffic_dialog and atc_state_machine::render_traffic_advisory(). next_state values have no function (traffic_dialog holds its own state), kept only for schema compatibility.",
+      "traffic_advisory": {
+        "response": "{callsign}, traffic, {clock} o'clock, {distance} miles, {direction}, {altitude_info}, {type}.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "TRAFFIC_IN_SIGHT": {
+        "response": "{callsign}, roger, maintain visual separation.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "TRAFFIC_NEGATIVE_CONTACT": {
+        "response": "{callsign}, roger, traffic now {clock} o'clock, {distance} miles.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "TRAFFIC_LOOKING": {
+        "response": "{callsign}, roger, traffic now {clock} o'clock, {distance} miles.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "taxi_hold_position": {
+        "response": "{callsign}, hold position, crossing traffic.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "taxi_caution": {
+        "response": "{callsign}, caution, traffic taxiing {side} of you.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "taxi_give_way": {
+        "response": "{callsign}, give way to the {type} {side} of you.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "go_around_traffic_runway": {
+        "_comment": "Phase-4 unsolicited controller call. Fires when the user in Pattern/LANDING_CLEARED is within 1 NM of the threshold and a target is on the active runway. Pure render action: no ATCState change, no traffic_dialog ack expected.",
+        "response": "{callsign}, go around, traffic on the runway, climb runway heading 3000 feet.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, report traffic in sight or negative contact.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      }
+    }
+  },
+  "uncontrolled": {
+    "IDLE": {
+      "INITIAL_CALL_INBOUND": {
+        "response": "{airport} Traffic, {callsign} inbound, joining the circuit.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "SELF_ANNOUNCE": {
+        "response": "{airport} Traffic, {callsign} {position}.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "RADIO_CHECK": {
+        "response": "No reply on the traffic frequency. Frequency appears active.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{airport} Traffic, {callsign} on frequency.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      }
+    },
+    "INFO": {
+      "_comment": "AFIS/Info unit (EUROCONTROL AFIS Manual 2.4: information, no clearances, no readback). {station} = '<airport> Information'. 'at your discretion' is AFIS convention, not an ICAO clearance.",
+      "INITIAL_CALL_INBOUND": {
+        "response": "{callsign}, {station}, runway {runway} in use, QNH {qnh}, no reported traffic, report downwind.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "INITIAL_CALL_GROUND": {
+        "response": "{callsign}, {station}, runway {runway} in use, QNH {qnh}, taxi at your discretion.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "SELF_ANNOUNCE": {
+        "response": "{callsign}, {station}, roger.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "SELF_ANNOUNCE_DEPARTURE": {
+        "_comment": "AFIS does not actively acknowledge departure self-announcements (information unit). Empty response -> silent transition.",
+        "response": "",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_DOWNWIND": {
+        "response": "{callsign}, {station}, roger, runway {runway}, no reported traffic.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_BASE": {
+        "response": "{callsign}, {station}, roger.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_FINAL": {
+        "response": "{callsign}, {station}, wind {wind}, land at your discretion.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "_comment_rmz": "RMZ phrases modeled in the Info/advisory style (AFIS is advisory, no clearance, no readback). RMZ_ENTER stays IDLE (follow-up downwind/base/final advisory in this INFO block); RMZ_LEAVE -> EN_ROUTE (transit pilot continues cross-country).",
+      "RMZ_ENTER": {
+        "response": "{callsign}, {station}, runway {runway} in use, QNH {qnh}, no reported traffic, report downwind.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "RMZ_LEAVE": {
+        "response": "{callsign}, {station}, roger, good day.",
+        "next_state": "EN_ROUTE",
+        "requires_readback": false
+      },
+      "LEAVING_FREQUENCY": {
+        "response": "{callsign}, {station}, roger, good day.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "RADIO_CHECK": {
+        "response": "{callsign}, {station}, reading you loud and clear.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, {station}, roger.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      }
+    },
+    "RADIO": {
+      "_comment": "Radio unit with flight information officer: advisory like Info, {station} = '<airport> Radio'. No clearances, no readback.",
+      "INITIAL_CALL_INBOUND": {
+        "response": "{callsign}, {station}, runway {runway} in use, QNH {qnh}, report downwind.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "INITIAL_CALL_GROUND": {
+        "response": "{callsign}, {station}, runway {runway} in use, QNH {qnh}, taxi at your discretion.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "SELF_ANNOUNCE": {
+        "response": "{callsign}, {station}, roger.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "SELF_ANNOUNCE_DEPARTURE": {
+        "_comment": "Advisory unit does not actively acknowledge departure self-announcements. Empty response -> silent transition.",
+        "response": "",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_DOWNWIND": {
+        "response": "{callsign}, {station}, roger, no reported traffic.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_BASE": {
+        "response": "{callsign}, {station}, roger.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "REPORT_POSITION_FINAL": {
+        "response": "{callsign}, {station}, wind {wind}, land at your discretion.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "LEAVING_FREQUENCY": {
+        "response": "{callsign}, {station}, roger, good day.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "RADIO_CHECK": {
+        "response": "{callsign}, {station}, reading you loud and clear.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      },
+      "_INVALID": {
+        "response": "{callsign}, {station}, roger.",
+        "next_state": "IDLE",
+        "requires_readback": false
+      }
+    }
+  }
+}

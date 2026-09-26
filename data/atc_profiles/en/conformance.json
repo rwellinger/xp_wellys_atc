@@ -1,0 +1,18 @@
+{
+  "_comment": "ICAO-VFR initial-call conformance (EN profile). Per intent two sets: 'required' = mandatory elements, 'recommended' = didactic full form. settings::bzf_strict_mode() selects the hard set (strict=false enforces only 'required', strict=true 'required' + 'recommended'); note bzf_strict_mode is UI-gated to the DE profile, so in EN this data only drives the (non-enforcing) missing-element logging plus the H2 hint-vs-recommended invariant test. Detection: position = parser signal (has_position/vrp), atis_letter = 'information' + NATO letter, intention/aircraft_type = 'element_keywords' (token-bound) or live acf_ICAO. Finding (docs/icao/icao_coverage.md 1.3): ICAO/SERA mandate ONLY the two-step call-sign exchange + full call signs; aircraft type / position / intentions / ATIS are NOT ICAO-required (they are national/local operationalisation, e.g. the CAP 413 content order) -> INITIAL_CALL_GROUND.required is empty, simulator behaviour unchanged. The EN readback/conformance strict-mode decision is Issue #42. ASCII-only.",
+  "INITIAL_CALL_GROUND": {
+    "required": [],
+    "recommended": ["aircraft_type", "position", "intention", "atis_letter"],
+    "missing_response": "{callsign}, say {missing}.",
+    "element_prompts": {
+      "position": "your position",
+      "intention": "your intentions",
+      "atis_letter": "information",
+      "aircraft_type": "aircraft type"
+    },
+    "element_keywords": {
+      "intention": ["vfr", "ifr", "to", "for", "pattern", "circuit", "remaining", "cross", "country", "departure", "local", "training", "transit"],
+      "aircraft_type": ["cessna", "diamond", "piper", "robin", "katana", "dimona", "mooney", "cirrus", "sportstar", "aquila", "tecnam"]
+    }
+  }
+}
