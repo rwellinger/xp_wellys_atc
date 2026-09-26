@@ -32,7 +32,7 @@ See LEGACY_PATHS.
 
 Usage:
     python3 tools/skunkcrafts/generate.py \
-        --tree  "<X-Plane>/Resources/available plugins/xp_wellys_vfr_atc" \
+        --tree  "<X-Plane>/xplaunchData/Plugins/xp_wellys_vfr_atc" \
         --version 0.4.0
 
 Run it against the *release* tree you are about to publish (the same layout

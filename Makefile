@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 XPLANE_ROOT := /Users/robertw/X-Plane 12
-PLUGIN_DIR  := $(XPLANE_ROOT)/Resources/available plugins/xp_wellys_vfr_atc
+PLUGIN_DIR  := $(XPLANE_ROOT)/xplaunchData/Plugins/xp_wellys_vfr_atc
 
 SDK_SENTINEL    := sdk/XPLM/XPLMPlugin.h
 IMGUI_SENTINEL  := vendor/imgui/imgui.h
