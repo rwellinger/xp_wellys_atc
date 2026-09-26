@@ -73,11 +73,11 @@ bool token_contains(const std::string &padded, const std::string &needle) {
 // garbled by STT, so a generous letter set is accepted.
 bool has_information_letter(const std::string &raw) {
   static const char *kLetters[] = {
-      "alfa",   "alpha",  "bravo",   "charlie", "delta",   "echo",
-      "foxtrot", "golf",  "hotel",   "india",   "juliet",  "juliett",
-      "kilo",   "lima",   "mike",    "november", "oscar",  "papa",
-      "quebec", "romeo",  "sierra",  "tango",   "uniform", "victor",
-      "whiskey", "wisky", "xray",    "yankee",  "zulu"};
+      "alfa",    "alpha", "bravo",  "charlie",  "delta",   "echo",
+      "foxtrot", "golf",  "hotel",  "india",    "juliet",  "juliett",
+      "kilo",    "lima",  "mike",   "november", "oscar",   "papa",
+      "quebec",  "romeo", "sierra", "tango",    "uniform", "victor",
+      "whiskey", "wisky", "xray",   "yankee",   "zulu"};
 
   // Tokenise the lowercased transcript on whitespace/punctuation.
   std::string lc = to_lower(raw);
@@ -150,8 +150,7 @@ bool element_present(const std::string &element, const nlohmann::json &node,
     if (any_keyword(padded, keyword_list(node, "aircraft_type")))
       return true;
     // Live acf_ICAO ("DV20") spoken back by the pilot also counts.
-    if (!ctx.aircraft_icao.empty() &&
-        token_contains(padded, ctx.aircraft_icao))
+    if (!ctx.aircraft_icao.empty() && token_contains(padded, ctx.aircraft_icao))
       return true;
     return false;
   }

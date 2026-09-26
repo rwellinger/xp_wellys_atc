@@ -341,8 +341,9 @@ std::string sha256_file(const std::string &path) {
   static const char hex[] = "0123456789abcdef";
   std::string out(static_cast<size_t>(2) * kSha256DigestLen, '\0');
   for (size_t i = 0; i < kSha256DigestLen; ++i) {
-    out[(2 * i)] = hex[(digest[i] >> 4) & 0xF];
-    out[(2 * i) + 1] = hex[digest[i] & 0xF];
+    const unsigned byte = digest[i];
+    out[(2 * i)] = hex[(byte >> 4) & 0xFu];
+    out[(2 * i) + 1] = hex[byte & 0xFu];
   }
   return out;
 }

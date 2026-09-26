@@ -31,8 +31,8 @@ void write_u32_le(std::vector<uint8_t> &out, uint32_t v) {
   out.push_back(static_cast<uint8_t>((v >> 24) & 0xff));
 }
 void write_u16_le(std::vector<uint8_t> &out, uint16_t v) {
-  out.push_back(static_cast<uint8_t>(v & 0xff));
-  out.push_back(static_cast<uint8_t>((v >> 8) & 0xff));
+  out.push_back(static_cast<uint8_t>(v & 0xffu));
+  out.push_back(static_cast<uint8_t>((static_cast<uint32_t>(v) >> 8) & 0xffu));
 }
 
 uint32_t read_u32_le(const uint8_t *p) {
@@ -83,8 +83,7 @@ pcm_float32_to_wav(const std::vector<float> &pcm_16k_mono) {
     const int32_t s = static_cast<int32_t>(std::lround(clamped * 32767.0f));
     const int16_t i16 = static_cast<int16_t>(
         std::max<int32_t>(-32768, std::min<int32_t>(32767, s)));
-    wav.push_back(static_cast<uint8_t>(i16 & 0xff));
-    wav.push_back(static_cast<uint8_t>((i16 >> 8) & 0xff));
+    write_u16_le(wav, static_cast<uint16_t>(i16));
   }
   return wav;
 }
@@ -114,31 +113,19 @@ inline int16_t decode_pcm_sample(const uint8_t *p, uint16_t bits,
     switch (bits) {
     case 8:
       // Unsigned PCM 8 — center at 128.
-      s = (static_cast<int32_t>(sp[0]) - 128) << 8;
+      s = (static_cast<int32_t>(sp[0]) - 128) * 256;
       break;
     case 16:
-      s = static_cast<int16_t>(static_cast<uint16_t>(sp[0]) |
-                               (static_cast<uint16_t>(sp[1]) << 8));
+      s = static_cast<int16_t>(read_u16_le(sp));
       break;
-    case 24: {
-      // Signed 24-bit little-endian; promote to int32 with sign-extend
-      // then truncate the bottom byte for int16 output.
-      uint32_t u = static_cast<uint32_t>(sp[0]) |
-                   (static_cast<uint32_t>(sp[1]) << 8) |
-                   (static_cast<uint32_t>(sp[2]) << 16);
-      if (u & 0x800000u)
-        u |= 0xff000000u;
-      s = static_cast<int32_t>(u) >> 8;
+    case 24:
+      // Signed 24-bit little-endian; the top two bytes already form the
+      // two's-complement int16 (drops the bottom byte, no sign-extend).
+      s = static_cast<int16_t>(read_u16_le(sp + 1));
       break;
-    }
-    case 32: {
-      uint32_t u = static_cast<uint32_t>(sp[0]) |
-                   (static_cast<uint32_t>(sp[1]) << 8) |
-                   (static_cast<uint32_t>(sp[2]) << 16) |
-                   (static_cast<uint32_t>(sp[3]) << 24);
-      s = static_cast<int32_t>(u) >> 16;
+    case 32:
+      s = static_cast<int16_t>(read_u16_le(sp + 2));
       break;
-    }
     default:
       return 0;
     }

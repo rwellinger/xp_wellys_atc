@@ -48,8 +48,8 @@ TemplateEntry lookup(bool is_towered, const std::string &state,
 // offered; when false (fresh spawn, never flew) the sign-off is dropped and
 // the first-contact intents stay. Only affects towered IDLE; every other
 // state returns the full key set regardless.
-std::vector<std::string> valid_intents(bool is_towered, const std::string &state,
-                                       bool post_landing);
+std::vector<std::string>
+valid_intents(bool is_towered, const std::string &state, bool post_landing);
 
 // Replace {key} placeholders in template string with values from vars
 std::string fill(const std::string &tmpl,

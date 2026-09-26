@@ -51,7 +51,7 @@ std::vector<uint8_t> base64_decode(const std::string &s) {
   std::vector<uint8_t> out;
   out.reserve(s.size() * 3 / 4);
   uint32_t buf = 0;
-  int bits = 0;
+  unsigned bits = 0;
   for (char c : s) {
     if (c == '=' || c == ' ' || c == '\n' || c == '\r' || c == '\t')
       continue;

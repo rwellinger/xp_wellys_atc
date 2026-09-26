@@ -151,9 +151,9 @@ void normalize_whisper_nato_variants(std::string &lc) {
 // the UTF-8 umlaut form "fünf".
 char digit_word_to_numeral(const std::string &tok) {
   static const std::pair<const char *, char> kDigits[] = {
-      {"null", '0'},  {"eins", '1'},   {"zwo", '2'},  {"zwei", '2'},
+      {"null", '0'},  {"eins", '1'},   {"zwo", '2'},   {"zwei", '2'},
       {"drei", '3'},  {"vier", '4'},   {"fuenf", '5'}, {"f\xc3\xbcnf", '5'},
-      {"sechs", '6'}, {"sieben", '7'}, {"acht", '8'}, {"neun", '9'}};
+      {"sechs", '6'}, {"sieben", '7'}, {"acht", '8'},  {"neun", '9'}};
   for (const auto &[word, digit] : kDigits) {
     if (tok == word)
       return digit;
@@ -230,8 +230,7 @@ bool pilot_has_callsign(const std::string &pilot_lc,
   if (sp1 == std::string::npos)
     return false;
   std::size_t sp2 = callsign_lc.rfind(' ', sp1 - 1);
-  std::string tail =
-      callsign_lc.substr(sp2 == std::string::npos ? 0 : sp2 + 1);
+  std::string tail = callsign_lc.substr(sp2 == std::string::npos ? 0 : sp2 + 1);
   const std::string tail_c = canon_callsign(tail);
   return !tail_c.empty() && p.find(tail_c) != std::string::npos;
 }
@@ -259,7 +258,8 @@ std::string canon_stripped(const std::string &s) {
 // Is the canonicalised clearance value present as a substring of the
 // canonicalised pilot transcript? An empty value cannot be checked, so
 // give the benefit of the doubt (mirrors pilot_has_callsign).
-bool value_covered(const std::string &haystack_canon, const std::string &value) {
+bool value_covered(const std::string &haystack_canon,
+                   const std::string &value) {
   const std::string v = canon_stripped(value);
   if (v.empty())
     return true;
@@ -484,8 +484,9 @@ std::vector<FieldDiff> diff_readback(const ClearanceComponents &comp,
   return out;
 }
 
-std::vector<Element> missing_readback_elements(const ClearanceComponents &comp,
-                                               const std::string &pilot_transcript) {
+std::vector<Element>
+missing_readback_elements(const ClearanceComponents &comp,
+                          const std::string &pilot_transcript) {
   // Thin wrapper over diff_readback: every element that is not Ok (Missing or
   // Wrong) is "not read back" for the completeness gate. Ok is decided by
   // value_covered exactly as before, so behaviour is unchanged.
@@ -545,12 +546,14 @@ std::string build_correction_response(const std::string &callsign,
 std::string build_correction_response(const std::string &callsign,
                                       const ClearanceComponents &,
                                       const std::vector<FieldDiff> &diff) {
-  const bool any_wrong = std::any_of(diff.begin(), diff.end(), [](const FieldDiff &d) {
-    return d.status == ReadbackStatus::Wrong;
-  });
-  const bool any_bad = std::any_of(diff.begin(), diff.end(), [](const FieldDiff &d) {
-    return d.status != ReadbackStatus::Ok;
-  });
+  const bool any_wrong =
+      std::any_of(diff.begin(), diff.end(), [](const FieldDiff &d) {
+        return d.status == ReadbackStatus::Wrong;
+      });
+  const bool any_bad =
+      std::any_of(diff.begin(), diff.end(), [](const FieldDiff &d) {
+        return d.status != ReadbackStatus::Ok;
+      });
   if (!any_bad)
     return "";
 

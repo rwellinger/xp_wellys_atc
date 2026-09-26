@@ -52,15 +52,15 @@ enum class FrequencyType {
   UNICOM,
   CTAF,
   ATIS,
-  INFO,  // German AFIS/Info facility (apt.dat code 1054 named "... Information")
+  INFO, // German AFIS/Info facility (apt.dat code 1054 named "... Information")
   RADIO, // Radio facility w/ Flugleiter (apt.dat code 1054 named "... Radio")
 };
 
 const char *frequency_type_name(FrequencyType ft);
 
 // Operational class of an airport's radio service. Replaces the former bool
-// is_towered_airport so AFIS/Info facilities (FrequencyType::INFO / RADIO) are a
-// first-class category, distinct from genuinely uncontrolled (UNICOM/CTAF)
+// is_towered_airport so AFIS/Info facilities (FrequencyType::INFO / RADIO) are
+// a first-class category, distinct from genuinely uncontrolled (UNICOM/CTAF)
 // fields. UNKNOWN is the safe default: when no airport is resolved / the
 // frequency cache is not ready yet it yields empty hints rather than silently
 // wrong ones. Order matters only for the explicit values.
@@ -68,7 +68,7 @@ enum class FacilityType {
   UNKNOWN = 0,      // not classified yet (no airport / cache not ready)
   UNCONTROLLED = 1, // UNICOM/CTAF self-announce field
   TOWERED = 2,      // controlled field with Tower (clearances, readback)
-  AFIS = 3,         // Info/Radio facility: traffic info + reports, no clearances
+  AFIS = 3, // Info/Radio facility: traffic info + reports, no clearances
 };
 
 const char *facility_type_name(FacilityType ft);
@@ -101,8 +101,9 @@ struct AirportFrequencies {
 };
 
 // Derive the operational FacilityType from an airport's frequency table.
-// Single source of truth for the classification (TOWER -> TOWERED, INFO/RADIO ->
-// AFIS, UNICOM/CTAF -> UNCONTROLLED, none -> UNKNOWN). SDK-free / unit-testable.
+// Single source of truth for the classification (TOWER -> TOWERED, INFO/RADIO
+// -> AFIS, UNICOM/CTAF -> UNCONTROLLED, none -> UNKNOWN). SDK-free /
+// unit-testable.
 FacilityType classify_facility(const AirportFrequencies &freqs);
 
 // True when the airport has at least one contactable ATC frequency
@@ -168,9 +169,9 @@ struct XPlaneContext {
   // taking the timestamp as a separate parameter.
   double now_secs = 0.0;
 
-  // Derived binary view kept for the (unchanged) state machine / template / flow
-  // logic that only cares about "controlled vs not". AFIS and UNCONTROLLED both
-  // return false here, exactly as the former bool is_towered_airport did.
+  // Derived binary view kept for the (unchanged) state machine / template /
+  // flow logic that only cares about "controlled vs not". AFIS and UNCONTROLLED
+  // both return false here, exactly as the former bool is_towered_airport did.
   bool is_towered() const noexcept {
     return facility_type == FacilityType::TOWERED;
   }

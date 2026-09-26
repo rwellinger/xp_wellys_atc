@@ -130,9 +130,7 @@ static AirspaceClass parse_class(const char *s) {
 }
 
 // Only index awareness-relevant classes — skip danger/prohibited/glider etc.
-static bool is_indexed(AirspaceClass c) {
-  return c != AirspaceClass::OTHER;
-}
+static bool is_indexed(AirspaceClass c) { return c != AirspaceClass::OTHER; }
 
 // ── Circle / arc tessellation ────────────────────────────────────────────
 // OpenAir defines many CTR/RMZ/TMZ zones as a centre + circle (DC) or as
@@ -141,8 +139,8 @@ static bool is_indexed(AirspaceClass c) {
 // tessellate them into polygon points here.
 
 // Point at (bearing_deg true, radius_nm) from a centre. Flat-earth offset.
-static std::pair<double, double> point_at(double clat, double clon,
-                                          double radius_nm, double bearing_deg) {
+static std::pair<double, double>
+point_at(double clat, double clon, double radius_nm, double bearing_deg) {
   double dlat = (radius_nm / kNmPerDeg) * std::cos(bearing_deg * kDeg2Rad);
   double coslat = std::cos(clat * kDeg2Rad);
   if (std::fabs(coslat) < 1e-9)
@@ -329,7 +327,8 @@ static std::size_t parse_file(const std::string &path,
         double radius_nm = 0, a1 = 0, a2 = 0;
         // Fixed-format arc parse; the returned field count (3) is checked.
         // NOLINTNEXTLINE(bugprone-unchecked-string-to-number-conversion)
-        if (std::sscanf(line + 3, " %lf , %lf , %lf", &radius_nm, &a1, &a2) == 3)
+        if (std::sscanf(line + 3, " %lf , %lf , %lf", &radius_nm, &a1, &a2) ==
+            3)
           emit_arc(cur, center_lat, center_lon, radius_nm, a1, a2, arc_dir);
       }
     } else if (std::strncmp(line, "DB ", 3) == 0) {
@@ -342,8 +341,7 @@ static std::size_t parse_file(const std::string &path,
           double lat1, lon1, lat2, lon2;
           if (parse_coord(c1.c_str(), lat1, lon1) &&
               parse_coord(c2.c_str(), lat2, lon2)) {
-            double radius_nm =
-                dist_nm(center_lat, center_lon, lat1, lon1);
+            double radius_nm = dist_nm(center_lat, center_lon, lat1, lon1);
             double b1 = bearing_to(center_lat, center_lon, lat1, lon1);
             double b2 = bearing_to(center_lat, center_lon, lat2, lon2);
             emit_arc(cur, center_lat, center_lon, radius_nm, b1, b2, arc_dir);

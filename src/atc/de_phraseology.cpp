@@ -910,7 +910,8 @@ std::string soften_caps_for_speech(const std::string &s) {
         k += 2;
         continue;
       }
-      out += is_upper(tok[k]) ? static_cast<char>(tok[k] + ('a' - 'A')) : tok[k];
+      out +=
+          is_upper(tok[k]) ? static_cast<char>(tok[k] + ('a' - 'A')) : tok[k];
       ++k;
     }
   }
@@ -1019,8 +1020,8 @@ std::string parse_spoken_icao(const std::string &words_lower) {
       started = true;
     } else {
       if (started)
-        break;    // run ended at first non-NATO word
-      return {};  // leading word is not a NATO letter -> miss
+        break;   // run ended at first non-NATO word
+      return {}; // leading word is not a NATO letter -> miss
     }
     if (icao.size() > 4)
       return {}; // too long to be an ICAO code

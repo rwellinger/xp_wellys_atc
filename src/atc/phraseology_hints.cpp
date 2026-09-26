@@ -116,8 +116,8 @@ std::vector<std::string> lookup(const HintQuery &q) {
     if (c >= 'a' && c <= 'z')
       c = static_cast<char>(c - 'a' + 'A');
   // UNKNOWN maps to a token no rule carries, so an unclassified field falls
-  // through to the empty fallback rule -> empty hints panel (visible/debuggable)
-  // rather than a silently wrong guess.
+  // through to the empty fallback rule -> empty hints panel
+  // (visible/debuggable) rather than a silently wrong guess.
   std::string facility_str;
   switch (q.facility) {
   case xplane_context::FacilityType::TOWERED:

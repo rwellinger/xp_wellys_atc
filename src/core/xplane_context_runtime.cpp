@@ -494,11 +494,11 @@ static void build_towered_cache() {
   }
 
   char log[256];
-  std::snprintf(
-      log, sizeof(log),
-      "[xp_wellys_vfr_atc] Airport cache ready: %zu with freqs (%zu "
-      "towered, %zu ATIS), %zu with runway data\n",
-      freq_cache_.size(), towered_count, atis_count, runway_cache_.size());
+  std::snprintf(log, sizeof(log),
+                "[xp_wellys_vfr_atc] Airport cache ready: %zu with freqs (%zu "
+                "towered, %zu ATIS), %zu with runway data\n",
+                freq_cache_.size(), towered_count, atis_count,
+                runway_cache_.size());
   XPLMDebugString(log);
 }
 
@@ -788,12 +788,11 @@ void update() {
                                             ctx.latitude, ctx.longitude);
           if (!cached_match_id.empty()) {
             char mlog[256];
-            std::snprintf(
-                mlog, sizeof(mlog),
-                "[xp_wellys_vfr_atc] Frequency match: %s (active COM "
-                "%u kHz) - switching active airport from %s\n",
-                cached_match_id.c_str(), com_khz,
-                ctx.geometric_nearest_id.c_str());
+            std::snprintf(mlog, sizeof(mlog),
+                          "[xp_wellys_vfr_atc] Frequency match: %s (active COM "
+                          "%u kHz) - switching active airport from %s\n",
+                          cached_match_id.c_str(), com_khz,
+                          ctx.geometric_nearest_id.c_str());
             XPLMDebugString(mlog);
           }
         }

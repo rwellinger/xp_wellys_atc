@@ -89,7 +89,7 @@ static constexpr float kAtisTuneDelaySec = 2.0f; // wait before playing
 // a transcript line + squelch burst (the user does not watch Log.txt). The
 // short retry runs through the existing flight-loop cooldown poller, so PTT
 // stays free between attempts.
-static constexpr int kAtisMaxTtsTries = 3;        // attempts before giving up
+static constexpr int kAtisMaxTtsTries = 3;         // attempts before giving up
 static constexpr float kAtisRetryDelaySec = 15.0f; // gap between failed tries
 static int atis_tts_failures_ = 0;                 // consecutive TTS failures
 
@@ -100,11 +100,11 @@ static int atis_tts_failures_ = 0;                 // consecutive TTS failures
 // we re-dispatch the SAME utterance a few times with a short gap through
 // the flight-loop poller (PTT stays blocked between tries), then surface a
 // UI-queryable network-error state with a manual "retry" button.
-static constexpr int kDialogMaxTtsTries = 3;       // attempts before giving up
+static constexpr int kDialogMaxTtsTries = 3;        // attempts before giving up
 static constexpr float kDialogRetryDelaySec = 3.0f; // gap between failed tries
-static int dialog_tts_failures_ = 0;               // consecutive TTS failures
-static float dialog_retry_timer_ = 0.0f;           // >0 = auto-retry scheduled
-static bool tts_network_error_ = false;            // UI give-up flag (retryable)
+static int dialog_tts_failures_ = 0;                // consecutive TTS failures
+static float dialog_retry_timer_ = 0.0f;            // >0 = auto-retry scheduled
+static bool tts_network_error_ = false; // UI give-up flag (retryable)
 // Content-moderation give-up flag (issue #62). Distinct from
 // tts_network_error_: a provider guardrail rejected the text, so retrying
 // is pointless — the UI shows an honest notice and NO retry button.
@@ -114,7 +114,7 @@ static bool tts_blocked_ = false;
 // flight-loop poller can re-send the identical utterance without re-running
 // the engine pipeline (state stays at post-process between auto-retries).
 struct GuardedTtsRequest {
-  std::string final_text;                  // already normalized for speech
+  std::string final_text; // already normalized for speech
   model_manifest::VoiceRole role = model_manifest::VoiceRole::Tower;
   float length_scale = 1.0f;
   atc_state_machine::AtcStateSnapshot pre_snap;
@@ -178,11 +178,11 @@ role_for_frequency(const xplane_context::XPlaneContext &ctx) {
 // `on_failure` (optional) fires on the main thread when synthesis fails.
 // Used by the ATIS path to drive the retry/give-up logic; on success the
 // failure callback is never invoked.
-static void
-speak_response(const std::string &text, model_manifest::VoiceRole role,
-               float length_scale = 1.0f, int com_override = 0,
-               std::function<void()> on_playback_starting = nullptr,
-               std::function<void()> on_failure = nullptr) {
+static void speak_response(const std::string &text,
+                           model_manifest::VoiceRole role,
+                           float length_scale = 1.0f, int com_override = 0,
+                           std::function<void()> on_playback_starting = nullptr,
+                           std::function<void()> on_failure = nullptr) {
   state_ = PTTState::PLAYING;
   tts_pending_ = true;
   ++total_inferences_; // TTS inference
@@ -206,11 +206,10 @@ speak_response(const std::string &text, model_manifest::VoiceRole role,
         if (success && !audio.pcm16.empty()) {
           if (settings::debug_logging()) {
             char dbg[160];
-            std::snprintf(
-                dbg, sizeof(dbg),
-                "[xp_wellys_vfr_atc][DEBUG] TTS produced %zu samples "
-                "@ %u Hz\n",
-                audio.pcm16.size(), audio.sample_rate_hz);
+            std::snprintf(dbg, sizeof(dbg),
+                          "[xp_wellys_vfr_atc][DEBUG] TTS produced %zu samples "
+                          "@ %u Hz\n",
+                          audio.pcm16.size(), audio.sample_rate_hz);
             XPLMDebugString(dbg);
           }
           if (on_playback_starting)
@@ -273,11 +272,10 @@ static void dispatch_guarded_tts() {
           last_guarded_req_.valid = false;
           if (settings::debug_logging()) {
             char dbg[160];
-            std::snprintf(
-                dbg, sizeof(dbg),
-                "[xp_wellys_vfr_atc][DEBUG] TTS produced %zu samples "
-                "@ %u Hz\n",
-                audio.pcm16.size(), audio.sample_rate_hz);
+            std::snprintf(dbg, sizeof(dbg),
+                          "[xp_wellys_vfr_atc][DEBUG] TTS produced %zu samples "
+                          "@ %u Hz\n",
+                          audio.pcm16.size(), audio.sample_rate_hz);
             XPLMDebugString(dbg);
           }
           int com = settings::active_com();
@@ -382,8 +380,8 @@ static void speak_response_guarded(const std::string &text,
                  : text);
 
   last_guarded_req_ = GuardedTtsRequest{
-      std::move(final_text), role, length_scale, std::move(pre_snap),
-      expected_gen,          true,
+      std::move(final_text), role,         length_scale,
+      std::move(pre_snap),   expected_gen, true,
   };
   dialog_tts_failures_ = 0;
   dialog_retry_timer_ = 0.0f;
@@ -512,7 +510,8 @@ void init() {
 void stop() {
   state_ = PTTState::IDLE;
   tts_pending_ = false;
-  atis_tts_failures_ = 0; // mirror init(): drop the cross-flight TTS-retry counter
+  atis_tts_failures_ =
+      0; // mirror init(): drop the cross-flight TTS-retry counter
   dialog_tts_failures_ = 0;
   dialog_retry_timer_ = 0.0f;
   tts_network_error_ = false;
@@ -546,9 +545,8 @@ void on_ptt_pressed() {
   // visible.
   if (!backends::stt_ready() || !backends::lm_ready() ||
       !backends::tts_ready()) {
-    XPLMDebugString(
-        "[xp_wellys_vfr_atc][ERROR] PTT blocked - local models not "
-        "loaded (open the plugin window to download)\n");
+    XPLMDebugString("[xp_wellys_vfr_atc][ERROR] PTT blocked - local models not "
+                    "loaded (open the plugin window to download)\n");
     return;
   }
 
@@ -639,7 +637,7 @@ void on_ptt_released() {
   static const char *const kVfrVocabBias =
       "Vorfeld Rollhalt Platzrunde Gegenanflug Queranflug Endanflug "
       "Abstellposition Piste QNH Squawk Transponder Frequenz Startfrei";
-  airport_ctx += " ";
+  airport_ctx += ' ';
   airport_ctx += kVfrVocabBias;
 
   backends::stt::transcribe_async(
@@ -784,8 +782,7 @@ void update() {
     if (dialog_retry_timer_ <= 0.0f) {
       dialog_retry_timer_ = 0.0f;
       if (last_guarded_req_.valid) {
-        XPLMDebugString(
-            "[xp_wellys_vfr_atc] Dialog TTS auto-retry firing\n");
+        XPLMDebugString("[xp_wellys_vfr_atc] Dialog TTS auto-retry firing\n");
         dispatch_guarded_tts();
       }
     }
@@ -876,9 +873,8 @@ void update() {
     atis_playing_ = false;
     state_ = PTTState::IDLE;
     if (settings::debug_logging())
-      XPLMDebugString(
-          "[xp_wellys_vfr_atc][DEBUG] ATIS aborted: pilot retuned "
-          "the COM that was playing ATIS\n");
+      XPLMDebugString("[xp_wellys_vfr_atc][DEBUG] ATIS aborted: pilot retuned "
+                      "the COM that was playing ATIS\n");
   }
 
   // ATIS is a side-channel like Traffic — independent of ATCState.

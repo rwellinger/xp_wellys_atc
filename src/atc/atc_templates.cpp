@@ -19,8 +19,8 @@
 #include "atc/atc_templates.hpp"
 #include "core/logging.hpp"
 
-#include <set>
 #include "persistence/settings.hpp"
+#include <set>
 
 #include <json.hpp>
 
@@ -122,8 +122,8 @@ TemplateEntry lookup(bool is_towered, const std::string &state,
   };
 }
 
-std::vector<std::string> valid_intents(bool is_towered, const std::string &state,
-                                       bool post_landing) {
+std::vector<std::string>
+valid_intents(bool is_towered, const std::string &state, bool post_landing) {
   std::vector<std::string> result;
 
   if (!loaded_)
@@ -146,9 +146,10 @@ std::vector<std::string> valid_intents(bool is_towered, const std::string &state
   // airborne or not (a cross-country leg to a NEW field reaches IDLE with
   // was_airborne=true but still needs the inbound first contact, Issue #14).
   // Their own phase precondition (flight_rules.json rejection_ground) is the
-  // ground/air authority, so an on-ground post-landing mis-pick is caught there.
-  static const std::set<std::string> kFirstContactOnly = {
-      "INITIAL_CALL_GROUND", "INITIAL_CALL_TOWER"};
+  // ground/air authority, so an on-ground post-landing mis-pick is caught
+  // there.
+  static const std::set<std::string> kFirstContactOnly = {"INITIAL_CALL_GROUND",
+                                                          "INITIAL_CALL_TOWER"};
   static const std::set<std::string> kPostLandingOnly = {"LEAVING_FREQUENCY"};
   const bool filter_idle = is_towered && state == "IDLE";
 

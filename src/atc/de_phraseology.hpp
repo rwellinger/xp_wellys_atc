@@ -67,8 +67,8 @@ std::string expand_callsign_phonetic(const std::string &raw);
 // assembled uppercase ICAO code, empty if no valid 3..4 letter run starts
 // the input.
 //   "echo delta mike alfa"            -> "EDMA"
-//   "echo delta mike alpha, blah"     -> "EDMA"  (stops at first non-letter word)
-//   "links"                           -> ""      (not a NATO word)
+//   "echo delta mike alpha, blah"     -> "EDMA"  (stops at first non-letter
+//   word) "links"                           -> ""      (not a NATO word)
 // Input is expected lowercase (post parse_spoken_number). Tolerant of common
 // Whisper / German spelling variants (alpha/alfa, juliet/juliett, x-ray/xray).
 // SDK-free; used by intent_parser::extract_destination.

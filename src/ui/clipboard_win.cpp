@@ -32,9 +32,8 @@ std::string read_system_text() {
     if (wide != nullptr) {
       // -1 length: the source is null-terminated, so the computed length
       // (and the resulting string) includes the terminator.
-      const int len =
-          WideCharToMultiByte(CP_UTF8, 0, wide, -1, nullptr, 0, nullptr,
-                              nullptr);
+      const int len = WideCharToMultiByte(CP_UTF8, 0, wide, -1, nullptr, 0,
+                                          nullptr, nullptr);
       if (len > 1) {
         std::vector<char> utf8(static_cast<size_t>(len));
         WideCharToMultiByte(CP_UTF8, 0, wide, -1, utf8.data(), len, nullptr,

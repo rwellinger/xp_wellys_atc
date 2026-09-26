@@ -57,8 +57,8 @@ enum class PilotIntent {
   TRAFFIC_NEGATIVE_CONTACT,
   TRAFFIC_LOOKING,
   REQUEST_REPEAT, // NfL §18 c) Nr. 4 — "WIEDERHOLEN SIE / SAY AGAIN"
-  RMZ_ENTER,      // NfL ANLAGE 7.4 *a) — "WERDE IN RMZ EINFLIEGEN / DURCHFLIEGEN"
-  RMZ_LEAVE,      // NfL ANLAGE 7.4 *b) — "VERLASSE RMZ (Position) (Ziffern) FUSS"
+  RMZ_ENTER, // NfL ANLAGE 7.4 *a) — "WERDE IN RMZ EINFLIEGEN / DURCHFLIEGEN"
+  RMZ_LEAVE, // NfL ANLAGE 7.4 *b) — "VERLASSE RMZ (Position) (Ziffern) FUSS"
 };
 
 struct PilotMessage {

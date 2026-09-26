@@ -259,7 +259,8 @@ static std::string format_bytes(uint64_t b) {
 #endif
 }
 
-[[maybe_unused]] static const char *file_state_label(backends::loader::FileState s) {
+[[maybe_unused]] static const char *
+file_state_label(backends::loader::FileState s) {
   using FS = backends::loader::FileState;
   switch (s) {
   case FS::NotChecked:
@@ -1324,11 +1325,10 @@ static void draw_audio_tab() {
       audio_test_timer_ = 0.0f;
       if (!audio_test_wav_.empty()) {
         char log[128];
-        std::snprintf(
-            log, sizeof(log),
-            "[xp_wellys_vfr_atc] Audio test playback - volume: %.2f, "
-            "wav: %zu bytes\n",
-            settings::volume(), audio_test_wav_.size());
+        std::snprintf(log, sizeof(log),
+                      "[xp_wellys_vfr_atc] Audio test playback - volume: %.2f, "
+                      "wav: %zu bytes\n",
+                      settings::volume(), audio_test_wav_.size());
         XPLMDebugString(log);
 
         // Save WAV to disk for debugging. Resolve the OS temp dir at
@@ -1608,11 +1608,12 @@ static void draw_settings_tab() {
           models_catalog::openai_voice_options(),
           settings::openai_tts_voice_atis(),
           [](const std::string &v) { settings::set_openai_tts_voice_atis(v); });
-      combo_from_catalog(
-          ui_strings::tr("settings.tower_voice"),
-          models_catalog::openai_voice_options(),
-          settings::openai_tts_voice_tower(),
-          [](const std::string &v) { settings::set_openai_tts_voice_tower(v); });
+      combo_from_catalog(ui_strings::tr("settings.tower_voice"),
+                         models_catalog::openai_voice_options(),
+                         settings::openai_tts_voice_tower(),
+                         [](const std::string &v) {
+                           settings::set_openai_tts_voice_tower(v);
+                         });
       combo_from_catalog(ui_strings::tr("settings.ground_voice"),
                          models_catalog::openai_voice_options(),
                          settings::openai_tts_voice_ground(),
@@ -1715,20 +1716,19 @@ static void draw_settings_tab() {
 
       combo_from_catalog(
           "ATIS voice##mistral", models_catalog::mistral_voice_options(),
-          settings::mistral_tts_voice_atis(),
-          [](const std::string &v) { settings::set_mistral_tts_voice_atis(v); });
-      combo_from_catalog("Tower voice##mistral",
-                         models_catalog::mistral_voice_options(),
-                         settings::mistral_tts_voice_tower(),
-                         [](const std::string &v) {
-                           settings::set_mistral_tts_voice_tower(v);
-                         });
-      combo_from_catalog("Ground voice##mistral",
-                         models_catalog::mistral_voice_options(),
-                         settings::mistral_tts_voice_ground(),
-                         [](const std::string &v) {
-                           settings::set_mistral_tts_voice_ground(v);
-                         });
+          settings::mistral_tts_voice_atis(), [](const std::string &v) {
+            settings::set_mistral_tts_voice_atis(v);
+          });
+      combo_from_catalog(
+          "Tower voice##mistral", models_catalog::mistral_voice_options(),
+          settings::mistral_tts_voice_tower(), [](const std::string &v) {
+            settings::set_mistral_tts_voice_tower(v);
+          });
+      combo_from_catalog(
+          "Ground voice##mistral", models_catalog::mistral_voice_options(),
+          settings::mistral_tts_voice_ground(), [](const std::string &v) {
+            settings::set_mistral_tts_voice_ground(v);
+          });
       ImGui::TextDisabled(
           "%s",
           "Voxtral preset voices - \"EN-GB Oliver (neutral)\" reads closest to "
@@ -2251,19 +2251,19 @@ static void draw_pilot_actions(const xplane_context::XPlaneContext &ctx,
       std::string raw_join, valid_join, filt_join;
       for (const auto &k : raw) {
         if (!raw_join.empty())
-          raw_join += ",";
+          raw_join += ',';
         raw_join += k;
       }
       for (const auto &k : valid) {
         if (!valid_join.empty())
-          valid_join += ",";
+          valid_join += ',';
         valid_join += k;
       }
       for (const auto &[k, r] : filtered) {
         if (!filt_join.empty())
-          filt_join += ",";
+          filt_join += ',';
         filt_join += k;
-        filt_join += ":";
+        filt_join += ':';
         filt_join += r;
       }
       logging::debug(
@@ -2628,14 +2628,14 @@ static void draw_flightprep_tab(const xplane_context::XPlaneContext &ctx) {
   }
   std::string preview;
   if (preview_xc) {
-    preview = preview_dest.empty()
-                  ? "VFR Ueberlandflug"
-                  : "VFR nach " +
-                        (settings::atc_profile() == "EN"
-                             ? en_phraseology::expand_callsign_phonetic(
-                                   preview_dest)
-                             : de_phraseology::expand_callsign_phonetic(
-                                   preview_dest));
+    preview =
+        preview_dest.empty()
+            ? "VFR Ueberlandflug"
+            : "VFR nach " +
+                  (settings::atc_profile() == "EN"
+                       ? en_phraseology::expand_callsign_phonetic(preview_dest)
+                       : de_phraseology::expand_callsign_phonetic(
+                             preview_dest));
   } else {
     preview = "VFR Platzrunde";
   }
@@ -2769,6 +2769,8 @@ static void draw_traffic_tab() {
     return;
   }
 
+  // ImGui flag enums are int-typed by API design.
+  // NOLINTNEXTLINE(bugprone-signed-bitwise)
   ImGuiTableFlags flags = ImGuiTableFlags_RowBg |
                           ImGuiTableFlags_BordersInnerV |
                           ImGuiTableFlags_SizingFixedFit;
@@ -2874,11 +2876,10 @@ static void draw_atc_panel() {
                            ui_strings::tr("panel.destination_format"),
                            dest.c_str());
         ImGui::TextDisabled(
-            "  %s",
-            (settings::atc_profile() == "EN"
-                 ? en_phraseology::expand_callsign_phonetic(dest)
-                 : de_phraseology::expand_callsign_phonetic(dest))
-                .c_str());
+            "  %s", (settings::atc_profile() == "EN"
+                         ? en_phraseology::expand_callsign_phonetic(dest)
+                         : de_phraseology::expand_callsign_phonetic(dest))
+                        .c_str());
       }
     }
 
@@ -3069,8 +3070,11 @@ static void wnd_key_cb(XPLMWindowID, char key, XPLMKeyFlags flags, char vkey,
   // Otherwise let X-Plane handle them (command key bindings, etc.)
   if (!io.WantTextInput)
     return;
+  // XPLMKeyFlags is int-typed by SDK design.
+  // NOLINTBEGIN(bugprone-signed-bitwise)
   bool is_down = (flags & xplm_DownFlag) != 0;
   bool is_up = (flags & xplm_UpFlag) != 0;
+  // NOLINTEND(bugprone-signed-bitwise)
   // Map special keys for both press and release so ImGui doesn't get stuck
   // with a "held" key (which would cause e.g. Backspace to keep deleting).
   ImGuiKey ikey = ImGuiKey_None;
@@ -3272,9 +3276,9 @@ static int draw_phase_cb(XPLMDrawingPhase, int, void *) {
           ImGui::EndTabItem();
         }
 #endif // XPWELLYS_USE_LOCAL_TTS
-        // Transcript-Tab lebt jetzt am ATC-Panel (siehe draw_atc_panel)
-        // — Pilot soll Funkverlauf neben dem Status sehen, nicht im
-        // Config-Fenster.
+       // Transcript-Tab lebt jetzt am ATC-Panel (siehe draw_atc_panel)
+       // — Pilot soll Funkverlauf neben dem Status sehen, nicht im
+       // Config-Fenster.
         if (ImGui::BeginTabItem(ui_strings::tr("tab.settings"))) {
           draw_settings_tab();
           ImGui::EndTabItem();
@@ -3375,6 +3379,7 @@ void init() {
   static std::string ini_path = settings::get_data_dir() + "/imgui.ini";
   io.IniFilename = ini_path.c_str();
   io.LogFilename = nullptr;
+  // NOLINTNEXTLINE(bugprone-signed-bitwise) -- ImGui flags are int-typed
   io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
   ImGui::StyleColorsDark();

@@ -298,7 +298,8 @@ struct CcBase {
 
 // CSV of the intents valid in the current state — raw material for the
 // offline "what was plausibly expected here" judgement. Read-only.
-static std::string expected_intents_csv(const xplane_context::XPlaneContext &ctx) {
+static std::string
+expected_intents_csv(const xplane_context::XPlaneContext &ctx) {
   using FT = xplane_context::FrequencyType;
   bool is_towered = ctx.is_towered() && ctx.frequency_type != FT::UNICOM &&
                     ctx.frequency_type != FT::CTAF &&
@@ -311,7 +312,7 @@ static std::string expected_intents_csv(const xplane_context::XPlaneContext &ctx
   std::string csv;
   for (const auto &v : valid) {
     if (!csv.empty())
-      csv += ",";
+      csv += ',';
     csv += v;
   }
   return csv;
@@ -331,10 +332,10 @@ static std::string guess_failure_locus(const std::string &transcript,
                                        bool vrp_set) {
   std::string t = to_lower_copy(transcript);
   static const char *kPhraseology[] = {
-      "rollen",      "piste",     "gegenanflug", "queranflug", "anflug",
-      "abflug",      "endteil",   "platzrunde",  "qnh",        "startklar",
-      "startfrei",   "durchstart", "steigflug",  "verlasse",   "wiederhol",
-      "melde",       "squawk",    "information", "rollhalt",   "freigabe",
+      "rollen",    "piste",      "gegenanflug", "queranflug", "anflug",
+      "abflug",    "endteil",    "platzrunde",  "qnh",        "startklar",
+      "startfrei", "durchstart", "steigflug",   "verlasse",   "wiederhol",
+      "melde",     "squawk",     "information", "rollhalt",   "freigabe",
   };
   bool phr = false;
   for (const char *kw : kPhraseology) {
@@ -383,7 +384,8 @@ static void cc_log(const std::string &transcript, float quality,
   if (missing != nullptr) {
     e.is_readback = true;
     for (auto el : *missing)
-      e.readback_missing_elements.emplace_back(bzf_compliance::element_name(el));
+      e.readback_missing_elements.emplace_back(
+          bzf_compliance::element_name(el));
   }
   if (outcome != "classified" || lm_used) {
     e.emit_failure_locus = true;
@@ -616,8 +618,7 @@ void process_transcript(Input in, Done done) {
   // reacts realistically (frequency guards, phase guards, _INVALID
   // templates).
   using FT = xplane_context::FrequencyType;
-  bool is_towered = ctx.is_towered() &&
-                    ctx.frequency_type != FT::UNICOM &&
+  bool is_towered = ctx.is_towered() && ctx.frequency_type != FT::UNICOM &&
                     ctx.frequency_type != FT::CTAF &&
                     ctx.frequency_type != FT::INFO &&
                     ctx.frequency_type != FT::RADIO;

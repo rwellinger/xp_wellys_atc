@@ -70,7 +70,6 @@ static std::vector<StateRevert> state_reverts_;
 static std::map<std::string, std::string> tower_only_auto_advance_;
 static FrequencyHint frequency_hint_;
 static bool frequency_hint_set_ = false;
-static bool loaded_ = false;
 
 static FlightPhase current_phase_ = FlightPhase::PARKED;
 static FlightPhase candidate_phase_ = FlightPhase::PARKED;
@@ -153,7 +152,6 @@ static void load_from_file() {
   std::ifstream in(path);
   if (!in.good()) {
     logging::info("Warning: flight_rules.json not found");
-    loaded_ = false;
     return;
   }
 
@@ -348,11 +346,9 @@ static void load_from_file() {
       frequency_hint_set_ = true;
     }
 
-    loaded_ = true;
     logging::info("Flight rules loaded");
   } catch (...) {
     logging::info("Warning: failed to parse flight_rules.json");
-    loaded_ = false;
   }
 }
 
@@ -451,7 +447,6 @@ void stop() {
   tower_only_auto_advance_.clear();
   frequency_hint_ = {};
   frequency_hint_set_ = false;
-  loaded_ = false;
   current_phase_ = FlightPhase::PARKED;
   candidate_phase_ = FlightPhase::PARKED;
   candidate_timer_ = 0.0f;

@@ -137,10 +137,9 @@ static void log_default_input_device() {
     CFStringGetCString(name_ref, name, sizeof(name), kCFStringEncodingUTF8);
     CFRelease(name_ref);
     char log[320];
-    std::snprintf(
-        log, sizeof(log),
-        "[xp_wellys_vfr_atc] Default input device: \"%s\" (id=%u)\n", name,
-        static_cast<unsigned>(dev_id));
+    std::snprintf(log, sizeof(log),
+                  "[xp_wellys_vfr_atc] Default input device: \"%s\" (id=%u)\n",
+                  name, static_cast<unsigned>(dev_id));
     XPLMDebugString(log);
   }
 }
@@ -223,8 +222,7 @@ void init() {
 
   OSStatus status = AudioComponentInstanceNew(component, &audio_unit_);
   if (status != noErr) {
-    XPLMDebugString(
-        "[xp_wellys_vfr_atc] Error: failed to create AudioUnit\n");
+    XPLMDebugString("[xp_wellys_vfr_atc] Error: failed to create AudioUnit\n");
     return;
   }
 
@@ -261,10 +259,10 @@ void init() {
         audio_unit_, kAudioOutputUnitProperty_CurrentDevice,
         kAudioUnitScope_Global, 0, &input_device, sizeof(input_device));
     char log[128];
-    std::snprintf(
-        log, sizeof(log),
-        "[xp_wellys_vfr_atc] Set AudioUnit input device id=%u: %s\n",
-        static_cast<unsigned>(input_device), status == noErr ? "OK" : "FAILED");
+    std::snprintf(log, sizeof(log),
+                  "[xp_wellys_vfr_atc] Set AudioUnit input device id=%u: %s\n",
+                  static_cast<unsigned>(input_device),
+                  status == noErr ? "OK" : "FAILED");
     XPLMDebugString(log);
   }
 
@@ -276,13 +274,13 @@ void init() {
                            kAudioUnitScope_Input, 1, &hw_fmt, &hw_fmt_size);
   if (status == noErr) {
     char log[256];
-    std::snprintf(
-        log, sizeof(log),
-        "[xp_wellys_vfr_atc] Hardware input format: %.0f Hz, %u ch, "
-        "%u bps, formatFlags=0x%X\n",
-        hw_fmt.mSampleRate, static_cast<unsigned>(hw_fmt.mChannelsPerFrame),
-        static_cast<unsigned>(hw_fmt.mBitsPerChannel),
-        static_cast<unsigned>(hw_fmt.mFormatFlags));
+    std::snprintf(log, sizeof(log),
+                  "[xp_wellys_vfr_atc] Hardware input format: %.0f Hz, %u ch, "
+                  "%u bps, formatFlags=0x%X\n",
+                  hw_fmt.mSampleRate,
+                  static_cast<unsigned>(hw_fmt.mChannelsPerFrame),
+                  static_cast<unsigned>(hw_fmt.mBitsPerChannel),
+                  static_cast<unsigned>(hw_fmt.mFormatFlags));
     XPLMDebugString(log);
   }
 
@@ -547,13 +545,12 @@ void stop_recording() {
 
   if (settings::debug_logging()) {
     char log[256];
-    std::snprintf(
-        log, sizeof(log),
-        "[xp_wellys_vfr_atc][DEBUG] Recording stopped: %zu samples "
-        "captured, %llu frames, peak: %d (%.1f%%)\n",
-        buffer_.size(),
-        static_cast<unsigned long long>(frames_captured_.load()),
-        static_cast<int>(peak), peak_pct);
+    std::snprintf(log, sizeof(log),
+                  "[xp_wellys_vfr_atc][DEBUG] Recording stopped: %zu samples "
+                  "captured, %llu frames, peak: %d (%.1f%%)\n",
+                  buffer_.size(),
+                  static_cast<unsigned long long>(frames_captured_.load()),
+                  static_cast<int>(peak), peak_pct);
     XPLMDebugString(log);
   }
   if (buffer_.empty()) {
@@ -600,8 +597,9 @@ std::vector<uint8_t> encode_wav() {
     wav.push_back(static_cast<uint8_t>((v >> 24) & 0xFF));
   };
   auto write_u16 = [&](uint16_t v) {
-    wav.push_back(static_cast<uint8_t>(v & 0xFF));
-    wav.push_back(static_cast<uint8_t>((v >> 8) & 0xFF));
+    wav.push_back(static_cast<uint8_t>(v & 0xFFu));
+    wav.push_back(
+        static_cast<uint8_t>((static_cast<uint32_t>(v) >> 8) & 0xFFu));
   };
   auto write_str = [&](const char *s) {
     while (*s)

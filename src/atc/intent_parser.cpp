@@ -333,7 +333,7 @@ collect_phonetic_sequence(const std::vector<std::string> &words, size_t start,
     if (jp)
       ++phonetic_count;
     if (!cs.empty())
-      cs += " ";
+      cs += ' ';
     std::string cw = words[end];
     cw[0] = static_cast<char>(std::toupper(cw[0]));
     cs += cw;

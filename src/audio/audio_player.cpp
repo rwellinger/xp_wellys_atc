@@ -126,8 +126,9 @@ static bool decode_wav_to_pcm16(const std::vector<uint8_t> &wav_data,
   }
 
   auto read_u16 = [&](size_t off) -> uint16_t {
-    return static_cast<uint16_t>(wav_data[off]) |
-           (static_cast<uint16_t>(wav_data[off + 1]) << 8);
+    return static_cast<uint16_t>(
+        static_cast<uint32_t>(wav_data[off]) |
+        (static_cast<uint32_t>(wav_data[off + 1]) << 8));
   };
   auto read_u32 = [&](size_t off) -> uint32_t {
     return static_cast<uint32_t>(wav_data[off]) |
@@ -360,8 +361,7 @@ void play_squelch_burst(int com) {
 
 void play_wav(const std::vector<uint8_t> &wav_data, float volume) {
   if (wav_data.empty()) {
-    XPLMDebugString(
-        "[xp_wellys_vfr_atc] play_wav() called with empty data\n");
+    XPLMDebugString("[xp_wellys_vfr_atc] play_wav() called with empty data\n");
     return;
   }
 

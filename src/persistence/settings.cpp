@@ -366,9 +366,8 @@ void save() {
 // ("November eins zwo drei Alfa Bravo") for DE. Single dispatch point so
 // getter and setter stay in lock-step (Issue #41).
 static std::string expand_callsign(const std::string &raw) {
-  return atc_language() == "en"
-             ? en_phraseology::expand_callsign_phonetic(raw)
-             : de_phraseology::expand_callsign_phonetic(raw);
+  return atc_language() == "en" ? en_phraseology::expand_callsign_phonetic(raw)
+                                : de_phraseology::expand_callsign_phonetic(raw);
 }
 
 std::string pilot_callsign_raw() {
@@ -764,8 +763,9 @@ std::string voice_for_role(model_manifest::VoiceRole role) {
   // while STT+LM stay on a cloud backend_mode, the role->voice lookup must
   // resolve to the local Piper slots (below), not the cloud voices — so
   // force the effective mode to "local" for voice resolution.
-  const std::string mode =
-      (tts_backend_override() == "local") ? std::string("local") : backend_mode();
+  const std::string mode = (tts_backend_override() == "local")
+                               ? std::string("local")
+                               : backend_mode();
   if (mode == "openai") {
     using R = model_manifest::VoiceRole;
     switch (role) {

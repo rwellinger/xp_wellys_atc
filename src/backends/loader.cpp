@@ -494,12 +494,13 @@ bool preload_piper_dll() {
   // Narrow copy for logging only — XPLMDebugString is ASCII-only anyway.
   std::string dll_utf8(dll.size(), '\0');
   for (size_t i = 0; i < dll.size(); ++i)
-    dll_utf8[i] = (dll[i] >= 0x20 && dll[i] < 0x7F) ? static_cast<char>(dll[i])
-                                                    : '?';
+    dll_utf8[i] =
+        (dll[i] >= 0x20 && dll[i] < 0x7F) ? static_cast<char>(dll[i]) : '?';
 
   if (!LoadLibraryExW(dll.c_str(), nullptr, LOAD_WITH_ALTERED_SEARCH_PATH)) {
     logging::error("piper.dll preload failed for %s (GetLastError=%lu)",
-                   dll_utf8.c_str(), static_cast<unsigned long>(GetLastError()));
+                   dll_utf8.c_str(),
+                   static_cast<unsigned long>(GetLastError()));
     return false;
   }
   logging::info("piper.dll preloaded from %s", dll_utf8.c_str());
@@ -727,9 +728,8 @@ void load_openai_backends() {
 void load_mistral_backends() {
   std::string api_key = settings::load_mistral_api_key();
   if (api_key.empty()) {
-    logging::error(
-        "[xp_wellys_vfr_atc] Mistral mode active but no API key in "
-        "Keychain. Open Settings to paste a Mistral key.");
+    logging::error("[xp_wellys_vfr_atc] Mistral mode active but no API key in "
+                   "Keychain. Open Settings to paste a Mistral key.");
     return;
   }
 

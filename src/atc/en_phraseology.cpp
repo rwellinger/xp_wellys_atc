@@ -39,8 +39,8 @@ namespace {
 // The reverse parser (spoken_digit_value) still accepts both "fower" and
 // "four", so STT tolerance is unchanged.
 constexpr std::array<const char *, 10> kDigitWords = {
-    "zero", "one",   "two",   "tree", "four",
-    "fife", "six",   "seven", "eight", "niner"};
+    "zero", "one", "two",   "tree",  "four",
+    "fife", "six", "seven", "eight", "niner"};
 
 // ICAO/NATO phonetic alphabet, official spellings (Annex 10 Vol II
 // Fig 5-1, docs/icao §11.3): "Alfa" (with f), "Juliett" (double-t),
@@ -369,8 +369,8 @@ std::string expand_sequence(const std::string &s) {
 // emit (three/four/five/nine), plus "oh" for zero. Case-insensitive.
 int spoken_digit_value(const std::string &lc_word) {
   static const std::array<const char *, 10> icao = {
-      "zero", "one",   "two",   "tree", "fower",
-      "fife", "six",   "seven", "eight", "niner"};
+      "zero", "one", "two",   "tree",  "fower",
+      "fife", "six", "seven", "eight", "niner"};
   for (int i = 0; i < 10; ++i)
     if (lc_word == icao[static_cast<std::size_t>(i)])
       return i;
@@ -493,8 +493,8 @@ bool prev_token_is_run_anchor(const std::vector<Token> &tok, std::size_t i) {
     return false;
   const std::string &prev = tok[i - 1].lc_word;
   static const std::array<const char *, 12> anchors = {
-      "runway",  "qnh",     "heading", "frequency", "wind",   "number",
-      "contact", "climb",   "descend", "squawk",    "traffic", "information"};
+      "runway",  "qnh",   "heading", "frequency", "wind",    "number",
+      "contact", "climb", "descend", "squawk",    "traffic", "information"};
   for (auto a : anchors)
     if (prev == a)
       return true;
@@ -546,8 +546,7 @@ std::string parse_spoken_number_impl(const std::string &text) {
       std::size_t after_left = i + freq_probe.length;
       bool prev_had_trailing = !tok[after_left - 1].trailing.empty();
       if (!prev_had_trailing && after_left < tok.size() &&
-          tok_is_decimal(tok[after_left]) &&
-          tok[after_left].trailing.empty()) {
+          tok_is_decimal(tok[after_left]) && tok[after_left].trailing.empty()) {
         DigitRun right = collect_digit_run(tok, after_left + 1, 1, 3);
         if (right.length > 0) {
           std::size_t end = after_left + 1 + right.length;

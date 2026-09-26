@@ -686,8 +686,8 @@ static bool apply_bzf_strict_check(const intent_parser::PilotMessage &msg,
   // wrong value; plain READ BACK for a merely incomplete readback).
   const auto diff = bzf_compliance::diff_readback(
       g_state.last_clearance_components_, msg.raw_transcript);
-  const bool conformant =
-      std::none_of(diff.begin(), diff.end(), [](const bzf_compliance::FieldDiff &d) {
+  const bool conformant = std::none_of(
+      diff.begin(), diff.end(), [](const bzf_compliance::FieldDiff &d) {
         return d.status != bzf_compliance::ReadbackStatus::Ok;
       });
   if (conformant)
@@ -710,7 +710,7 @@ static bool apply_bzf_strict_check(const intent_parser::PilotMessage &msg,
     if (d.status == bzf_compliance::ReadbackStatus::Ok)
       continue;
     if (!element_list.empty())
-      element_list += ",";
+      element_list += ',';
     element_list += bzf_compliance::element_name(d.element);
     element_list += (d.status == bzf_compliance::ReadbackStatus::Wrong)
                         ? ":wrong"
@@ -724,11 +724,10 @@ static bool apply_bzf_strict_check(const intent_parser::PilotMessage &msg,
 // readback tracking, departure-type, tower-only auto-advance. Step 4 will
 // split these between the per-flow modules; for now they live alongside
 // process().
-static void
-apply_post_transition_hooks(const intent_parser::PilotMessage &msg,
-                            const xplane_context::XPlaneContext &ctx,
-                            ATCResponse &resp,
-                            const bzf_compliance::ClearanceComponents &components) {
+static void apply_post_transition_hooks(
+    const intent_parser::PilotMessage &msg,
+    const xplane_context::XPlaneContext &ctx, ATCResponse &resp,
+    const bzf_compliance::ClearanceComponents &components) {
   // Track readback state.
   if (msg.intent == intent_parser::PilotIntent::READBACK) {
     bump_gen();

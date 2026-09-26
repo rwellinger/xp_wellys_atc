@@ -331,8 +331,8 @@ generate_atis_text_en(const xplane_context::XPlaneContext &ctx) {
   std::string text;
   text += airport + " Information " + letter_name + ". ";
   text += "Runway " + runway + " in use. ";
-  text +=
-      "Wind " + format_wind_en(ctx.wind_direction_deg, ctx.wind_speed_kt) + ". ";
+  text += "Wind " + format_wind_en(ctx.wind_direction_deg, ctx.wind_speed_kt) +
+          ". ";
   text += "Visibility " + format_visibility_en(ctx.visibility_m) + ". ";
   text += format_clouds_en(ctx.cloud_type, ctx.cloud_base_ft_msl) + " ";
   // Temperature/dew point as raw ints; the EN TTS voice reads 18 / 12 as

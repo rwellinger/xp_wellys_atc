@@ -45,8 +45,9 @@ namespace cross_country_log {
 
 struct Entry {
   // ── Raw observation ────────────────────────────────────────────────
-  std::string transcript; // raw Whisper output, unmodified (engine in.transcript)
-  float quality = 0.0f;   // Whisper quality value
+  std::string
+      transcript;       // raw Whisper output, unmodified (engine in.transcript)
+  float quality = 0.0f; // Whisper quality value
 
   // ── Tower side of the exchange ─────────────────────────────────────
   // The controller reply the pilot transmission produced (clearance,
@@ -57,7 +58,7 @@ struct Entry {
   std::string atc_response;
 
   // ── Classification result ──────────────────────────────────────────
-  std::string intent;     // classified / rule-hinted intent name
+  std::string intent; // classified / rule-hinted intent name
   float confidence = 0.0f;
 
   // Which path carried this transmission:
@@ -66,7 +67,7 @@ struct Entry {
   //   "clearance_match" — deterministic readback recognition vs clearance
   std::string path;
 
-  bool lm_used = false; // true iff the LM backend was invoked
+  bool lm_used = false;  // true iff the LM backend was invoked
   bool lm_ready = false; // meaningful only when lm_used
 
   // "classified" | "unknown" | "tower_reported_garbled"

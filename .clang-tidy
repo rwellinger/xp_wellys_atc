@@ -17,3 +17,7 @@ WarningsAsErrors: 'bugprone-*,-bugprone-throwing-static-initialization'
 CheckOptions:
   - key: bugprone-suspicious-string-compare.WarnOnLogicalNotComparison
     value: 'true'
+  # LLVM 23 added bugprone-signed-bitwise. Positive literals (`<< 8`,
+  # `& 0xff`) are int-typed by the language but never sign-relevant.
+  - key: bugprone-signed-bitwise.IgnorePositiveIntegerLiterals
+    value: 'true'

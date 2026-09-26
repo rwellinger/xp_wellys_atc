@@ -101,8 +101,9 @@ std::vector<Element> check_pilot_readback(const std::string &pilot_transcript,
 // regexes of check_pilot_readback for the value-precise path and is the
 // single matcher used by both readback recognition (engine) and the
 // BZF-strict completeness check (state machine).
-std::vector<Element> missing_readback_elements(const ClearanceComponents &comp,
-                                               const std::string &pilot_transcript);
+std::vector<Element>
+missing_readback_elements(const ClearanceComponents &comp,
+                          const std::string &pilot_transcript);
 
 // Per-element verdict of a readback against the stored clearance. Unlike
 // missing_readback_elements (which only says "not covered"), this
