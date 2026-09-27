@@ -72,6 +72,31 @@ Details, architecture, configuration and development workflow:
 [`docs/README.md`](docs/README.md).
 Binding guidelines for working on the code: [`CLAUDE.md`](CLAUDE.md).
 
+## Privacy
+
+The plugin has no telemetry or analytics and sends nothing to the author.
+What leaves your machine depends on the backend you choose:
+
+- **Local** — speech recognition, language model and speech output all run
+  on your machine. The only network access is the one-time model download
+  from HuggingFace (~2.0 GB).
+- **OpenAI / Mistral** — requests go directly from your machine to the
+  selected provider, authenticated with your own API key:
+  - STT: your push-to-talk recording, plus airport names and callsigns as
+    recognition hints
+  - LM: the transcript and the ATC context (only when intent confidence
+    is < 0.7)
+  - TTS: the ATC reply text
+
+  The provider's privacy policy applies
+  ([OpenAI](https://openai.com/policies/privacy-policy/),
+  [Mistral](https://mistral.ai/terms/#privacy-policy)).
+
+**API keys** are entered in the plugin settings but never written to the
+plugin's config files. They are stored in the operating system's credential
+store: macOS Keychain or Windows Credential Manager (one entry per
+provider). Deleting the key in the plugin settings removes the entry.
+
 ## License
 
 GPL-3.0-or-later (required by espeak-ng, statically linked into `libpiper`).
