@@ -35,7 +35,7 @@ jobs:
     timeout-minutes: 15
     if: (github.event_name == 'push' && github.ref != 'refs/heads/main') || github.event_name == 'workflow_dispatch'
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Setup dependencies
         # Prebuilt xp_wellys_libs bundle (SHA256-verified) + SDK / ImGui / json /
@@ -43,7 +43,7 @@ jobs:
         run: make setup
 
       - name: Set up ccache
-        uses: hendrikmuhs/ccache-action@v1.2.23
+        uses: hendrikmuhs/ccache-action@v1.2.24
         with:
           key: ${{ runner.os }}-arm64-test
           max-size: 500M
@@ -80,13 +80,13 @@ jobs:
     # re-running this on the release commit is pure redundancy.
     if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && !startsWith(github.ref, 'refs/tags/v') && !startsWith(github.event.head_commit.message, 'release ')
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Setup dependencies (cloud-only — no submodules)
         run: make setup-cloud
 
       - name: Set up ccache
-        uses: hendrikmuhs/ccache-action@v1.2.23
+        uses: hendrikmuhs/ccache-action@v1.2.24
         with:
           key: ${{ runner.os }}-${{ github.job }}-debug
           max-size: 1500M
@@ -117,7 +117,7 @@ jobs:
     timeout-minutes: 25 # only the plugin's own ~40 TUs compile; libs are prebuilt
     if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Setup dependencies
         # Downloads + SHA256-verifies the prebuilt xp_wellys_libs bundle
@@ -128,7 +128,7 @@ jobs:
       - name: Set up ccache
         # Caches only the plugin's own translation units now (the heavy libs are
         # prebuilt), so a small static key is plenty.
-        uses: hendrikmuhs/ccache-action@v1.2.23
+        uses: hendrikmuhs/ccache-action@v1.2.24
         with:
           key: ${{ runner.os }}-arm64-plugin
           max-size: 500M
@@ -155,7 +155,7 @@ jobs:
         # into the drop-in ZIP. upload-artifact roots the archive at the
         # common ancestor (build/), so the paths land as xp_wellys_vfr_atc.xpl,
         # libpiper.dylib, ... , espeak_ng-install/share/espeak-ng-data/.
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: xp_wellys_vfr_atc-mac
           path: |
@@ -193,7 +193,7 @@ jobs:
     # normal PR merge never pays the ~30 min Windows build.
     if: (github.event_name == 'push' && github.ref != 'refs/heads/main') || github.event_name == 'workflow_dispatch'
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         # No submodules: cloud-only build pulls in none of the local
         # inference third-party trees.
 
@@ -201,9 +201,13 @@ jobs:
         # Puts cl.exe + the Windows SDK on PATH so CMake's Ninja generator
         # finds the toolchain directly, sidestepping the flaky Visual
         # Studio generator instance lookup on the hosted image.
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x64
+        # Inline vcvars64 instead of ilammy/msvc-dev-cmd (still on Node 20).
+        shell: pwsh
+        run: |
+          $vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          cmd /c "`"$vs\VC\Auxiliary\Build\vcvars64.bat`" >nul && set" | ForEach-Object {
+            if ($_ -match '^([^=]+)=(.*)$') { "$($matches[1])=$($matches[2])" | Out-File $env:GITHUB_ENV -Append -Encoding utf8 }
+          }
 
       - name: Install libcurl (vcpkg, static, Schannel TLS)
         shell: pwsh
@@ -324,7 +328,7 @@ jobs:
           cp -r docs "$STAGE/docs"
 
       - name: Upload Windows artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: xp_wellys_vfr_atc-win
           path: dist/xp_wellys_vfr_atc
@@ -346,18 +350,18 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         # Repo only — for data/*.json, docs/ and tools/skunkcrafts/generate.py.
         # The compiled binaries arrive via the two artifacts below.
 
       - name: Download macOS slice
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: xp_wellys_vfr_atc-mac
           path: mac-dist
 
       - name: Download Windows slice
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: xp_wellys_vfr_atc-win
           path: win-dist
@@ -444,7 +448,7 @@ jobs:
           fi
 
       - name: Create release with assets
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: dist/xp_wellys_vfr_atc.zip
           body_path: ${{ steps.notes.outputs.path }}
