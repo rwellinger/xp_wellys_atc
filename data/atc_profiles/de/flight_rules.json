@@ -7,12 +7,16 @@
     "pattern_max_agl_ft": 3000.0,
     "near_airport_nm": 5.0,
     "runway_aligned_deg": 30.0,
-    "final_descent_rate_fpm": -200.0
+    "final_descent_rate_fpm": -200.0,
+    "hover_max_agl_ft": 50.0,
+    "hover_max_gs_kt": 20.0,
+    "heli_final_max_agl_ft": 500.0
   },
   "hysteresis": {
     "ground_to_airborne_sec": 0.5,
     "airborne_to_landing_sec": 0.3,
-    "auto_correction_delay_sec": 3.0
+    "auto_correction_delay_sec": 3.0,
+    "hover_to_airborne_sec": 3.0
   },
   "intent_preconditions": {
     "INITIAL_CALL_GROUND": {

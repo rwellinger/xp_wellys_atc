@@ -1,0 +1,23 @@
+{
+  "_comment": "EN regression: a tower call must not turn a pattern flight into a cross-country departure. The rule marker 'to' used to match inside 'Tower', so every '<airport> Tower ... ready for departure' got 'frequency change approved'.",
+  "name": "LSZG EN pattern departure from the Tower call",
+  "region": "EN",
+  "context": {
+    "airport": "LSZG",
+    "airport_name": "Grenchen",
+    "towered": true,
+    "tower_only": false,
+    "on_ground": true,
+    "com": 120.100,
+    "freq_type": "TOWER",
+    "runway": "06",
+    "callsign": "Delta Hotel Delta Romeo Uniform"
+  },
+  "say": [
+    { "set_state": "TOWER_CONTACT" },
+    { "note": "Tower call at the holding point",
+      "text": "Grenchen Tower, Delta Hotel Delta Romeo Uniform, short of runway 06, ready for departure",
+      "expect": "report downwind",
+      "expect_state": "Pattern/DEPARTURE_CLEARED" }
+  ]
+}

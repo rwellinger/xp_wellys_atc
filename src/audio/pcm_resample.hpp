@@ -33,18 +33,15 @@ constexpr uint32_t kTargetRateHz = 16000;
 // 16-bit signed PCM -> float [-1, 1] at kTargetRateHz.
 //
 // src_rate_hz == 0 or kTargetRateHz is a pure scale (no filtering, no
-// resampling) and is the path both platforms should normally take:
-// miniaudio (Windows) and Core Audio (macOS) are asked to deliver 16 kHz
-// directly, because both resample with a real filter and we do not want
-// to duplicate that work.
+// resampling). That is the Windows path: miniaudio delivers 16 kHz directly.
 //
-// Any other rate goes through a Blackman-windowed-sinc polyphase
-// converter. This is the LAST RESORT, not the normal path -- it exists
-// for devices that refuse a 16 kHz client format (some Bluetooth
-// headsets). It must still be anti-aliased: a naive decimation folds
-// everything above 8 kHz back into the band, and 4-10 kHz is exactly
-// where the sibilants live that separate spelled NATO callsigns
-// ("Foxtrott" / "Oscar" / "Sierra"). See issue #85.
+// Any other rate goes through a Blackman-windowed-sinc polyphase converter.
+// This is the normal macOS path: Core Audio captures at the device rate
+// because its 16 kHz client format delivers corrupted audio (see
+// audio_recorder.cpp). It must be anti-aliased: a naive decimation folds
+// everything above 8 kHz back into the band, and 4-10 kHz is exactly where
+// the sibilants live that separate spelled NATO callsigns ("Foxtrott" /
+// "Oscar" / "Sierra"). See issue #85.
 std::vector<float> to_float_16k(const std::vector<int16_t> &pcm16,
                                 uint32_t src_rate_hz);
 

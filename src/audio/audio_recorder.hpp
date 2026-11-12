@@ -21,15 +21,43 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <string>
 #include <vector>
 
 namespace audio_recorder {
+
+// A selectable microphone. `id` is what settings::audio_input_device()
+// persists: the Core Audio device UID on macOS (the numeric AudioDeviceID
+// changes between boots), the endpoint name on Windows. `name` is ASCII-safe
+// for Log.txt and the ImGui font.
+struct InputDevice {
+  std::string id;
+  std::string name;
+};
 
 void init();
 void stop();
 
 void start_recording();
 void stop_recording();
+
+// Enumerate the capture devices. Not cheap enough for a per-frame call --
+// the UI caches the result.
+std::vector<InputDevice> list_input_devices();
+
+// Persist `id` ("" = system default) and rebind capture to it without
+// restarting X-Plane. Main thread only. Returns false if a recording is in
+// progress (nothing changes) or the device could not be brought up.
+bool set_input_device(const std::string &id);
+
+// Name of the device capture is bound to; "" if the recorder is not up.
+const std::string &active_input_device_name();
+
+// True when the last recording held samples but all of them were digital
+// zero. A live microphone always has a noise floor, so this means the input
+// is cut off (e.g. a MacBook's built-in mic with the lid closed) rather than
+// merely quiet.
+bool last_recording_silent();
 
 // Move the captured PCM out of the recorder into the caller. The
 // returned buffer is mono, signed 16-bit, at sample_rate_hz(). Used by

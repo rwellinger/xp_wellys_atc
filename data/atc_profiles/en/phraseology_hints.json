@@ -103,7 +103,7 @@
     },
     {
       "comment": "DEPARTURE_CLEARED airborne (cross-country): pilot can request a frequency change or sign off.",
-      "state": "XC/DEPARTURE_CLEARED", "phase": ["CLIMB", "CRUISE"], "facility": "towered",
+      "state": "XC/DEPARTURE_CLEARED", "phase": ["CLIMB", "PATTERN", "CRUISE"], "facility": "towered",
       "frequency_type": "TOWER",
       "intents": ["REQUEST_FREQUENCY", "LEAVING_FREQUENCY"]
     },

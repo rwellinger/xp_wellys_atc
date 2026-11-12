@@ -150,6 +150,10 @@ void apply_landing_sequence(const intent_parser::PilotMessage &msg,
   if (resp.next_state != ATCState::LANDING_CLEARED)
     return;
 
+  // Sequencing is runway-based; a helicopter need not use the runway.
+  if (ctx.is_helicopter)
+    return;
+
   auto rwy_opt = resolve_active_runway(ctx);
   if (!rwy_opt.has_value())
     return;

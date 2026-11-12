@@ -24,6 +24,8 @@ add_executable(xp_wellys_vfr_atc_tests
     ${CATCH2_DIR}/catch_amalgamated.cpp
     module_reset_listener.cpp
     test_smoke.cpp
+    test_helicopter.cpp
+    test_language_switch.cpp
     test_frequency_classification.cpp
     test_facility_classification.cpp
     test_info_radio_flow.cpp

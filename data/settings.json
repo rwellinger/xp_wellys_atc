@@ -14,6 +14,8 @@
   "atc_profile": "DE",
   "ui_language": "en",
   "start_mode": "engines_running",
+  "aircraft_category": "auto",
+  "audio_input_device": "",
   "vfr_flight_type": "pattern",
   "vfr_destination": "",
   "backend_mode": "local",

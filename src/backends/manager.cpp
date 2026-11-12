@@ -246,14 +246,10 @@ void transcribe_async(std::vector<int16_t> pcm16, uint32_t sample_rate_hz,
     // Convert outside the call mutex so concurrent callers get the
     // most parallelism we can offer without serialising on whisper.
     //
-    // Anything other than 16 kHz means the capture layer could not give
-    // us the target rate and pcm_resample has to band-limit in software.
-    // That is the degraded path (issue #85) -- say so in Log.txt rather
-    // than leaving it to be reconstructed from sample counts.
+    // macOS captures at the device rate, pcm_resample band-limits to 16 kHz.
     if (sample_rate_hz != 0 && sample_rate_hz != pcm_resample::kTargetRateHz)
-      logging::info("[STT] capture rate %u Hz != 16000 Hz, resampling in "
-                    "software (fallback path)",
-                    static_cast<unsigned>(sample_rate_hz));
+      logging::debug("[STT] resampling capture from %u Hz to 16000 Hz",
+                     static_cast<unsigned>(sample_rate_hz));
     std::vector<float> pcm32 =
         pcm_resample::to_float_16k(pcm16, sample_rate_hz);
 

@@ -495,12 +495,13 @@ derived. The strict/conformance mode applies only in the DE profile.
 (`de` | `en`, default `en`): it drives only the menu, button and label
 strings (`ui_strings.json`), not the spoken phraseology. So you can run
 the operating UI in English, for example, while the radio stays on German
-NfL standard. The interface language applies immediately without a
-restart; the phraseology language from the next plugin start (Issue #56).
+NfL standard. Both languages apply immediately without a restart (Issue
+#56). Switching the phraseology language also reloads the backends, which
+takes a moment, and is locked while a transmission is in progress.
 
 | Setting | Default | Description |
 |---|---|---|
-| `atc_language` | `de` | ATC phraseology language (`de` = NfL DACH-VFR / `en` = ICAO-VFR). Derived from it: `atc_profile` (`DE`/`EN`) and the backend language. Selectable in the Settings tab; applies from the next plugin start (profile and local TTS voice are loaded at init). The strict/conformance mode applies only in the DE profile. |
+| `atc_language` | `de` | ATC phraseology language (`de` = NfL DACH-VFR / `en` = ICAO-VFR). Derived from it: `atc_profile` (`DE`/`EN`) and the backend language. Selectable in the Settings tab; applies immediately (profile tables and backends reload; locked during a transmission). The strict/conformance mode applies only in the DE profile. |
 | `ui_language` | `en` | Interface language (`de` | `en`) for menus, buttons and labels (`ui_strings.json`) — **decoupled** from `atc_language` (Issue #56). A change in the Settings tab applies immediately without a restart. Existing configs without this key inherit their `atc_language` on migration, so the interface looks unchanged. |
 | `pilot_callsign` | *(empty)* | Phonetic callsign (set in the plugin settings) |
 | `active_com` | `1` | Active COM radio (1 or 2) |

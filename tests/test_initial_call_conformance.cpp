@@ -516,9 +516,11 @@ TEST_CASE("xc departure: a pattern flight still gets the pattern departure",
             std::string("Pattern/DEPARTURE_CLEARED"));
 }
 
-TEST_CASE("xc departure: an explicit READY_FOR_DEPARTURE_VFR is unchanged",
+TEST_CASE("xc departure: READY_FOR_DEPARTURE_VFR on a planned cross-country "
+          "flight is unchanged",
           "[conformance][intention][persist][departure]") {
     load_de_profile();
+    settings::set_vfr_flight_type("cross_country");
     auto ctx = tower_departure_ctx();
     atc_state_machine::set_state(atc_state_machine::ATCState::TOWER_CONTACT);
 
@@ -528,6 +530,50 @@ TEST_CASE("xc departure: an explicit READY_FOR_DEPARTURE_VFR is unchanged",
     REQUIRE(resp.text.find("Frequenzwechsel") != std::string::npos);
     REQUIRE(atc_state_machine::state_name(atc_state_machine::get_state()) ==
             std::string("XC/DEPARTURE_CLEARED"));
+}
+
+TEST_CASE("xc departure: a pattern flight demotes READY_FOR_DEPARTURE_VFR",
+          "[conformance][intention][persist][departure]") {
+    load_de_profile(); // pre-flight = pattern, nothing declared
+    auto ctx = tower_departure_ctx();
+    atc_state_machine::set_state(atc_state_machine::ATCState::TOWER_CONTACT);
+
+    auto resp = atc_state_machine::process(
+        ready_for_departure(PilotIntent::READY_FOR_DEPARTURE_VFR), ctx, 100.0);
+
+    REQUIRE(resp.text.find("Gegenanflug") != std::string::npos);
+    REQUIRE(atc_state_machine::state_name(atc_state_machine::get_state()) ==
+            std::string("Pattern/DEPARTURE_CLEARED"));
+}
+
+TEST_CASE("xc departure: a stated destination overrides the pattern pre-flight",
+          "[conformance][intention][persist][departure]") {
+    load_de_profile();
+    auto ctx = tower_departure_ctx();
+    atc_state_machine::set_state(atc_state_machine::ATCState::TOWER_CONTACT);
+
+    auto msg = ready_for_departure(PilotIntent::READY_FOR_DEPARTURE_VFR);
+    msg.destination = "EDMA";
+    auto resp = atc_state_machine::process(msg, ctx, 100.0);
+
+    REQUIRE(resp.text.find("Frequenzwechsel") != std::string::npos);
+    REQUIRE(atc_state_machine::state_name(atc_state_machine::get_state()) ==
+            std::string("XC/DEPARTURE_CLEARED"));
+}
+
+TEST_CASE("xc departure: a declared pattern flight outranks a cross-country "
+          "pre-flight",
+          "[conformance][intention][persist][departure]") {
+    load_de_profile();
+    settings::set_vfr_flight_type("cross_country");
+    atc_state_machine::set_flight_intent_pattern();
+    auto ctx = tower_departure_ctx();
+    atc_state_machine::set_state(atc_state_machine::ATCState::TOWER_CONTACT);
+
+    auto resp = atc_state_machine::process(
+        ready_for_departure(PilotIntent::READY_FOR_DEPARTURE_VFR), ctx, 100.0);
+
+    REQUIRE(resp.text.find("Gegenanflug") != std::string::npos);
 }
 
 // ── Tower-only first contact: INITIAL_CALL_TOWER -> INITIAL_CALL_GROUND ──

@@ -20,7 +20,9 @@ Die **Sprache** ist der einzige maßgebliche Schalter
 (`settings::atc_language()`, Issue #36) und liefert `"de"` (Standard) oder
 `"en"`. Davon leiten sich `settings::atc_profile()` (`"DE"` / `"EN"`) und
 `settings::backend_language()` (gleich `atc_language()`) ab. Die Sprache
-ist im **Settings-Tab** wählbar (`settings::set_atc_language()`). Es gibt
+ist im **Settings-Tab** wählbar und gilt sofort: `atc_ui::apply_atc_language()`
+lädt über `engine::reload_language_profile()` alle Profil-Tabellen neu und startet
+die Backends neu; während einer Funke ist die Combo gesperrt. Es gibt
 zwei Profil-Bundles: `data/atc_profiles/de/` und `data/atc_profiles/en/`.
 Strict-/Conformance-Hooks gaten auf `atc_profile()=="DE"` und sind im
 EN-Profil inert.
@@ -259,7 +261,7 @@ xp_wellys_vfr_atc/
 │   │       └── state_storage.hpp            # AtcStateSnapshot + Generations-Zähler
 │   ├── audio/
 │   │   ├── ptt_input.hpp/.cpp          # Push-to-Talk-Befehlsbindung
-│   │   ├── audio_recorder.hpp/.cpp     # Core-Audio-Mic-Capture → 16 kHz PCM
+│   │   ├── audio_recorder.hpp/.cpp     # Core-Audio-Mic-Capture → PCM (Geräte-Rate)
 │   │   ├── audio_player.hpp/.cpp       # Core-Audio-PCM-Wiedergabe auf Funkbus + Squelch-Burst
 │   │   └── mic_permission.hpp/.mm      # macOS-Mikrofon-Berechtigungs-Prompt
 │   ├── backends/
@@ -413,8 +415,19 @@ Start gelesen; nach dem Editieren der JSON X-Plane neu starten.
 **`ptt_input`** — Erkennt die PTT-Aktivierung über den X-Plane-Befehl
 `xp_wellys_devfr_atc/ptt`. Benachrichtigt `atc_session` bei Press/Release.
 
-**`audio_recorder`** — Core-Audio-`AudioUnit` erfasst das Mic mit 16 kHz
-mono 16-bit PCM in `std::vector<int16_t>`. Bei PTT-Release übergibt es den
+**`audio_recorder`** — Core-Audio-`AudioUnit` erfasst das Mic mono 16-bit PCM
+in `std::vector<int16_t>`, und zwar mit der **Geräte-Rate**; `pcm_resample` rechnet
+in `backends/manager` auf 16 kHz um. **Kein 16-kHz-Client-Format anfordern:** die
+AUHAL akzeptiert es, liefert auf einem 48-kHz-Gerät aber weiter 48000 Frames/s
+(gemessen auf macOS 15 und 26). Auf macOS 15 mit USB-Headset enthielt dabei jeder
+Callback denselben Schnipsel dreifach. Das Eingabegerät kommt aus
+`settings::audio_input_device()` (macOS: Device-UID, Windows: Endpoint-Name;
+leer = Systemstandard, fehlendes Gerät fällt mit Log-Zeile darauf zurück) und
+ist im Audio-Tab zur Laufzeit wählbar (`set_input_device()`). X-Planes Radio
+Device gilt **nur für die Ausgabe** und ist über das SDK nicht lesbar — das
+Mikrofon muss deshalb hier gewählt werden. Eine komplett stille Aufnahme
+(`last_recording_silent()`, Peak 0, z. B. MacBook-Mic bei geschlossenem Deckel)
+bricht in `atc_session` vor dem STT-Aufruf mit klarer Meldung ab. Bei PTT-Release übergibt es den
 PCM-Puffer an die aktive STT-Strategie via `backends::stt()` — die
 konkrete Backend-Wahl ist hier unsichtbar. Kein WAV-Datei-Roundtrip.
 
@@ -490,6 +503,13 @@ Init. `lookup(is_towered, state, intent_key)` mit `_INVALID`-Fallback;
 Schwellwerte + Hysterese aus `flight_rules.json`. Bietet
 `check_precondition`, `check_frequency_precondition`,
 `get_auto_corrections`. Hot-Reload via `reload()`.
+Helikopter (Issue #1): `classify_ground()` faltet Hover in die ATC-Bodenklasse
+— **`ctx.on_ground` heisst "Bodenbewegung", nicht "Fahrwerk berührt"**, weil
+alle Konsumenten (Intent-Adjustments, `was_airborne`-Reset, Traffic-Domain)
+genau das fragen; `ctx.hovering` markiert den Fall, Phase ist dann `TAXI`. Wer
+`on_ground` schreibt, muss `hovering` mitlöschen. `ctx.is_helicopter` kommt aus
+`xplane_context::resolve_is_helicopter()` (Setting `aircraft_category` >
+DataRef `sim/aircraft2/metadata/is_helicopter` > ICAO-Liste).
 
 **`atc_state_machine`** — Besitzt den aktuellen `ATCState`. Auf einen
 gültigen `PilotIntent` wendet es zwei Vorbedingungs-Guards an
@@ -777,6 +797,8 @@ Intents überspringen sie ganz. Jede Inferenz läuft auf `std::thread`s mit
 
   "atc_profile": "DE",                      // fest "DE" (NfL DACH-VFR)
   "start_mode": "engines_running",          // "engines_running" | "cold_and_dark"
+  "aircraft_category": "auto",               // "auto" | "airplane" | "helicopter"
+  "audio_input_device": "",                 // Mikrofon: Device-ID, "" = Systemstandard
 
   "pattern_direction": "left",
   "disable_default_atc": false,

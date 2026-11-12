@@ -121,7 +121,13 @@ struct XPlaneContext {
   float vertical_speed_fpm = 0.0f;
   float heading_true = 0.0f;
   float height_agl_ft = 0.0f;
+  // ATC ground class, not strictly "gear on the surface": a helicopter in
+  // hover / hover-taxi also counts (see flight_phase::classify_ground), since
+  // every consumer asks "is this pilot a ground movement?". `hovering` marks
+  // that case.
   bool on_ground = true;
+  bool hovering = false;
+  bool is_helicopter = false;
   float com1_freq_mhz = 0.0f;
   float com2_freq_mhz = 0.0f;
   float com1_standby_mhz = 0.0f;
@@ -193,6 +199,13 @@ void set_standby_freq(uint32_t freq_khz);
 void lock_airport(const std::string &icao);
 void unlock_airport();
 const std::string &locked_airport() noexcept;
+
+// Resolve the helicopter flag. `category` is settings::aircraft_category():
+// "airplane" / "helicopter" win outright; otherwise the sim's aircraft
+// metadata decides, with an ICAO type list as fallback for older add-ons
+// that never set the metadata flag.
+bool resolve_is_helicopter(const std::string &category, bool metadata_flag,
+                           const std::string &icao);
 
 struct NearbyAirport {
   std::string icao;

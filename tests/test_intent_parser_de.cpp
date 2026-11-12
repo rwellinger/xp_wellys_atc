@@ -216,6 +216,18 @@ TEST_CASE("DE: Boden + erbitte Rollen -> REQUEST_TAXI",
     REQUIRE(m.confidence >= 0.85f);
 }
 
+// ATC's own prompt in GROUND_CONTACT is "melden Sie sich rollbereit", so the
+// answer must not fall through to the facility rule on "Rollkontrolle".
+TEST_CASE("DE: Rollkontrolle + rollbereit -> REQUEST_TAXI",
+          "[intent][de][taxi]") {
+    DeRegionGuard g;
+    auto ctx = ground_ctx();
+    auto m = parse("Grenchen, Rollkontrolle. Hotel Bravo Zulu, Juliett, Delta, "
+                   "Rollbereit für Piste 06.",
+                   ctx);
+    REQUIRE(m.intent == PilotIntent::REQUEST_TAXI);
+}
+
 TEST_CASE("DE: Rollfreigabe readback 'rollen Sie ueber Charlie' -> READBACK",
           "[intent][de][readback]") {
     DeRegionGuard g;

@@ -1,0 +1,31 @@
+{
+  "_comment": "Issue #1: helicopter in hover-taxi (not touching the surface) gets the normal ground flow instead of 'you are airborne'.",
+  "name": "Helicopter hover-taxi ground flow (DE)",
+  "region": "DE",
+  "context": {
+    "airport": "EDNY",
+    "airport_name": "Friedrichshafen",
+    "towered": true,
+    "tower_only": false,
+    "is_helicopter": true,
+    "on_ground": false,
+    "agl_ft": 5.0,
+    "groundspeed_kt": 8.0,
+    "com": 121.725,
+    "freq_type": "GROUND",
+    "runway": "06",
+    "callsign": "Delta Hotel Alpha Bravo Charlie"
+  },
+  "say": [
+    {
+      "note": "Initial call in hover",
+      "text": "Friedrichshafen Rollkontrolle Delta Hotel Alpha Bravo Charlie Hubschrauber am Vorfeld Information Alpha",
+      "expect_state": "GROUND_CONTACT"
+    },
+    {
+      "note": "Taxi request in hover",
+      "text": "Delta Hotel Alpha Bravo Charlie erbitte Rollen",
+      "expect_state": "TAXI_CLEARED"
+    }
+  ]
+}

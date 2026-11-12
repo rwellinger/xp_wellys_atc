@@ -107,6 +107,13 @@ bool poll_traffic_advisory(const xplane_context::XPlaneContext &ctx,
 bool poll_go_around(const xplane_context::XPlaneContext &ctx, double now_secs,
                     std::string *out_text);
 
+// Reload every language-dependent asset (templates, flight rules, intent
+// rules, phraseology hints, conformance) from the bundle of the current
+// settings::atc_language(). Without this, a language switch leaves the loaded
+// tables on the old language while live lookups already use the new one.
+// Call with no transmission in progress: the tables are read on worker threads.
+void reload_language_profile();
+
 } // namespace engine
 
 #endif

@@ -23,9 +23,11 @@
 #include <XPLMUtilities.h>
 
 #include <atomic>
+#include <chrono>
 #include <cmath>
 #include <cstring>
 #include <mutex>
+#include <string>
 #include <vector>
 
 #if defined(__APPLE__)
@@ -60,12 +62,32 @@ static std::vector<int16_t> buffer_;
 static std::mutex buffer_mutex_;
 static std::atomic<bool> recording_{false};
 static bool initialized_ = false;
+static std::string active_device_name_;
+// Peak of the last recording; -1 while there is none to judge.
+static std::atomic<int> last_peak_{-1};
+
+// Log.txt and the ImGui font only render ASCII. Device names are user data
+// and may not be ("Roberts Kopfhoerer" with a typographic apostrophe, say);
+// each multi-byte UTF-8 sequence collapses to one '?'.
+static std::string ascii_safe(const std::string &utf8) {
+  std::string out;
+  out.reserve(utf8.size());
+  for (const char c : utf8) {
+    const auto b = static_cast<unsigned char>(c);
+    if (b >= 0x20 && b <= 0x7E)
+      out.push_back(c);
+    else if (b >= 0xC0) // lead byte; continuation bytes are dropped
+      out.push_back('?');
+  }
+  return out;
+}
 
 #if defined(__APPLE__)
 
 static AudioComponentInstance audio_unit_ = nullptr;
 
 static std::atomic<int> render_call_count_{0};
+static std::chrono::steady_clock::time_point record_start_;
 
 static OSStatus render_callback(void * /*inRefCon*/,
                                 AudioUnitRenderActionFlags *io_action_flags,
@@ -109,46 +131,105 @@ static OSStatus render_callback(void * /*inRefCon*/,
   return noErr;
 }
 
-static void log_default_input_device() {
+static AudioObjectPropertyAddress global_prop(AudioObjectPropertySelector sel) {
   AudioObjectPropertyAddress prop{};
-  prop.mSelector = kAudioHardwarePropertyDefaultInputDevice;
+  prop.mSelector = sel;
   prop.mScope = kAudioObjectPropertyScopeGlobal;
   prop.mElement = kAudioObjectPropertyElementMain;
+  return prop;
+}
 
-  AudioDeviceID dev_id = kAudioDeviceUnknown;
-  UInt32 size = sizeof(dev_id);
-  OSStatus err = AudioObjectGetPropertyData(kAudioObjectSystemObject, &prop, 0,
-                                            nullptr, &size, &dev_id);
-  if (err != noErr || dev_id == kAudioDeviceUnknown) {
-    XPLMDebugString("[xp_wellys_vfr_atc] No default input device found\n");
-    return;
-  }
+// Read a CFString property (name, UID) as UTF-8; "" on failure.
+static std::string device_string(AudioDeviceID dev,
+                                 AudioObjectPropertySelector sel) {
+  const AudioObjectPropertyAddress prop = global_prop(sel);
+  CFStringRef ref = nullptr;
+  UInt32 size = sizeof(CFStringRef);
+  const OSStatus err = AudioObjectGetPropertyData(dev, &prop, 0, nullptr, &size,
+                                                  static_cast<void *>(&ref));
+  if (err != noErr || !ref)
+    return {};
+  char buf[256] = {};
+  CFStringGetCString(ref, buf, sizeof(buf), kCFStringEncodingUTF8);
+  CFRelease(ref);
+  return buf;
+}
 
-  AudioObjectPropertyAddress name_prop{};
-  name_prop.mSelector = kAudioObjectPropertyName;
-  name_prop.mScope = kAudioObjectPropertyScopeGlobal;
-  name_prop.mElement = kAudioObjectPropertyElementMain;
-  CFStringRef name_ref = nullptr;
-  UInt32 name_size = sizeof(CFStringRef);
-  err = AudioObjectGetPropertyData(dev_id, &name_prop, 0, nullptr, &name_size,
-                                   static_cast<void *>(&name_ref));
-  if (err == noErr && name_ref) {
-    char name[256] = {};
-    CFStringGetCString(name_ref, name, sizeof(name), kCFStringEncodingUTF8);
-    CFRelease(name_ref);
-    char log[320];
-    std::snprintf(log, sizeof(log),
-                  "[xp_wellys_vfr_atc] Default input device: \"%s\" (id=%u)\n",
-                  name, static_cast<unsigned>(dev_id));
-    XPLMDebugString(log);
+static bool device_has_input(AudioDeviceID dev) {
+  AudioObjectPropertyAddress prop{};
+  prop.mSelector = kAudioDevicePropertyStreams;
+  prop.mScope = kAudioObjectPropertyScopeInput;
+  prop.mElement = kAudioObjectPropertyElementMain;
+  UInt32 size = 0;
+  return AudioObjectGetPropertyDataSize(dev, &prop, 0, nullptr, &size) ==
+             noErr &&
+         size > 0;
+}
+
+static std::vector<AudioDeviceID> input_device_ids() {
+  const AudioObjectPropertyAddress prop =
+      global_prop(kAudioHardwarePropertyDevices);
+  UInt32 size = 0;
+  if (AudioObjectGetPropertyDataSize(kAudioObjectSystemObject, &prop, 0,
+                                     nullptr, &size) != noErr)
+    return {};
+  std::vector<AudioDeviceID> all(size / sizeof(AudioDeviceID));
+  if (all.empty() ||
+      AudioObjectGetPropertyData(kAudioObjectSystemObject, &prop, 0, nullptr,
+                                 &size, all.data()) != noErr)
+    return {};
+  std::vector<AudioDeviceID> inputs;
+  for (const AudioDeviceID dev : all) {
+    if (device_has_input(dev))
+      inputs.push_back(dev);
   }
+  return inputs;
+}
+
+static AudioDeviceID default_input_device() {
+  const AudioObjectPropertyAddress prop =
+      global_prop(kAudioHardwarePropertyDefaultInputDevice);
+  AudioDeviceID dev = kAudioDeviceUnknown;
+  UInt32 size = sizeof(dev);
+  if (AudioObjectGetPropertyData(kAudioObjectSystemObject, &prop, 0, nullptr,
+                                 &size, &dev) != noErr)
+    return kAudioDeviceUnknown;
+  return dev;
+}
+
+// The configured device if it is present, otherwise the system default. A
+// configured device can legitimately be missing (headset unplugged); the
+// setting is kept so it binds again once the device is back.
+static AudioDeviceID resolve_input_device() {
+  const std::string wanted = settings::audio_input_device();
+  if (wanted.empty())
+    return default_input_device();
+
+  for (const AudioDeviceID dev : input_device_ids()) {
+    if (device_string(dev, kAudioDevicePropertyDeviceUID) == wanted)
+      return dev;
+  }
+  XPLMDebugString("[xp_wellys_vfr_atc] Configured input device not found, "
+                  "falling back to system default\n");
+  return default_input_device();
+}
+
+std::vector<InputDevice> list_input_devices() {
+  std::vector<InputDevice> out;
+  for (const AudioDeviceID dev : input_device_ids()) {
+    std::string uid = device_string(dev, kAudioDevicePropertyDeviceUID);
+    if (!uid.empty())
+      out.push_back({std::move(uid),
+                     ascii_safe(device_string(dev, kAudioObjectPropertyName))});
+  }
+  return out;
 }
 
 // Configure the client-side format on the input bus at `rate` and bring
 // the unit up. Success means the AUHAL accepted the format, reported it
 // back unchanged, AND initialized -- a set that silently lands on a
-// different rate is a failure here, otherwise we would believe we had
-// 16 kHz while the callback delivers something else.
+// different rate is a failure here. This does not prove the callback really
+// delivers that rate, see the rate check in stop_recording().
 //
 // On failure the unit is left uninitialized so the caller can retry with
 // another rate. `out_status` carries the OSStatus for logging.
@@ -206,8 +287,6 @@ void init() {
         "recording will not work\n");
   }
 
-  log_default_input_device();
-
   AudioComponentDescription desc{};
   desc.componentType = kAudioUnitType_Output;
   desc.componentSubType = kAudioUnitSubType_HALOutput;
@@ -245,25 +324,24 @@ void init() {
                        kAudioUnitScope_Output, 0, &disable_output,
                        sizeof(disable_output));
 
-  // Explicitly set input device to system default input
-  AudioObjectPropertyAddress default_input_prop{};
-  default_input_prop.mSelector = kAudioHardwarePropertyDefaultInputDevice;
-  default_input_prop.mScope = kAudioObjectPropertyScopeGlobal;
-  default_input_prop.mElement = kAudioObjectPropertyElementMain;
-  AudioDeviceID input_device = kAudioDeviceUnknown;
-  UInt32 dev_size = sizeof(input_device);
-  AudioObjectGetPropertyData(kAudioObjectSystemObject, &default_input_prop, 0,
-                             nullptr, &dev_size, &input_device);
+  // Bind the configured input device. X-Plane's Radio Device is output-only
+  // and not readable through the SDK, so the microphone is chosen here.
+  const AudioDeviceID input_device = resolve_input_device();
   if (input_device != kAudioDeviceUnknown) {
     status = AudioUnitSetProperty(
         audio_unit_, kAudioOutputUnitProperty_CurrentDevice,
         kAudioUnitScope_Global, 0, &input_device, sizeof(input_device));
-    char log[128];
+    active_device_name_ =
+        ascii_safe(device_string(input_device, kAudioObjectPropertyName));
+    char log[384];
     std::snprintf(log, sizeof(log),
-                  "[xp_wellys_vfr_atc] Set AudioUnit input device id=%u: %s\n",
+                  "[xp_wellys_vfr_atc] Input device: \"%s\" (id=%u): %s\n",
+                  active_device_name_.c_str(),
                   static_cast<unsigned>(input_device),
                   status == noErr ? "OK" : "FAILED");
     XPLMDebugString(log);
+  } else {
+    XPLMDebugString("[xp_wellys_vfr_atc] No input device found\n");
   }
 
   // Log the device's native (hardware) format
@@ -303,35 +381,30 @@ void init() {
     return;
   }
 
-  // Ask Core Audio for 16 kHz directly; fall back to the device's native
-  // rate only if it refuses.
+  // Capture at the device's own rate; pcm_resample converts to 16 kHz.
   //
-  // 16 kHz first, because the AUHAL's own converter band-limits properly.
-  // Adopting the device rate instead pushes the conversion onto
-  // pcm_resample, which is the software fallback -- correct, but extra
-  // work we do not need to do. (Until issue #85 this was the *only* macOS
-  // path, and back then the software resampler was an unfiltered linear
-  // decimation that aliased everything above 8 kHz down into the speech
-  // band.)
+  // Do NOT ask the AUHAL for 16 kHz first. It accepts that format and reports
+  // it back, but on a 48 kHz device it still delivers 48000 frames/s (seen on
+  // macOS 15 and 26). On macOS 15 with a USB headset, every 512-frame callback
+  // held the same ~171-sample chunk three times: stuttered audio, 3x too long,
+  // that STT only half understands.
   //
-  // The fallback stays because some devices genuinely reject the
-  // conversion: 24 kHz Bluetooth headsets (AirPods) have been observed to
-  // fail with -10863 here, and a dead microphone is far worse than a
-  // resample. Do not "simplify" this to a hard 16 kHz set.
-  if (!activate_client_format(kDesiredSampleRate, &status)) {
+  // The 16 kHz retry only exists because a dead microphone is worse than a
+  // degraded one, for a device that refuses its own reported rate.
+  if (!activate_client_format(device_rate, &status)) {
     char log[224];
     std::snprintf(log, sizeof(log),
-                  "[xp_wellys_vfr_atc] 16 kHz client format rejected "
-                  "(err %d), falling back to device rate %.0f Hz - STT "
-                  "quality will be reduced\n",
-                  static_cast<int>(status), device_rate);
+                  "[xp_wellys_vfr_atc] Device rate %.0f Hz rejected (err %d), "
+                  "trying 16 kHz client format - STT quality may be "
+                  "reduced\n",
+                  device_rate, static_cast<int>(status));
     XPLMDebugString(log);
 
-    if (!activate_client_format(device_rate, &status)) {
+    if (!activate_client_format(kDesiredSampleRate, &status)) {
       std::snprintf(log, sizeof(log),
                     "[xp_wellys_vfr_atc] Error: failed to configure audio "
-                    "format at device rate %.0f Hz (err %d)\n",
-                    device_rate, static_cast<int>(status));
+                    "format at 16 kHz (err %d)\n",
+                    static_cast<int>(status));
       XPLMDebugString(log);
       AudioComponentInstanceDispose(audio_unit_);
       audio_unit_ = nullptr;
@@ -373,6 +446,27 @@ void stop() {
   buffer_.clear();
 }
 
+// The AUHAL can report one rate and deliver another, which no format query
+// reveals. Sample count against wall clock does.
+static void warn_on_rate_mismatch(size_t samples) {
+  constexpr double kMinSeconds = 1.0;
+  constexpr double kTolerance = 0.25;
+  const std::chrono::duration<double> elapsed =
+      std::chrono::steady_clock::now() - record_start_;
+  if (elapsed.count() < kMinSeconds)
+    return;
+  const double measured = static_cast<double>(samples) / elapsed.count();
+  const double expected = static_cast<double>(actual_sample_rate_);
+  if (std::fabs(measured / expected - 1.0) <= kTolerance)
+    return;
+  char log[160];
+  std::snprintf(log, sizeof(log),
+                "[xp_wellys_vfr_atc] WARNING: mic delivered %.0f samples/s, "
+                "expected %.0f Hz - audio is distorted, STT will suffer\n",
+                measured, expected);
+  XPLMDebugString(log);
+}
+
 void start_recording() {
   if (!initialized_ || !audio_unit_) {
     XPLMDebugString(
@@ -386,6 +480,7 @@ void start_recording() {
   }
 
   render_call_count_ = 0;
+  record_start_ = std::chrono::steady_clock::now();
   recording_ = true;
   OSStatus status = AudioOutputUnitStart(audio_unit_);
   if (status != noErr) {
@@ -417,6 +512,7 @@ void stop_recording() {
         peak = abs_s;
     }
     float peak_pct = (static_cast<float>(peak) / 32767.0f) * 100.0f;
+    last_peak_ = buffer_.empty() ? -1 : peak;
 
     if (settings::debug_logging()) {
       char log[256];
@@ -428,6 +524,7 @@ void stop_recording() {
                     static_cast<int>(peak), peak_pct);
       XPLMDebugString(log);
     }
+    warn_on_rate_mismatch(buffer_.size());
     if (buffer_.empty() && render_call_count_.load() == 0) {
       XPLMDebugString("[xp_wellys_vfr_atc] ERROR: No audio captured. Check: "
                       "System Settings "
@@ -455,6 +552,30 @@ static void data_callback(ma_device * /*dev*/, void * /*output*/,
   buffer_.insert(buffer_.end(), samples, samples + frame_count);
 }
 
+// Visit every capture endpoint. The context only lives for the enumeration;
+// a ma_device_id is plain data and stays valid for ma_device_init.
+template <typename Fn> static void for_each_capture_device(Fn &&fn) {
+  ma_context context;
+  if (ma_context_init(nullptr, 0, nullptr, &context) != MA_SUCCESS)
+    return;
+  ma_device_info *infos = nullptr;
+  ma_uint32 count = 0;
+  if (ma_context_get_devices(&context, nullptr, nullptr, &infos, &count) ==
+      MA_SUCCESS) {
+    for (ma_uint32 i = 0; i < count; ++i)
+      fn(infos[i]);
+  }
+  ma_context_uninit(&context);
+}
+
+std::vector<InputDevice> list_input_devices() {
+  std::vector<InputDevice> out;
+  for_each_capture_device([&out](const ma_device_info &info) {
+    out.push_back({info.name, ascii_safe(info.name)});
+  });
+  return out;
+}
+
 void init() {
   // Windows has no per-app mic prompt; this logs and returns true. A
   // system-level privacy block surfaces as an empty capture stream, which
@@ -466,6 +587,24 @@ void init() {
   config.capture.channels = kNumChannels;
   config.sampleRate = kDesiredSampleRate; // miniaudio resamples to this
   config.dataCallback = data_callback;
+
+  // The configured endpoint if present, otherwise the system default. A
+  // missing device keeps the setting so it binds again once it is back.
+  ma_device_id selected_id{};
+  bool selected = false;
+  const std::string wanted = settings::audio_input_device();
+  if (!wanted.empty()) {
+    for_each_capture_device([&](const ma_device_info &info) {
+      if (wanted == info.name) {
+        selected_id = info.id;
+        selected = true;
+      }
+    });
+    if (!selected)
+      XPLMDebugString("[xp_wellys_vfr_atc] Configured input device not found, "
+                      "falling back to system default\n");
+  }
+  config.capture.pDeviceID = selected ? &selected_id : nullptr;
 
   ma_result r = ma_device_init(nullptr, &config, &device_);
   if (r != MA_SUCCESS) {
@@ -479,12 +618,13 @@ void init() {
   device_ready_ = true;
   actual_sample_rate_ = kDesiredSampleRate;
   initialized_ = true;
+  active_device_name_ = ascii_safe(device_.capture.name);
 
-  char log[256];
+  char log[384];
   std::snprintf(log, sizeof(log),
                 "[xp_wellys_vfr_atc] Audio recorder initialized (miniaudio "
                 "WASAPI, %uHz mono 16-bit); input device: \"%s\"\n",
-                actual_sample_rate_, device_.capture.name);
+                actual_sample_rate_, active_device_name_.c_str());
   XPLMDebugString(log);
 }
 
@@ -542,6 +682,7 @@ void stop_recording() {
       peak = abs_s;
   }
   float peak_pct = (static_cast<float>(peak) / 32767.0f) * 100.0f;
+  last_peak_ = buffer_.empty() ? -1 : peak;
 
   if (settings::debug_logging()) {
     char log[256];
@@ -571,8 +712,25 @@ void init() {
 void stop() {}
 void start_recording() {}
 void stop_recording() {}
+std::vector<InputDevice> list_input_devices() { return {}; }
 
 #endif
+
+bool set_input_device(const std::string &id) {
+  if (recording_.load())
+    return false;
+  settings::set_audio_input_device(id);
+  settings::save();
+  stop();
+  active_device_name_.clear();
+  last_peak_ = -1;
+  init();
+  return initialized_;
+}
+
+const std::string &active_input_device_name() { return active_device_name_; }
+
+bool last_recording_silent() { return last_peak_.load() == 0; }
 
 std::vector<int16_t> take_pcm() {
   std::lock_guard<std::mutex> lock(buffer_mutex_);

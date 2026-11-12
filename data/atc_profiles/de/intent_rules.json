@@ -207,7 +207,7 @@
       "_note": "Plain 'request taxi' / 'rollen'. Exclude clearance readbacks ('rollen sie ueber X') and frequency-change readbacks that mention 'taxi'.",
       "intent": "REQUEST_TAXI",
       "confidence": 0.90,
-      "any": ["rollen", "rollfreigabe", "erbitte rollen"],
+      "any": ["rollen", "rollbereit", "rollfreigabe", "erbitte rollen"],
       "none": [
         "contact tower",
         "kontaktiere boden", "kontaktiere turm",

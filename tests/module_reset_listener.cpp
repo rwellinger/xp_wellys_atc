@@ -29,6 +29,7 @@
 // because reset() asserts it is on the captured flight-loop thread.
 
 #include "atc/atc_state_machine.hpp"
+#include "atc/engine.hpp"
 #include "atc/atis_generator.hpp"
 #include "atc/flight_phase.hpp"
 #include "persistence/settings.hpp"
@@ -54,6 +55,15 @@ public:
     atis_generator::init();
     // 4. bzf_strict_mode + VFR intention + callsign back to defaults.
     settings::reset_for_test();
+  }
+
+  // A test that loaded the EN profile must not leave its tables behind: they
+  // are module globals and a later DE test would read EN templates.
+  void testCaseEnded(Catch::TestCaseStats const &) override {
+    if (settings::atc_profile() == "DE")
+      return;
+    settings::set_atc_profile("DE");
+    engine::reload_language_profile();
   }
 };
 

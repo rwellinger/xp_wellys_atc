@@ -106,6 +106,13 @@ void stop();
 void update(const xplane_context::XPlaneContext &ctx, float dt);
 void reload();
 
+// Fold hover into the ATC ground class: a helicopter that is not touching the
+// surface but is low and slow near the airport gets on_ground = hovering =
+// true. No-op for fixed-wing. Call with a context whose on_ground is the
+// physical value; repeat calls are safe because a previous hover result is
+// undone first, so writers of on_ground must clear `hovering` as well.
+void classify_ground(xplane_context::XPlaneContext &ctx);
+
 // Reset only the runtime phase state (current/candidate phase, hysteresis
 // timer, airborne latch) back to a fresh PARKED baseline, leaving the
 // loaded config (thresholds, preconditions, ...) intact. Used by the

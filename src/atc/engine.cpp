@@ -14,7 +14,10 @@
 #include "atc/atc_templates.hpp"
 #include "atc/bzf_compliance.hpp"
 #include "atc/flight_phase.hpp"
+#include "atc/initial_call_conformance.hpp"
+#include "atc/intent_rules.hpp"
 #include "atc/landing_sequence.hpp"
+#include "atc/phraseology_hints.hpp"
 #include "atc/traffic_advisor.hpp"
 #include "atc/traffic_dialog.hpp"
 #include "backends/manager.hpp"
@@ -923,6 +926,10 @@ resolve_active_runway_for_go_around(const xplane_context::XPlaneContext &ctx) {
 
 bool poll_go_around(const xplane_context::XPlaneContext &ctx, double now_secs,
                     std::string *out_text) {
+  // A helicopter need not land on the runway, so its occupancy says nothing.
+  if (ctx.is_helicopter)
+    return false;
+
   // Gate 1: user is on a granted landing clearance.
   if (atc_state_machine::get_state() !=
       atc_state_machine::ATCState::LANDING_CLEARED)
@@ -967,6 +974,16 @@ bool poll_go_around(const xplane_context::XPlaneContext &ctx, double now_secs,
                 user_dist_nm,
                 seq.occupant.has_value() ? seq.occupant->modeS_id : 0u);
   return true;
+}
+
+void reload_language_profile() {
+  atc_templates::reload();
+  flight_phase::reload();
+  intent_rules::reload();
+  phraseology_hints::reload();
+  initial_call_conformance::reload();
+  logging::info("ATC language profile reloaded: %s",
+                settings::atc_profile().c_str());
 }
 
 bool poll_traffic_advisory(const xplane_context::XPlaneContext &ctx,

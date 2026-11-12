@@ -13,6 +13,8 @@
 
 #include "core/xplane_context.hpp"
 
+#include <algorithm>
+#include <cctype>
 #include <cmath>
 
 namespace xplane_context {
@@ -43,6 +45,15 @@ int priority_rank(FrequencyType t) {
   }
   return 0;
 }
+// ICAO Doc 8643 designators of common helicopters. Only consulted when the
+// aircraft metadata flag is not set.
+constexpr const char *kHelicopterIcaoTypes[] = {
+    "A109", "A119", "A139", "A169", "AS32", "AS50", "AS55", "AS65", "B06",
+    "B105", "B212", "B407", "B412", "B429", "B505", "BK17", "EC20", "EC30",
+    "EC35", "EC45", "EC55", "EC75", "G2CA", "H160", "H269", "H500", "H60",
+    "MD52", "MD60", "R22",  "R44",  "R66",  "S76",  "S92",  "UH1",
+};
+
 } // namespace
 
 bool AirportFrequencies::has(FrequencyType ft) const {
@@ -155,6 +166,21 @@ FrequencyType classify_by_name(FrequencyType base, const std::string &name) {
   if (last == "RADIO" || last == "RDO")
     return FrequencyType::RADIO;
   return FrequencyType::TOWER;
+}
+
+bool resolve_is_helicopter(const std::string &category, bool metadata_flag,
+                           const std::string &icao) {
+  if (category == "airplane")
+    return false;
+  if (category == "helicopter" || metadata_flag)
+    return true;
+  std::string upper = icao;
+  std::transform(
+      upper.begin(), upper.end(), upper.begin(),
+      [](unsigned char c) { return static_cast<char>(std::toupper(c)); });
+  return std::any_of(std::begin(kHelicopterIcaoTypes),
+                     std::end(kHelicopterIcaoTypes),
+                     [&upper](const char *type) { return upper == type; });
 }
 
 } // namespace xplane_context

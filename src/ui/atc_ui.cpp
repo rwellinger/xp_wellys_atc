@@ -23,6 +23,7 @@
 #include "atc/atis_generator.hpp"
 #include "atc/de_phraseology.hpp"
 #include "atc/en_phraseology.hpp"
+#include "atc/engine.hpp"
 #include "atc/flight_phase.hpp"
 #include "atc/flows/ground_operations.hpp"
 #include "atc/intent_parser.hpp"
@@ -114,11 +115,29 @@ static const char *start_mode_labels[] = {"Cold and Dark", "Engines Running",
                                           "Ready for Takeoff"};
 static int start_mode_selection = 1; // default: engines_running
 
+static const char *aircraft_category_keys[] = {"auto", "airplane",
+                                               "helicopter"};
+static int aircraft_category_selection = 0; // default: auto
+
 // ATC phraseology language — "de" (NfL DACH-VFR) or "en" (ICAO-VFR).
 // Keys match settings::atc_language(); labels are shown in the combo.
 // A restart is required for the profile bundles / voices to reload.
 static const char *language_keys[] = {"de", "en"};
 static int language_selection = 0; // default: de
+
+// Switch the ATC language at runtime. The backends restart because the local
+// STT model and TTS voices are chosen per language at load time. Between
+// flights the dialog state is dropped too; in flight it survives, as the state
+// names are the same in both profiles.
+static void apply_atc_language(const char *language) {
+  settings::set_atc_language(language);
+  settings::save();
+  engine::reload_language_profile();
+  atc_state_machine::begin_fresh_flight(xplane_context::get().on_ground);
+  backends::loader::stop();
+  backends::loader::start();
+  atc_session::reset_atis_cooldown();
+}
 
 // Interface (UI-chrome) language — "de" or "en" (Issue #56). Decoupled from
 // the ATC phraseology language above; reuses language_keys. Switches live via
@@ -1305,11 +1324,56 @@ static float audio_test_timer_ = 0.0f;
 static std::vector<uint8_t> audio_test_wav_;
 static constexpr float kTestRecordDuration = 3.0f;
 
+// Microphone picker. The list is cached: enumerating Core Audio / WASAPI
+// devices is too slow for a per-frame call, so it refreshes on first draw and
+// on the button (a headset plugged in later).
+static void draw_input_device_picker() {
+  static std::vector<audio_recorder::InputDevice> devices;
+  static bool devices_loaded = false;
+  if (!devices_loaded) {
+    devices = audio_recorder::list_input_devices();
+    devices_loaded = true;
+  }
+
+  const std::string configured = settings::audio_input_device();
+  const std::string &active = audio_recorder::active_input_device_name();
+  const char *preview =
+      active.empty() ? ui_strings::tr("audio.input_default") : active.c_str();
+
+  // Rebinding during the mic test would cut the recording off.
+  const bool locked = audio_test_state_ == AudioTestState::RECORDING;
+  if (locked)
+    ImGui::BeginDisabled();
+  if (ImGui::BeginCombo(ui_strings::tr("audio.input_device"), preview)) {
+    if (ImGui::Selectable(ui_strings::tr("audio.input_default"),
+                          configured.empty()))
+      audio_recorder::set_input_device("");
+    for (const auto &dev : devices) {
+      ImGui::PushID(dev.id.c_str());
+      if (ImGui::Selectable(dev.name.c_str(), dev.id == configured))
+        audio_recorder::set_input_device(dev.id);
+      ImGui::PopID();
+    }
+    ImGui::EndCombo();
+  }
+  if (locked)
+    ImGui::EndDisabled();
+
+  ImGui::SameLine();
+  if (ImGui::Button(ui_strings::tr("btn.refresh_devices")))
+    devices = audio_recorder::list_input_devices();
+
+  ImGui::TextDisabled("%s", ui_strings::tr("audio.input_hint"));
+  if (audio_recorder::last_recording_silent())
+    ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.2f, 1.0f), "%s",
+                       ui_strings::tr("audio.silent_warning"));
+}
+
 static void draw_audio_tab() {
   // ── Microphone / Input ──────────────────────────────────────────
   ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.0f, 1.0f), "%s",
                      ui_strings::tr("audio.mic_header"));
-  ImGui::TextDisabled("%s", ui_strings::tr("audio.input_device"));
+  draw_input_device_picker();
   ImGui::Spacing();
 
   float delta = ImGui::GetIO().DeltaTime;
@@ -1420,6 +1484,10 @@ static void draw_settings_tab() {
     std::string pdir = settings::pattern_direction();
     pattern_dir_selection = (pdir == "right") ? 1 : 0;
     std::string sm = settings::start_mode();
+    std::string ac = settings::aircraft_category();
+    aircraft_category_selection = (ac == "airplane")     ? 1
+                                  : (ac == "helicopter") ? 2
+                                                         : 0;
     start_mode_selection = 1; // engines_running default
     for (size_t i = 0; i < sizeof(start_mode_keys) / sizeof(start_mode_keys[0]);
          ++i) {
@@ -1840,19 +1908,20 @@ static void draw_settings_tab() {
   }
 
   // ATC phraseology language — DE (NfL DACH-VFR) or EN (ICAO-VFR). Governs
-  // the spoken phraseology, ATC responses and hint contents. Applies on the
-  // next plugin start: the profile bundle and the local TTS voice are loaded
-  // during init. Labels carry the NfL/ICAO annotation here.
+  // the spoken phraseology, ATC responses and hint contents. Applies at once;
+  // locked while a transmission runs, because workers read the profile tables.
+  // Labels carry the NfL/ICAO annotation here.
   const char *language_labels_tr[2] = {
       ui_strings::tr("settings.language_de"),
       ui_strings::tr("settings.language_en"),
   };
+  ImGui::BeginDisabled(atc_session::ptt_state() != atc_session::PTTState::IDLE);
   if (ImGui::Combo(ui_strings::tr("settings.language_label"),
                    &language_selection, language_labels_tr, 2)) {
-    settings::set_atc_language(language_keys[language_selection]);
-    settings::save();
+    apply_atc_language(language_keys[language_selection]);
   }
-  if (ImGui::IsItemHovered()) {
+  ImGui::EndDisabled();
+  if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) {
     ImGui::SetTooltip("%s", ui_strings::tr("tooltip.language"));
   }
 
@@ -1870,6 +1939,23 @@ static void draw_settings_tab() {
   }
   if (ImGui::IsItemHovered()) {
     ImGui::SetTooltip("%s", ui_strings::tr("tooltip.start_mode"));
+  }
+
+  // Aircraft class override; ctx.is_helicopter follows on the next frame.
+  const char *aircraft_category_labels_tr[3] = {
+      ui_strings::tr("aircraft_category.auto"),
+      ui_strings::tr("aircraft_category.airplane"),
+      ui_strings::tr("aircraft_category.helicopter"),
+  };
+  if (ImGui::Combo(ui_strings::tr("settings.aircraft_category_label"),
+                   &aircraft_category_selection, aircraft_category_labels_tr,
+                   3)) {
+    settings::set_aircraft_category(
+        aircraft_category_keys[aircraft_category_selection]);
+    settings::save();
+  }
+  if (ImGui::IsItemHovered()) {
+    ImGui::SetTooltip("%s", ui_strings::tr("tooltip.aircraft_category"));
   }
 
   // Debug logging

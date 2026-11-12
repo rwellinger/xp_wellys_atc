@@ -8,6 +8,7 @@
  * (at your option) any later version.
  */
 
+#include "atc/flight_phase.hpp"
 #include "core/xplane_context.hpp"
 #include "data/airspace_db.hpp"
 #include "persistence/settings.hpp"
@@ -46,6 +47,8 @@ static XPLMDataRef dr_com1_freq = nullptr;
 static XPLMDataRef dr_com2_freq = nullptr;
 static XPLMDataRef dr_active_com = nullptr;
 static XPLMDataRef dr_aircraft_icao = nullptr;
+static XPLMDataRef dr_is_helicopter = nullptr;
+static XPLMDataRef dr_onground_any = nullptr;
 static XPLMDataRef dr_avionics_on = nullptr;
 static XPLMDataRef dr_com1_power = nullptr;
 static XPLMDataRef dr_com2_power = nullptr;
@@ -519,6 +522,8 @@ void init() {
   dr_active_com =
       XPLMFindDataRef("sim/cockpit2/radios/actuators/audio_com_selection");
   dr_aircraft_icao = XPLMFindDataRef("sim/aircraft/view/acf_ICAO");
+  dr_is_helicopter = XPLMFindDataRef("sim/aircraft2/metadata/is_helicopter");
+  dr_onground_any = XPLMFindDataRef("sim/flightmodel/failures/onground_any");
   dr_avionics_on = XPLMFindDataRef("sim/cockpit/electrical/avionics_on");
   dr_com1_power = XPLMFindDataRef("sim/cockpit2/radios/actuators/com1_power");
   dr_com2_power = XPLMFindDataRef("sim/cockpit2/radios/actuators/com2_power");
@@ -580,6 +585,7 @@ void update() {
     float y_agl = XPLMGetDataf(dr_y_agl);
     ctx.height_agl_ft = y_agl * 3.28084f;
     ctx.on_ground = (y_agl < 0.5f);
+    ctx.hovering = false;
   }
 
   if (dr_com1_freq)
@@ -604,6 +610,21 @@ void update() {
     XPLMGetDatab(dr_aircraft_icao, buf, 0, sizeof(buf) - 1);
     ctx.aircraft_icao = buf;
   }
+
+  ctx.is_helicopter = xplane_context::resolve_is_helicopter(
+      settings::aircraft_category(),
+      dr_is_helicopter && XPLMGetDatai(dr_is_helicopter) != 0,
+      ctx.aircraft_icao);
+
+  // y_agl is taken at the CG, so a helicopter on skids or tall gear may sit
+  // above the 0.5 m limit. Fixed-wing keeps the plain y_agl test.
+  if (ctx.is_helicopter && dr_onground_any &&
+      XPLMGetDatai(dr_onground_any) != 0)
+    ctx.on_ground = true;
+
+  // Uses the previous frame's airport position; this keeps the later
+  // on_ground consumers in this function on the ATC ground class.
+  flight_phase::classify_ground(ctx);
 
   if (dr_avionics_on)
     ctx.avionics_on = (XPLMGetDatai(dr_avionics_on) != 0);

@@ -57,7 +57,9 @@
         "leaving the frequency",
         "leaving frequency",
         { "any": ["frequency change"],
-          "none": ["request", "approved"] }
+          "none": ["request", "approved"] },
+        { "any": ["change frequency", "changing frequency"],
+          "none": ["request", "approved", "after departure"] }
       ]
     },
 
@@ -124,7 +126,7 @@
         { "any": ["departure", "holding point", "hold short", "line up"] },
         { "any": ["to the north", "to the south", "to the east", "to the west",
                   "northbound", "southbound", "eastbound", "westbound",
-                  "cross country", "en route", "outbound", "to"] }
+                  "cross country", "en route", "outbound", "departure to "] }
       ]
     },
 

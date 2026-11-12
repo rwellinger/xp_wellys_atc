@@ -107,7 +107,8 @@ bool parse_facility(const std::string &s, xplane_context::FacilityType &out) {
 
 // flight_phase has a temporal-hysteresis window; the runner primes it
 // with 30 one-second ticks so ground phases settle immediately.
-void prime_flight_phase(const xplane_context::XPlaneContext &ctx) {
+void prime_flight_phase(xplane_context::XPlaneContext &ctx) {
+  flight_phase::classify_ground(ctx);
   for (int i = 0; i < 30; ++i)
     flight_phase::update(ctx, 1.0f);
 }
@@ -195,6 +196,11 @@ void cmd_set(std::string &callsign, const std::string &rest) {
       bool b;
       if (!parse_bool(value, b)) throw std::runtime_error("expected bool");
       ctx.on_ground = b;
+      ctx.hovering = false;
+    } else if (field == "is_helicopter") {
+      bool b;
+      if (!parse_bool(value, b)) throw std::runtime_error("expected bool");
+      ctx.is_helicopter = b;
     } else if (field == "com") {
       ctx.com1_freq_mhz = std::stof(value);
       ctx.active_com = 1;
@@ -220,12 +226,10 @@ void cmd_set(std::string &callsign, const std::string &rest) {
       std::string up = value;
       std::transform(up.begin(), up.end(), up.begin(),
                      [](unsigned char c) { return std::toupper(c); });
-      // German-VFR-only build: "DE" is the only valid profile.
-      if (up != "DE")
-        throw std::runtime_error("region must be DE (German-VFR-only build)");
+      if (up != "DE" && up != "EN")
+        throw std::runtime_error("region must be DE or EN");
       settings::set_atc_profile(up);
-      atc_templates::reload();
-      flight_phase::reload();
+      engine::reload_language_profile();
       airport_vrps::reload();
     } else {
       std::fprintf(stderr, "Unknown field: %s (try 'help')\n", field.c_str());
@@ -253,8 +257,7 @@ void cmd_load(std::string &callsign, const std::string &rest) {
     auto scn = scenario::load(rest);
     const std::string region = scn.region.empty() ? "DE" : scn.region;
     settings::set_atc_profile(region);
-    atc_templates::reload();
-    flight_phase::reload();
+    engine::reload_language_profile();
     airport_vrps::reload();
     xplane_context::g_cli_ctx = std::move(scn.ctx);
     ensure_engine_fields(xplane_context::g_cli_ctx);
@@ -283,7 +286,7 @@ void cmd_help() {
       "  quit                  Exit (or Ctrl+D)\n"
       "\n"
       "Set fields:\n"
-      "  region DE                Phraseology profile (German-VFR-only)\n"
+      "  region DE|EN             Phraseology profile\n"
       "  airport <ICAO>           e.g. LSZH\n"
       "  airport_name <text>\n"
       "  towered true|false        (shorthand: facility TOWERED|UNCONTROLLED)\n"
@@ -294,6 +297,7 @@ void cmd_help() {
       "  freq_type <TYPE>         GROUND|TOWER|UNICOM|CTAF|ATIS|DELIVERY|INFO|RADIO\n"
       "  runway <id>              e.g. 28, 10L\n"
       "  altitude_ft <ft>\n"
+      "  is_helicopter <bool>\n"
       "  agl_ft <ft>\n"
       "  groundspeed_kt <kt>\n"
       "  heading <deg>\n"

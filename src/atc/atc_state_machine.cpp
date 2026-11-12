@@ -457,6 +457,12 @@ void begin_fresh_flight(bool on_ground) {
   reset(); // reuses the full field sweep + single bump_gen() + log line
 }
 
+static bool cross_country_planned() {
+  if (g_state.flight_intent_declared_)
+    return g_state.flight_intent_cross_country_;
+  return settings::vfr_flight_type() == "cross_country";
+}
+
 // ── Disregard ───────────────────────────────────────────────────────
 
 // "Disregard" radius: airborne pilots within this distance from their
@@ -869,6 +875,16 @@ ATCResponse process(const intent_parser::PilotMessage &msg_in,
     msg.intent = intent_parser::PilotIntent::READY_FOR_DEPARTURE_VFR;
     logging::info("Cross-country flight intent: promoted READY_FOR_DEPARTURE "
                   "-> READY_FOR_DEPARTURE_VFR");
+  }
+
+  // The flight plan outranks a course marker in the call: without a stated
+  // destination, a pattern flight stays a pattern flight. Same precedence as
+  // the first-contact intention: destination, declared intent, pre-flight.
+  if (msg.intent == intent_parser::PilotIntent::READY_FOR_DEPARTURE_VFR &&
+      msg.destination.empty() && !cross_country_planned()) {
+    msg.intent = intent_parser::PilotIntent::READY_FOR_DEPARTURE;
+    logging::info("Pattern flight: demoted READY_FOR_DEPARTURE_VFR "
+                  "-> READY_FOR_DEPARTURE");
   }
 
   // Airport-change reset is also done per-frame in check_airport_change();

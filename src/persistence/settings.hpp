@@ -115,6 +115,12 @@ std::string backend_language();
 //   "engines_running"   — IDLE, pilot ready to call Ground (default)
 //   "ready_for_takeoff" — TOWER_CONTACT, pilot at holding point
 std::string start_mode();
+// Aircraft class override: "auto" (default, from the sim's aircraft metadata),
+// "airplane" or "helicopter". See xplane_context::resolve_is_helicopter.
+std::string aircraft_category();
+// Microphone: id from audio_recorder::list_input_devices(), "" = system
+// default. Independent of X-Plane's Radio Device, which is output-only.
+std::string audio_input_device();
 bool debug_traffic();
 
 // Debug helper: replace the mic / PTT path with a typed text field in
@@ -262,6 +268,8 @@ void set_debug_traffic(bool v);
 void set_debug_text_input(bool v);
 void set_bzf_strict_mode(bool v);
 void set_start_mode(const std::string &v);
+void set_aircraft_category(const std::string &v);
+void set_audio_input_device(const std::string &v);
 
 // Reset the test-mutable settings (atc_language, bzf_strict_mode, vfr
 // intention, pilot callsign) back to their defaults. Used by the module-reset

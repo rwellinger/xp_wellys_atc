@@ -31,6 +31,7 @@
 #include "core/xplane_context.hpp"
 #include "persistence/model_manifest.hpp"
 #include "persistence/settings.hpp"
+#include "ui/ui_strings.hpp"
 
 #include <XPLMProcessing.h>
 #include <XPLMUtilities.h>
@@ -574,6 +575,28 @@ void on_ptt_released() {
         "[xp_wellys_vfr_atc] Recording too short (%.2fs), discarding\n",
         last_duration_);
     XPLMDebugString(buf);
+    state_ = PTTState::IDLE;
+    return;
+  }
+
+  // All-zero capture means the input is cut off, not that the pilot was
+  // quiet. No backend can transcribe it, and the empty result would surface
+  // as an unexplained "Transcription failed".
+  if (audio_recorder::last_recording_silent()) {
+    const std::string &device = audio_recorder::active_input_device_name();
+    char msg[256];
+    std::snprintf(msg, sizeof(msg),
+                  ui_strings::tr("audio.silent_capture_format"),
+                  device.c_str());
+    logging::error("Silent capture from input device \"%s\", STT skipped",
+                   device.c_str());
+    transcript_.push_back(TranscriptEntry{
+        static_cast<double>(XPLMGetElapsedTime()),
+        TranscriptKind::System,
+        msg,
+        "",
+    });
+    audio_recorder::take_pcm(); // discard
     state_ = PTTState::IDLE;
     return;
   }

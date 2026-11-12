@@ -44,12 +44,16 @@ struct PhaseThresholds {
   float near_airport_nm = 5.0f;
   float runway_aligned_deg = 30.0f;
   float final_descent_rate_fpm = -200.0f;
+  float hover_max_agl_ft = 50.0f;
+  float hover_max_gs_kt = 20.0f;
+  float heli_final_max_agl_ft = 500.0f;
 };
 
 struct HysteresisConfig {
   float ground_to_airborne_sec = 0.5f;
   float airborne_to_landing_sec = 0.3f;
   float auto_correction_delay_sec = 3.0f;
+  float hover_to_airborne_sec = 3.0f;
 };
 
 // ── Module state ─────────────────────────────────────────────────
@@ -170,6 +174,10 @@ static void load_from_file() {
       thresholds_.runway_aligned_deg = pt.value("runway_aligned_deg", 30.0f);
       thresholds_.final_descent_rate_fpm =
           pt.value("final_descent_rate_fpm", -200.0f);
+      thresholds_.hover_max_agl_ft = pt.value("hover_max_agl_ft", 50.0f);
+      thresholds_.hover_max_gs_kt = pt.value("hover_max_gs_kt", 20.0f);
+      thresholds_.heli_final_max_agl_ft =
+          pt.value("heli_final_max_agl_ft", 500.0f);
     }
 
     // Hysteresis
@@ -181,6 +189,8 @@ static void load_from_file() {
           hy.value("airborne_to_landing_sec", 0.3f);
       hysteresis_.auto_correction_delay_sec =
           hy.value("auto_correction_delay_sec", 3.0f);
+      hysteresis_.hover_to_airborne_sec =
+          hy.value("hover_to_airborne_sec", 3.0f);
     }
 
     // Intent preconditions
@@ -354,7 +364,25 @@ static void load_from_file() {
 
 // ── Raw phase detection (no hysteresis) ──────────────────────────
 
+static bool near_airport(const xplane_context::XPlaneContext &ctx) {
+  return haversine_distance_nm(ctx.latitude, ctx.longitude, ctx.airport_lat,
+                               ctx.airport_lon) < thresholds_.near_airport_nm;
+}
+
+// Helipads and FATOs are rarely runway-aligned, so a helicopter's final is
+// defined by the descent alone.
+static bool is_helicopter_final(const xplane_context::XPlaneContext &ctx) {
+  return ctx.is_helicopter &&
+         ctx.vertical_speed_fpm < thresholds_.final_descent_rate_fpm &&
+         ctx.height_agl_ft < thresholds_.heli_final_max_agl_ft;
+}
+
 static FlightPhase detect_raw(const xplane_context::XPlaneContext &ctx) {
+  // Hover maps to TAXI even when stationary: it needs the same ground-class
+  // preconditions, and the rotor is by definition turning.
+  if (ctx.hovering)
+    return FlightPhase::TAXI;
+
   // Ground phases — purely geometric (engine state is pilot's concern,
   // not ATC's, and is not tracked anywhere else in the plugin).
   if (ctx.on_ground) {
@@ -371,12 +399,12 @@ static FlightPhase detect_raw(const xplane_context::XPlaneContext &ctx) {
   }
 
   // Airborne phases
-  double dist_nm = haversine_distance_nm(ctx.latitude, ctx.longitude,
-                                         ctx.airport_lat, ctx.airport_lon);
-  bool near_airport = (dist_nm < thresholds_.near_airport_nm);
   bool low_agl = (ctx.height_agl_ft < thresholds_.pattern_max_agl_ft);
 
-  if (near_airport && low_agl) {
+  if (near_airport(ctx) && low_agl) {
+    if (is_helicopter_final(ctx))
+      return FlightPhase::FINAL_APPROACH;
+
     // Check final approach: descending + runway-aligned
     float rwy_hdg = active_runway_heading(ctx);
     if (rwy_hdg >= 0.0f &&
@@ -396,9 +424,14 @@ static FlightPhase detect_raw(const xplane_context::XPlaneContext &ctx) {
 
 // ── Hysteresis logic ─────────────────────────────────────────────
 
-static bool needs_hysteresis(FlightPhase from, FlightPhase to) {
+static bool needs_hysteresis(FlightPhase from, FlightPhase to,
+                             bool is_helicopter) {
   bool from_ground = is_on_ground(from);
   bool to_ground = is_on_ground(to);
+
+  // Helicopter: hover excursions cross the ground/air line in both directions
+  if (is_helicopter && from_ground != to_ground)
+    return true;
 
   // Ground → airborne: needs delay
   if (from_ground && !to_ground)
@@ -416,7 +449,11 @@ static bool needs_hysteresis(FlightPhase from, FlightPhase to) {
   return false;
 }
 
-static float hysteresis_duration(FlightPhase from, FlightPhase to) {
+static float hysteresis_duration(FlightPhase from, FlightPhase to,
+                                 bool is_helicopter) {
+  if (is_helicopter && is_on_ground(from) != is_on_ground(to))
+    return hysteresis_.hover_to_airborne_sec;
+
   if (is_on_ground(from) && !is_on_ground(to))
     return hysteresis_.ground_to_airborne_sec;
 
@@ -464,6 +501,20 @@ void reset() {
 
 FlightPhase get() { return current_phase_; }
 
+void classify_ground(xplane_context::XPlaneContext &ctx) {
+  if (ctx.hovering) {
+    ctx.hovering = false;
+    ctx.on_ground = false;
+  }
+  if (!ctx.is_helicopter || ctx.on_ground)
+    return;
+  if (ctx.height_agl_ft > thresholds_.hover_max_agl_ft ||
+      ctx.groundspeed_kts > thresholds_.hover_max_gs_kt || !near_airport(ctx))
+    return;
+  ctx.hovering = true;
+  ctx.on_ground = true;
+}
+
 void update(const xplane_context::XPlaneContext &ctx, float dt) {
   FlightPhase raw = detect_raw(ctx);
 
@@ -490,9 +541,10 @@ void update(const xplane_context::XPlaneContext &ctx, float dt) {
     candidate_timer_ = 0.0f;
   }
 
-  if (needs_hysteresis(current_phase_, raw)) {
+  if (needs_hysteresis(current_phase_, raw, ctx.is_helicopter)) {
     candidate_timer_ += dt;
-    float required = hysteresis_duration(current_phase_, raw);
+    float required =
+        hysteresis_duration(current_phase_, raw, ctx.is_helicopter);
     if (candidate_timer_ < required)
       return; // Not yet stable enough
   }

@@ -110,8 +110,11 @@ static void apply_field(xplane_context::XPlaneContext &ctx,
     ctx.facility_type = facility_from_string(value);
   else if (field == "tower_only")
     ctx.tower_only = parse_bool(value);
-  else if (field == "on_ground")
+  else if (field == "on_ground") {
     ctx.on_ground = parse_bool(value);
+    ctx.hovering = false;
+  } else if (field == "is_helicopter")
+    ctx.is_helicopter = parse_bool(value);
   else if (field == "com") {
     ctx.com1_freq_mhz = std::stof(value);
     ctx.active_com = 1;
@@ -165,11 +168,8 @@ Scenario load(const std::string &path) {
     std::string up;
     for (char c : r)
       up += (c >= 'a' && c <= 'z') ? static_cast<char>(c - 'a' + 'A') : c;
-    // German-VFR-only build: "DE" is the only valid profile.
-    if (up != "DE") {
-      throw std::runtime_error(
-          "region must be \"DE\" (German-VFR-only build): " + r);
-    }
+    if (up != "DE" && up != "EN")
+      throw std::runtime_error("region must be \"DE\" or \"EN\": " + r);
     scn.region = up;
   }
 
@@ -188,6 +188,7 @@ Scenario load(const std::string &path) {
                               : xplane_context::FacilityType::UNCONTROLLED;
     ctx.tower_only = c.value("tower_only", false);
     ctx.on_ground = c.value("on_ground", true);
+    ctx.is_helicopter = c.value("is_helicopter", false);
     ctx.com1_freq_mhz = c.value("com", 121.800f);
     ctx.active_com = 1;
     // Optional "freqs": [{"mhz": 126.300, "type": "TOWER"}, ...] — simulates
@@ -346,8 +347,7 @@ RunResult run(const Scenario &scn) {
   // reload() re-reads data/atc_profiles/de/{atc_templates,flight_rules}.json.
   const std::string region = scn.region.empty() ? "DE" : scn.region;
   settings::set_atc_profile(region);
-  atc_templates::reload();
-  flight_phase::reload();
+  engine::reload_language_profile();
   airport_vrps::reload();
   intent_rules::reload();
 
@@ -386,6 +386,7 @@ RunResult run(const Scenario &scn) {
   // Drive flight_phase past its ground-hysteresis window so REQUEST_TAXI
   // and friends don't get rejected as "engines off / parked" on step 1.
   // 30 × 1-second ticks matches the M2 interactive fallback.
+  flight_phase::classify_ground(ctx);
   for (int i = 0; i < 30; ++i)
     flight_phase::update(ctx, 1.0f);
 
@@ -409,6 +410,7 @@ RunResult run(const Scenario &scn) {
           ++mismatches;
         }
       }
+      flight_phase::classify_ground(ctx);
       for (int i = 0; i < 30; ++i)
         flight_phase::update(ctx, 1.0f);
     }

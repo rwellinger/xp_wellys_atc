@@ -87,6 +87,8 @@ static json default_config() {
       {"traffic_features_enabled", true},
       {"bzf_strict_mode", false},
       {"start_mode", "engines_running"},
+      {"aircraft_category", "auto"},
+      {"audio_input_device", ""},
       {"backend_mode", "local"},
       {"tts_backend_override", ""},
       {"api_key_saved", false},
@@ -305,7 +307,8 @@ std::string atc_profile_data_dir() {
   // Profile bundle directory derived from atc_language: data/atc_profiles/de
   // or data/atc_profiles/en. The six asset loaders (templates, flight_rules,
   // intent_rules, phraseology_hints, ui_strings, conformance) resolve through
-  // here, so a language switch repoints all of them at once.
+  // here. Loaded tables stay as they are until reloaded, see
+  // engine::reload_language_profile().
   return data_dir_path + "/atc_profiles/" + atc_language();
 }
 
@@ -437,6 +440,17 @@ std::string start_mode() {
       v != "ready_for_takeoff")
     v = "engines_running";
   return v;
+}
+
+std::string aircraft_category() {
+  std::string v = cfg.value("aircraft_category", std::string("auto"));
+  if (v != "airplane" && v != "helicopter")
+    v = "auto";
+  return v;
+}
+
+std::string audio_input_device() {
+  return cfg.value("audio_input_device", std::string());
 }
 
 std::string backend_mode() {
@@ -595,6 +609,16 @@ void set_start_mode(const std::string &v) {
     cfg["start_mode"] = v;
   else
     cfg["start_mode"] = "engines_running";
+}
+void set_aircraft_category(const std::string &v) {
+  if (v == "airplane" || v == "helicopter")
+    cfg["aircraft_category"] = v;
+  else
+    cfg["aircraft_category"] = "auto";
+}
+
+void set_audio_input_device(const std::string &v) {
+  cfg["audio_input_device"] = v;
 }
 
 // ── Dual-backend settings ─────────────────────────────────────

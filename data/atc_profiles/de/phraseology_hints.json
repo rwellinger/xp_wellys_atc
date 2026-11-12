@@ -103,7 +103,7 @@
     },
     {
       "comment": "DEPARTURE_CLEARED in der Luft (Cross-Country): Pilot kann Frequenzwechsel anfordern oder sich abmelden.",
-      "state": "XC/DEPARTURE_CLEARED", "phase": ["CLIMB", "CRUISE"], "facility": "towered",
+      "state": "XC/DEPARTURE_CLEARED", "phase": ["CLIMB", "PATTERN", "CRUISE"], "facility": "towered",
       "frequency_type": "TOWER",
       "intents": ["REQUEST_FREQUENCY", "LEAVING_FREQUENCY"]
     },
