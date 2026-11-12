@@ -26,6 +26,7 @@ void stop();
 void toggle();
 void toggle_atc_panel();
 void toggle_transcript_window();
+void toggle_about();
 void draw();
 void reset_window_position();
 

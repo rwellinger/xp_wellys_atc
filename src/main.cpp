@@ -64,6 +64,8 @@ static void menu_handler(void *, void *item_ref) {
     atc_ui::reset_window_position();
   else if (idx == 3)
     atc_ui::toggle_transcript_window();
+  else if (idx == 4)
+    atc_ui::toggle_about();
 }
 
 static int atc_panel_cmd_handler(XPLMCommandRef, XPLMCommandPhase phase,
@@ -232,6 +234,9 @@ PLUGIN_API int XPluginStart(char *name, char *sig, char *desc) {
                      reinterpret_cast<void *>(uintptr_t{3}), 0);
   XPLMAppendMenuItem(menu_id, "Reset Window Position",
                      reinterpret_cast<void *>(uintptr_t{2}), 0);
+  XPLMAppendMenuSeparator(menu_id);
+  XPLMAppendMenuItem(menu_id, "About...",
+                     reinterpret_cast<void *>(uintptr_t{4}), 0);
   // NOLINTEND(performance-no-int-to-ptr)
 
   return 1;

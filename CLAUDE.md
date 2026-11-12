@@ -216,6 +216,7 @@ Von `make setup` befüllt, nie eingecheckt:
 | `vendor/imgui/` | Dear ImGui v1.91.x |
 | `vendor/json.hpp` | nlohmann/json v3.11.x |
 | `vendor/miniaudio.h` | miniaudio v0.11.x (Windows-Mic-Capture, WASAPI) |
+| `vendor/xp_wellys_about/` | xp_wellys_about (gepinnter Tag `ABOUT_VERSION`) — geteilte "About"-Seite aller thWelly-Plugins |
 | `spikes/spike_whisper/third_party/whisper.cpp/` | whisper.cpp-Submodul |
 | `spikes/spike_llama/third_party/llama.cpp/` | llama.cpp-Submodul (liefert `ggml`) |
 | `spikes/spike_piper/third_party/piper1-gpl/` | Piper-Submodul (espeak-ng + onnxruntime) |
@@ -303,6 +304,7 @@ xp_wellys_vfr_atc/
 │   └── ui/
 │       ├── atc_ui.hpp/.cpp             # Dear-ImGui-ATC-Panel + Settings/Models/Traffic-Tabs + Debug-Texteingabe
 │       ├── ui_strings.hpp/.cpp         # i18n-String-Lookup (de)
+│       ├── about_window.hpp/.cpp       # Menü "About..." → xp_wellys_about-Fenster (Plugin-Info + Third-Party-Lizenzen)
 │       └── clipboard.hpp/.mm           # System-Pasteboard-Lese-Helfer (NSPasteboard) — hinter [Paste]-Buttons
 ├── data/
 │   ├── settings.json                   # Laufzeit-Standards (keine Geheimnisse — eingecheckt)

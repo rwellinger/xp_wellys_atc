@@ -2,9 +2,9 @@
 
 Native plugin for **macOS** and **Windows**. Simulates VFR radio communication: you speak, the plugin understands your call and ATC answers with a voice — speech to text, intent recognition and text to speech. German (DACH) and ICAO English phraseology.
 
-### What's New in the next release (version to be decided)
+### What's New in v1.1.0
 
-  - **Helicopters are now tolerated.** Stage 1 of helicopter support; helicopter-specific phraseology and helipads follow later.
+  - **Helicopters are now tolerated.** Stage 1 of 2 of helicopter support; helicopter-specific phraseology and helipads follow in stage 2.
     - Detected automatically from the aircraft data, with a new **Aircraft class** setting (Automatic / Airplane / Helicopter) for misdetected add-ons.
     - Hover and hover-taxi near an airport count as ground movement, so ground calls are no longer rejected with "you are airborne".
     - Approaches that are not aligned with the runway are recognised as final, also at heliports without runways.
@@ -16,6 +16,7 @@ Native plugin for **macOS** and **Windows**. Simulates VFR radio communication: 
   - **English sign-off.** "Change frequency" is now understood as leaving the frequency, and on a cross-country departure the sign-off hint also appears while still near the airport.
   - **"Rollbereit" is understood.** Answering ATC's "melden Sie sich rollbereit" with that word now requests taxi instead of repeating the prompt.
   - **Phraseology language switches immediately.** No restart needed; the backends reload, which takes a moment. This also fixes the mix of German and English radio calls after switching. The setting is locked during a transmission.
+  - **About window.** New **About...** entry in the plugin menu with version, license and the third-party components.
 
 ### What's New in v1.0.1
 

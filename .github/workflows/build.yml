@@ -213,7 +213,7 @@ jobs:
         shell: pwsh
         run: vcpkg install curl:x64-windows-static
 
-      - name: Setup dependencies (SDK headers + Win libs, ImGui, json)
+      - name: Setup dependencies (SDK headers + Win libs, ImGui, json, miniaudio, about)
         # PowerShell, not Git Bash: the bash on windows-latest ships GNU
         # tar, which cannot extract .zip. Expand-Archive handles both zips.
         shell: pwsh
@@ -243,6 +243,13 @@ jobs:
 
           Write-Host "Downloading miniaudio v0.11.25..."
           curl.exe -fsSL "https://raw.githubusercontent.com/mackron/miniaudio/0.11.25/miniaudio.h" -o vendor/miniaudio.h
+
+          # Keep in sync with ABOUT_VERSION in the Makefile.
+          Write-Host "Downloading xp_wellys_about v1.0.0..."
+          curl.exe -fsSL "https://github.com/rwellinger/xp_wellys_about/archive/refs/tags/v1.0.0.zip" -o about.zip
+          Expand-Archive -Path about.zip -DestinationPath about_extracted -Force
+          New-Item -ItemType Directory -Force -Path vendor/xp_wellys_about | Out-Null
+          Copy-Item -Recurse "about_extracted/xp_wellys_about-1.0.0/src","about_extracted/xp_wellys_about-1.0.0/LICENSE" vendor/xp_wellys_about/
 
       - name: Download prebuilt xp_wellys_libs bundle (win-x64, full)
         # The Windows slice runs the FULL local stack: whisper + llama (ggml with

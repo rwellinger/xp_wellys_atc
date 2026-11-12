@@ -43,6 +43,7 @@
 #include "persistence/model_paths.hpp"
 #include "persistence/models_catalog.hpp"
 #include "persistence/settings.hpp"
+#include "ui/about_window.hpp"
 #include "ui/clipboard.hpp"
 #include "ui/ui_strings.hpp"
 
@@ -91,6 +92,13 @@ static XPLMWindowID window_id = nullptr;
 static bool visible = false;
 static bool atc_panel_visible_ = false;
 static bool transcript_window_visible_ = false;
+static bool about_visible_ = false;
+
+// Any ImGui window open? Drives the draw callback and the capture window.
+static bool any_window_visible() {
+  return visible || atc_panel_visible_ || transcript_window_visible_ ||
+         about_visible_;
+}
 
 // ImGui persistent buffers
 static char callsign_raw_buf[64] = {};
@@ -3201,7 +3209,7 @@ static void wnd_key_cb(XPLMWindowID, char key, XPLMKeyFlags flags, char vkey,
 // ── Draw phase callback (ImGui rendering) ────────────────────────
 
 static int draw_phase_cb(XPLMDrawingPhase, int, void *) {
-  if (!visible && !atc_panel_visible_ && !transcript_window_visible_)
+  if (!any_window_visible())
     return 1;
 
   int gl, gt, gr, gb;
@@ -3411,12 +3419,13 @@ static int draw_phase_cb(XPLMDrawingPhase, int, void *) {
   // ATC Commands panel + Transcript window (both independent of main window)
   draw_atc_panel();
   draw_transcript_window();
+  if (about_visible_)
+    about_window::draw(about_visible_);
 
   // If all windows are now closed, release the capture window so X-Plane
   // gets input back. Without this, the invisible full-screen capture window
   // swallows all mouse/keyboard events.
-  if (!visible && !atc_panel_visible_ && !transcript_window_visible_ &&
-      window_id) {
+  if (!any_window_visible() && window_id) {
     XPLMSetWindowIsVisible(window_id, 0);
     XPLMTakeKeyboardFocus(nullptr);
   }
@@ -3431,8 +3440,7 @@ static int draw_phase_cb(XPLMDrawingPhase, int, void *) {
   // independently of which window is open, AND so X-Plane command
   // bindings (PTT, autopilot) keep firing when no text widget is
   // active.
-  if (window_id &&
-      (visible || atc_panel_visible_ || transcript_window_visible_)) {
+  if (window_id && any_window_visible()) {
     bool want_text = ImGui::GetIO().WantTextInput;
     bool have_focus = XPLMHasKeyboardFocus(window_id) != 0;
     if (want_text && !have_focus)
@@ -3488,6 +3496,8 @@ void stop() {
     XPLMDestroyWindow(window_id);
     window_id = nullptr;
   }
+  // Photo texture before the renderer: both live in X-Plane's GL context.
+  about_window::release();
   ImGui_ImplOpenGL2_Shutdown();
   ImGui::DestroyContext();
 
@@ -3631,6 +3641,24 @@ void toggle_transcript_window() {
       // Keyboard focus is granted per-frame by the WantTextInput logic in
       // draw_phase_cb when the Debug-Texteingabe field is clicked, so we do
       // not steal focus here (which would block X-Plane command bindings).
+    } else {
+      XPLMSetWindowIsVisible(window_id, 0);
+      XPLMTakeKeyboardFocus(nullptr);
+    }
+  }
+}
+
+void toggle_about() {
+  about_visible_ = !about_visible_;
+
+  if (about_visible_)
+    ensure_capture_window();
+
+  if (window_id) {
+    if (any_window_visible()) {
+      XPLMSetWindowIsVisible(window_id, 1);
+      XPLMBringWindowToFront(window_id);
+      // No text fields in the About page: leave keyboard focus with X-Plane.
     } else {
       XPLMSetWindowIsVisible(window_id, 0);
       XPLMTakeKeyboardFocus(nullptr);

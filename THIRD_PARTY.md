@@ -16,6 +16,7 @@ all dependencies are GPLv3-compatible.
 | [espeak-ng](https://github.com/espeak-ng/espeak-ng) | bundled with Piper | GPL-3.0-or-later | Statically linked inside `libpiper.dylib`; data dir bundled |
 | [Dear ImGui](https://github.com/ocornut/imgui) | v1.92.8 | MIT | Compiled into the `.xpl` |
 | [nlohmann/json](https://github.com/nlohmann/json) | v3.12.0 | MIT | Header-only, compiled into the `.xpl` |
+| [xp_wellys_about](https://github.com/rwellinger/xp_wellys_about) | v1.0.0 | MIT (code); profile photo all rights reserved | Compiled into the `.xpl` (About window) |
 | [Catch2](https://github.com/catchorg/Catch2) | v3.15.1 | BSL-1.0 | Test-only; not shipped with the release |
 | libcurl | system (`/usr/lib/libcurl.4.dylib`) | curl/MIT-style | macOS-system; dynamically loaded |
 | X-Plane SDK | XPSDK430 | freely redistributable for plugin development | Headers only at build time |

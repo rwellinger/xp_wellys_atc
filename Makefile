@@ -7,6 +7,7 @@ SDK_SENTINEL    := sdk/XPLM/XPLMPlugin.h
 IMGUI_SENTINEL  := vendor/imgui/imgui.h
 JSON_SENTINEL   := vendor/json.hpp
 CATCH2_SENTINEL := vendor/catch2/catch_amalgamated.hpp
+ABOUT_SENTINEL  := vendor/xp_wellys_about/src/wellys_about.hpp
 
 # miniaudio: single-header capture backend, Windows-only (issue #21). The
 # macOS build never references it (the #elif defined(_WIN32) branch in
@@ -28,6 +29,9 @@ PREBUILT_SENTINEL     := $(PREBUILT_LIBS_DIR)/lib/libwhisper.a
 
 CATCH2_VERSION := 3.15.1
 
+# Shared "About the developer" page: github.com/rwellinger/xp_wellys_about
+ABOUT_VERSION  := 1.0.0
+
 # SkunkCrafts Updater: staging dir for the publishable release tree.
 # Lives under build/ so `make clean` removes it. The tree mirrors the
 # installed plugin MINUS the in-sim-downloaded models and runtime logs,
@@ -46,7 +50,7 @@ help:
 	@echo ""
 	@echo "  make                   Show this help (default)"
 	@echo "  make all               clean + format + build + lint"
-	@echo "  make setup             Download prebuilt xp_wellys_libs bundle + X-Plane SDK, Dear ImGui, nlohmann/json, Catch2"
+	@echo "  make setup             Download prebuilt xp_wellys_libs bundle + X-Plane SDK, Dear ImGui, nlohmann/json, Catch2, xp_wellys_about"
 	@echo "  make setup-cloud       Cloud-only deps (SDK, ImGui, json, Catch2) WITHOUT the local-inference bundle — for the fast CI sanity build"
 	@echo "  make build             Build universal plugin (arm64 local+cloud, x86_64 cloud-only) -> build/xp_wellys_vfr_atc.xpl"
 	@echo "  make ci-fast           Fast cloud-only arm64 sanity build + unit/scenario tests (no submodules, no local backends)"
@@ -73,7 +77,7 @@ help:
 	@echo "  make help              Show this help"
 
 # ── Setup ─────────────────────────────────────────────────────────────────────
-setup: $(PREBUILT_SENTINEL) $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(CATCH2_SENTINEL) $(MINIAUDIO_SENTINEL)
+setup: $(PREBUILT_SENTINEL) $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(CATCH2_SENTINEL) $(MINIAUDIO_SENTINEL) $(ABOUT_SENTINEL)
 	@echo "Setup complete. Run 'make build' to compile."
 
 # Cloud-only setup: the four non-bundle vendor deps only. Deliberately skips
@@ -81,7 +85,7 @@ setup: $(PREBUILT_SENTINEL) $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $
 # (XPWELLYS_USE_LOCAL_INFERENCE=OFF) never references whisper/llama/Piper, so
 # the fast CI sanity build (`make ci-fast`) needs neither the bundle download
 # nor any local-inference libraries.
-setup-cloud: $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(CATCH2_SENTINEL) $(MINIAUDIO_SENTINEL)
+setup-cloud: $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(CATCH2_SENTINEL) $(MINIAUDIO_SENTINEL) $(ABOUT_SENTINEL)
 	@echo "Cloud-only setup complete (no submodules). Run 'make ci-fast'."
 
 $(SDK_SENTINEL):
@@ -145,6 +149,18 @@ $(PREBUILT_SENTINEL):
 	@cd $(PREBUILT_LIBS_DIR)/lib && grep -E '^[0-9a-f]{64}  ' ../manifest.txt | shasum -a 256 -c -
 	@echo "xp_wellys_libs bundle v$(PREBUILT_LIBS_VERSION) installed + verified."
 
+$(ABOUT_SENTINEL):
+	@echo "Downloading xp_wellys_about v$(ABOUT_VERSION)..."
+	@set -euo pipefail; \
+	TMP=$$(mktemp -d); \
+	trap "rm -rf $$TMP" EXIT; \
+	curl -fsSL "https://github.com/rwellinger/xp_wellys_about/archive/refs/tags/v$(ABOUT_VERSION).tar.gz" \
+	     -o "$$TMP/about.tar.gz"; \
+	tar -xzf "$$TMP/about.tar.gz" -C "$$TMP/"; \
+	mkdir -p vendor/xp_wellys_about; \
+	cp -R "$$TMP/xp_wellys_about-$(ABOUT_VERSION)/src" "$$TMP/xp_wellys_about-$(ABOUT_VERSION)/LICENSE" vendor/xp_wellys_about/
+	@echo "xp_wellys_about installed."
+
 $(CATCH2_SENTINEL):
 	@echo "Downloading Catch2 v$(CATCH2_VERSION) (amalgamated)..."
 	@set -euo pipefail; \
@@ -179,7 +195,7 @@ $(CATCH2_SENTINEL):
 # (regular dev build); `release-build` sets it to `-DRELEASE=ON`.
 RELEASE_FLAG ?=
 
-build: $(PREBUILT_SENTINEL) $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(CATCH2_SENTINEL)
+build: $(PREBUILT_SENTINEL) $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(CATCH2_SENTINEL) $(ABOUT_SENTINEL)
 	@echo "=== Building universal xp_wellys_vfr_atc (arm64 local+cloud, x86_64 cloud-only) ==="
 	@echo ""
 	@echo "--- arm64 slice (local + cloud) ---"
@@ -230,7 +246,7 @@ build: $(PREBUILT_SENTINEL) $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $
 # deps cache-warm job (`warm-deps`) instead. Uses its own build-ci/ dir so it never
 # clobbers the release build/ trees. Depends on the four non-submodule
 # vendor sentinels only.
-ci-fast: $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(CATCH2_SENTINEL)
+ci-fast: $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(CATCH2_SENTINEL) $(ABOUT_SENTINEL)
 	@echo "=== Fast cloud-only sanity build (arm64, no local backends) ==="
 	@# Both local flags OFF: this fast build has no prebuilt bundle
 	@# (no PREBUILT_SENTINEL dep), so XPWELLYS_USE_LOCAL_TTS (default ON)
@@ -326,7 +342,7 @@ win-zip:
 	@echo "  Get-ChildItem <plugin>\\win_x64 | Unblock-File"
 
 # ── REPL (headless CLI) ───────────────────────────────────────────────────────
-repl: $(PREBUILT_SENTINEL) $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(CATCH2_SENTINEL)
+repl: $(PREBUILT_SENTINEL) $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(CATCH2_SENTINEL) $(ABOUT_SENTINEL)
 	@echo "=== Building atc_repl ==="
 	cmake -B build -DCMAKE_BUILD_TYPE=Release -Wno-dev
 	cmake --build build --target atc_repl --parallel
@@ -340,7 +356,7 @@ run-repl: repl
 # ── Tests ─────────────────────────────────────────────────────────────────────
 test: test-unit test-scenarios
 
-test-unit: $(PREBUILT_SENTINEL) $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(CATCH2_SENTINEL)
+test-unit: $(PREBUILT_SENTINEL) $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(CATCH2_SENTINEL) $(ABOUT_SENTINEL)
 	@echo "=== Building xp_wellys_vfr_atc unit tests ==="
 	cmake -B build -DCMAKE_BUILD_TYPE=Release -Wno-dev
 	cmake --build build --target xp_wellys_vfr_atc_tests --parallel
@@ -454,7 +470,7 @@ format:
 	    exit 1; }
 	clang-format -i src/main.cpp src/*/*.cpp src/*/*.hpp
 
-lint: $(PREBUILT_SENTINEL) $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(CATCH2_SENTINEL)
+lint: $(PREBUILT_SENTINEL) $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(CATCH2_SENTINEL) $(ABOUT_SENTINEL)
 	@command -v clang-tidy >/dev/null 2>&1 || { \
 	    echo "clang-tidy not found. Install with: brew install llvm"; \
 	    echo "Then add to PATH: export PATH=\"$$(brew --prefix llvm)/bin:$$PATH\""; \
@@ -475,7 +491,7 @@ lint: $(PREBUILT_SENTINEL) $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(
 # Findings abort with a non-zero exit (`-fno-sanitize-recover=all`), so this
 # target is CI-friendly. Build dir is `build-sanitize/` — independent of
 # `build/` so Release artifacts stay untouched.
-sanitize: $(PREBUILT_SENTINEL) $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(CATCH2_SENTINEL)
+sanitize: $(PREBUILT_SENTINEL) $(SDK_SENTINEL) $(IMGUI_SENTINEL) $(JSON_SENTINEL) $(CATCH2_SENTINEL) $(ABOUT_SENTINEL)
 	@echo "=== Configuring sanitizer build (ASan + UBSan) ==="
 	cmake -B build-sanitize -DCMAKE_BUILD_TYPE=Debug -DXP_WELLYS_ATC_SANITIZE=ON -Wno-dev
 	@echo "=== Building atc_repl + xp_wellys_vfr_atc_tests with ASan + UBSan ==="

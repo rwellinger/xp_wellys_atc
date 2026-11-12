@@ -146,6 +146,15 @@ set(IMGUI_SOURCES
     ${IMGUI_DIR}/backends/imgui_impl_opengl2.cpp
 )
 
+# ── xp_wellys_about (downloaded by 'make setup' into vendor/xp_wellys_about) ──
+# The "About the developer" page shared by all of thWelly's plugins.
+# Plugin-only: about_photo.cpp uploads an OpenGL texture via XPLMGraphics.
+set(ABOUT_DIR ${CMAKE_SOURCE_DIR}/vendor/xp_wellys_about)
+set(ABOUT_SOURCES
+    ${ABOUT_DIR}/src/about_view.cpp
+    ${ABOUT_DIR}/src/about_photo.cpp
+)
+
 # libcurl is only needed by the plugin module (model downloader). The
 # headless atc_repl tool no longer pulls it in.
 find_package(CURL REQUIRED)
@@ -307,7 +316,9 @@ add_library(xp_wellys_vfr_atc MODULE
     src/persistence/keychain.cpp
     src/ui/atc_ui.cpp
     src/ui/ui_strings.cpp
+    src/ui/about_window.cpp
     ${IMGUI_SOURCES}
+    ${ABOUT_SOURCES}
 )
 
 # Platform UI/permission bridges. macOS uses the Objective-C++ sources
@@ -359,6 +370,8 @@ target_include_directories(xp_wellys_vfr_atc PRIVATE
     ${IMGUI_DIR}
     ${IMGUI_DIR}/backends
 )
+# Vendored About page as SYSTEM so -Wall/-Wextra and clang-tidy skip it.
+target_include_directories(xp_wellys_vfr_atc SYSTEM PRIVATE ${ABOUT_DIR}/src)
 
 if(XPWELLYS_USE_LOCAL_INFERENCE)
     # Backend headers (whisper.h / llama.h / ggml / common / piper.h) come
@@ -402,7 +415,7 @@ if(APPLE)
 
     # Suppress OpenGL deprecation warnings in our code only (ImGui defines its own)
     set_source_files_properties(
-        src/main.cpp src/ui/atc_ui.cpp
+        src/main.cpp src/ui/atc_ui.cpp ${ABOUT_DIR}/src/about_photo.cpp
         PROPERTIES COMPILE_DEFINITIONS "GL_SILENCE_DEPRECATION"
     )
     target_compile_options(xp_wellys_vfr_atc PRIVATE
