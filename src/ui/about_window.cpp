@@ -40,13 +40,14 @@ const WellysAbout::PluginInfo &plugin_info() {
       {
           {"whisper.cpp", "MIT"},
           {"llama.cpp / ggml", "MIT"},
-          {"Piper (libpiper)", "MIT"},
+          {"Piper (libpiper)", "GPL-3.0"},
           {"espeak-ng", "GPL-3.0-or-later"},
           {"onnxruntime", "MIT"},
           {"Dear ImGui", "MIT"},
           {"nlohmann/json", "MIT"},
           {"miniaudio", "Public Domain / MIT-0"},
           {"libcurl", "curl license"},
+          {"zlib", "zlib license"},
           {"X-Plane SDK", "Laminar Research SDK License"},
       },
   };

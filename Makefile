@@ -575,6 +575,9 @@ skunkcrafts:
 	    --exclude '.DS_Store' \
 	    --exclude 'skunkcrafts_updater*' \
 	    "$(PLUGIN_DIR)/" "$(SKUNK_DIR)/"; \
+	cp packaging/README.md packaging/THIRD_PARTY_LICENSES.md \
+	   packaging/ONNXRUNTIME_THIRD_PARTY_NOTICES.txt \
+	   RELEASE.md LICENSE "$(SKUNK_DIR)/"; \
 	python3 tools/skunkcrafts/generate.py --tree "$(SKUNK_DIR)" --version "$$VER"; \
 	echo "Staged release tree at $(SKUNK_DIR)/ (version $$VER)."; \
 	echo "Publish its contents to the 'release' branch / your update host."
