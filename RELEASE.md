@@ -2,6 +2,9 @@
 
 Native plugin for **macOS** and **Windows**. Simulates VFR radio communication: you speak, the plugin understands your call and ATC answers with a voice — speech to text, intent recognition and text to speech. German (DACH) and ICAO English phraseology.
 
+### What's New in v1.1.1
+ - **Updates through the SkunkCrafts Updater** — the plugin can now be kept up to date with the [SkunkCrafts Updater](https://forums.x-plane.org/forums/forum/406-skunkcrafts-updater/) instead of downloading and unzipping every release by hand.
+
 ### What's New in v1.1.0
 
   - **Helicopters are now tolerated.** Stage 1 of 2 of helicopter support; helicopter-specific phraseology and helipads follow in stage 2.
