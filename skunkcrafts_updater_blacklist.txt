@@ -1,0 +1,2 @@
+mac_x64/xp_wellys_devfr_atc.xpl
+win_x64/xp_wellys_devfr_atc.xpl

@@ -1,0 +1,57 @@
+* xp_wellys_vfr_atc — bundled German VFR airspace starter set (OpenAir)
+* =======================================================================
+* SAMPLE DATA. This is a small, representative set of German airspaces so
+* the 3-D airspace DB (openair_db) is functional out of the box. It is NOT
+* a complete or current chart. For accurate, up-to-date coverage, export a
+* Germany OpenAir file from https://www.openaip.net and drop it at:
+*     <X-Plane>/Output/preferences/xp_wellys_devfr_atc/airspace.txt
+* Entries there are appended on top of this starter set.
+*
+* Indexed classes: CTR, RMZ, TMZ, TMA, CTA, ED-R (AC R). Other classes
+* (danger/prohibited/glider/E/F/G) are parsed but skipped.
+*
+* Altitudes: GND/SFC = surface, "<n> MSL" = feet above mean sea level,
+* FLxxx = flight level. AGL values are stored as-is (no terrain add).
+* Coordinates: DD:MM:SS N/S DDD:MM:SS E/W. Circles: V X=<centre> + DC <NM>.
+
+* --- Bremen CTR (EDDW), Klasse D, circle ~6 NM, GND–1500 MSL ---
+AC CTR
+AN BREMEN CTR
+AH 1500 MSL
+AL GND
+V X=53:02:50 N 008:47:20 E
+DC 6.0
+
+* --- Kassel-Calden RMZ (EDVK), circle ~5 NM, GND–4500 MSL ---
+AC RMZ
+AN KASSEL RMZ
+AH 4500 MSL
+AL GND
+V X=51:24:29 N 009:22:39 E
+DC 5.0
+
+* --- Erfurt-Weimar TMZ (EDDE), circle ~8 NM, 1000 MSL–FL100 ---
+AC TMZ
+AN ERFURT TMZ
+AH FL100
+AL 1000 MSL
+V X=50:58:47 N 010:57:29 E
+DC 8.0
+
+* --- Braunschweig CTR (EDVE), Klasse D, DP polygon box, GND–2500 MSL ---
+AC CTR
+AN BRAUNSCHWEIG CTR
+AH 2500 MSL
+AL GND
+DP 52:23:00 N 010:26:00 E
+DP 52:23:00 N 010:40:00 E
+DP 52:14:00 N 010:40:00 E
+DP 52:14:00 N 010:26:00 E
+
+* --- Hannover TMA sector (EDDV), Klasse D, circle ~20 NM, 3500 MSL–FL100 ---
+AC TMA
+AN HANNOVER TMA
+AH FL100
+AL 3500 MSL
+V X=52:27:40 N 009:41:06 E
+DC 20.0

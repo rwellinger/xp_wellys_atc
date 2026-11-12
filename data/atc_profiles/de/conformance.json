@@ -1,0 +1,18 @@
+{
+  "_comment": "BZF-Erstanruf-Konformitaet (NfL Sprechfunk 2024). Pro Intent zwei Sets: 'required' = NfL-zwingende Elemente, 'recommended' = didaktische Vollform (BZF-Pruefungserwartung). settings::bzf_strict_mode() waehlt das harte Set: strict=false erzwingt nur 'required', strict=true 'required' + 'recommended'. Fehlt ein erzwungenes Element, fordert der Tower es per 'missing_response' nach (sonst laeuft der Flow ungehindert, fehlende Elemente werden nur geloggt). Detektion: position = Parser-Signal (has_position/vrp), atis_letter = 'Information' + NATO-Buchstabe, intention/aircraft_type/request = 'element_keywords' (token-gebunden) bzw. Live-acf_ICAO. Befund NfL 1.4.7/1.4.3: nur das Roll-Anliegen (ERBITTE ROLLEN, separater REQUEST_TAXI-Sprechakt) ist zwingend; Muster/Standort/Absichten/ATIS sind [optional] -> INITIAL_CALL_GROUND.required ist leer, Simulator-Verhalten unveraendert.",
+  "INITIAL_CALL_GROUND": {
+    "required": [],
+    "recommended": ["aircraft_type", "position", "intention", "atis_letter"],
+    "missing_response": "{callsign}, sagen Sie {missing}.",
+    "element_prompts": {
+      "position": "Ihre Position",
+      "intention": "Ihr Vorhaben",
+      "atis_letter": "Information",
+      "aircraft_type": "Luftfahrzeugmuster"
+    },
+    "element_keywords": {
+      "intention": ["vfr", "nach", "ueber", "platzrunde", "ueberland", "rundflug", "richtung", "abflug", "ifr"],
+      "aircraft_type": ["cessna", "diamond", "piper", "robin", "katana", "dimona", "mooney", "cirrus", "sportstar", "aquila", "tecnam"]
+    }
+  }
+}

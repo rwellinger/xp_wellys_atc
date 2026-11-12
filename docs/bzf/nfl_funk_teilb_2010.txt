@@ -1,0 +1,1757 @@
+Nachfolgend Anlagen 7 und 8 der am 15.10.2010 in Kraft getretenen Bekanntma-
+chung der DFS (NfL I 226/10) über die Sprechfunkverfahren
+
+TEIL B (Phrasen)
+
+                                         ANLAGE 7
+                                    REDEWENDUNGEN
+
+(1)   Im Sprechfunk- bzw. Fernsprechverkehr sind die nachfolgenden Redewendungen zu ver-
+      wenden:
+
+Redewendung                Bedeutung
+
+ACKNOWLEDGE                Let me know that you have received and understood this message
+BESTÄTIGEN SIE             Teilen Sie mit, daß die Meldung empfangen und verstanden wurde
+
+AFFIRM                     Yes
+POSITIV                    Ja
+
+APPROVED                   Permission for proposed action granted
+GENEHMIGT                  Erlaubnis für das vorgeschlagene Verfahren erteilt
+
+BREAK                      I hereby indicate the separation between portions of the message
+                           (To be used where there is no clear distinction between the text and
+                           other portions of the message)
+TRENNUNG                   Ich zeige hiermit die Trennung zwischen Teilen der Meldung an (Zu
+                           benutzen, wenn keine klare Trennung zwischen dem Text und ande-
+                           ren Teilen der Meldung erkannt werden kann)
+
+BREAK BREAK                I hereby indicate the separation between messages transmitted to
+                           different aircraft in a very busy environment
+TRENNUNG TRENNUNG          Ich zeige hiermit die Trennung zwischen Meldungen an, die in einer
+                           hochbelasteten Verkehrssituation an verschiedene Luftfahrzeuge
+                           übermittelt werden
+
+CANCEL                     Cancel the previously transmitted clearance
+AUFGEHOBEN                 Die vorher übermittelte Freigabe ist aufgehoben
+
+CHECK                      Examine a system or procedure (Not to be used in any other context.
+                           No answer is normally expected)
+CHECK                      Prüfen Sie ein System oder ein Verfahren (in keinem anderen Zu-
+                           sammenhang zu verwenden. Normalerweise wird keine Antwort er-
+                           wartet)
+
+CLEARED,                   Authorized to proceed under the conditions specified
+FREI                       Genehmigung, unter festgelegten Bedingungen zu verfahren
+
+CONFIRM                    I request verification of (clearance, instruction, action, information)
+BESTÄTIGEN SIE              Ich erbitte Bestätigung der (Freigabe, Anweisung, Handlung, Infor-
+                            mation)
+
+CONTACT                     Establish communications with...
+RUFEN SIE                   Stellen Sie Funkverbindung her mit
+
+CORRECT                     "True" or "Accurate"
+KORREKT                     "Wahr" oder "Richtig"
+
+CORRECTION                  An error has been made in this transmission (or message indicated).
+                            The correct version is
+BERICHTIGUNG                Bei der Übermittlung ist ein Fehler unterlaufen, es muß richtig hei-
+                            ßen
+
+DISREGARD                   Ignore
+IGNORIEREN SIE              Selbsterklärend
+
+HOW DO YOU READ       What is the readability of my transmission
+WIE VERSTEHEN SIE MICH   Wie ist die Verständlichkeit meiner Sendung
+
+MAINTAIN                    Remain at the level specified or in its literal sense, e.g. MAINTAIN
+                            VFR
+BEHALTEN SIE ... BEI /      Behalten Sie z.B. die benannte Flughöhe bei, oder im übertragenen
+BLEIBEN SIE                 Sinne, z.B. Bleiben Sie VFR
+
+l SAY AGAIN                 I repeat for clarity or emphasis
+ICH WIEDERHOLE              lch wiederhole zur Klarstellung oder Betonung
+
+MONITOR                     Listen out on (frequency / channel)
+MONITOR                     Hören Sie (Frequenz / Kanal) ab
+
+NEGATIVE                    No / Permission not granted / That is not correct
+NEGATIV                     Nein / Erlaubnis nicht erteilt / Das ist nicht richtig
+
+NON RNAV                    Announcement of missing RNAV equipment
+NON RNAV                    Angabe wenn Flachennavigationsausrüstung fehlt
+
+OVER                        My transmission is ended - and I expect a response from you
+KOMMEN                      Meine Übermittlung ist beendet, und ich erwarte Ihre Antwort
+
+             Note :         Not normally used in VHF communications
+
+             Anmerkung :    Im Sprechfunkverkehr im VHF-Bereich normalerweise nicht genutzt
+
+OUT                         This exchange of transmission is ended and no response is expected
+ENDE                        Die Übermittlung der Meldung ist beendet. Ich erwarte keine Antwort
+
+             Note:          Not normally used in VHF communications
+
+             Anmerkung:     Im Sprechfunkverkehr im VHF-Bereich normalerweise nicht genutzt
+
+READ BACK              Repeat all, or the specified part, - of this message back to me exactly as
+                       received
+WIEDERHOLEN SIE WÖRTLICH Wiederholen Sie alles oder den bezeichneten Teil dieser Meldung
+                       wörtlich
+RECLEARED                  A change has been made to your last clearance and this new clearance
+                           supersedes your previous clearance or part thereof
+FREIGABEÄNDERUNG           Es hat sich eine Änderung gegenüber Ihrer letzten Freigabe ergeben, die-
+                           se neue Freigabe ersetzt die vorherige Freigabe oder Teile davon
+
+REPORT                     Pass me the following information
+MELDEN SIE                 Geben Sie mir die folgende Information
+
+REQUEST                    I should like to know / I wish to obtain
+ERBITTE                    Ich möchte wissen / Ich beantrage
+
+ROGER                      I have received all of your last transmission
+VERSTANDEN                 Ich habe Ihre letzte Meldung - vollständig erhalten
+
+             Note :        Under no circumstances to be used in reply to a question requiring
+                           READ BACK or a direct answer in the affirmative (AFFIRM) or
+                           negative sense (NEGATIVE).
+
+             Anmerkung :   Unter keinen Umständen zu benutzen, wenn die Art der Meldung ei-
+                           ne wörtliche Wiederholung, POSITIV oder NEGATIV als Antwort er-
+                           fordern würde.
+
+SAY AGAIN                  Repeat all, or the following part, of your last transmission
+WIEDERHOLEN SIE            Wiederholen Sie alles oder den folgenden Teil Ihrer Meldung
+
+SPEAK SLOWER           Reduce your rate of speech
+SPRECHEN SIE LANGSAMER Vermindern Sie Ihre Sprechgeschwindigkeit
+
+SQUAWK                     Switch transponder to the following setting
+SQUAWK                     Schalten Sic den Transponder auf Mode I Code
+
+STANDBY                    Wait and I will call you
+STANDBY                    Warten Sie und ich werde Sie rufen
+
+             Note :        The caller would normally re-establish contact if the delay is lengthy.
+                           STANDBY is not an approval or denial.
+             Anmerkung :   Die rufende Station wird normalerweise erneut Funkverbindung her-
+                           stellen falls sich die Verzögerung über einen längeren Zeitraum er-
+                           streckt. STANDBY ist keine Zustimmung oder Ablehnung.
+
+UNABLE                     I cannot comply with your request, instruction or clearance
+NICHT MÖGLICH              Ich kann Ihrer Anfrage, Anweisung oder Freigabe nicht Folge leisten
+
+             Note          UNABLE is normally followed by a reason.
+
+             Anmerkung     NICHT MÖGLICH wird normalerweise durch eine Begründung er-
+                           gänzt
+
+WILCO                      I understand your message and will comply with it (Abbreviation for
+                           "will comply)
+WILCO                      Ich verstehe Ihre Meldung und werde entsprechend handeln
+
+WORDS TWICE                Request : Communication is difficult. Please send every word, or
+                           group of words, twice
+                                    information : Since communication is difficult, every word, or group
+                                    of words, in this message will be sent twice
+WORTE DOPPELT                       Aufforderung: Die Verständigung ist schwierig. Bitte senden Sie
+                                    jedes Wort, oder jede Gruppe von Worten, doppelt.
+                                    Information : Da die Verständigung schwierig ist, wird jedes Wort,
+                                    oder jede Gruppe von Worten, in dieser Meldung doppelt gesendet.
+
+
+
+
+                                                  ANLAGE 8
+                                                SPRECHGRUPPEN
+
+
+ALLGEMEINES
+(1)   Die nachstehenden Sprechgruppen können nicht alle Situationen abdecken. Bei Bedarf sind
+      daher zusätzliche Sprechgruppen, die kurz gefasst und unmißverständlich sind, zu verwen-
+      den.
+
+(2)   Die Aufteilung der Sprechgruppen in Kapitel bedeutet nicht, dass Sprechgruppen eines Kapi-
+      tels nicht in anderen Situationen angewendet werden dürfen.
+
+(3)   Fettgedruckte Teile           der    Sprechgruppen     sind     grundsätzlich       anzuwendende          Stan-
+      dard-Sprechgruppen.
+
+(4)   Mit Sternchen (*) gekennzeichnete Teile der Sprechgruppen sind – soweit erforderlich – zu-
+      sätzlich zu benutzen.
+
+(5)   Durch Schrägstrich (/) getrennte Teile der Sprechgruppen sind – soweit erforderlich – alter-
+      nativ zu benutzen.
+
+(6)   Durch Klammern gekennzeichnete Teile der Sprechgruppen sind durch die entsprechenden
+      Angaben zu ersetzen.
+
+
+Deutsche Sprechgruppen                                   Englische Sprechgruppen
+L = Luftfunkstelle,                                      A = Aircraft radio station
+B = Bodenfunkstelle                                      G = Ground radio station
+
+1. FLUGPLÄTZE OHNE FLUGVERKEHRSKONTROLLE / AERODROMES WITHOUT AIR TRAFFIC CONTROL
+
+1.1 Rollen / schweben – Taxiing / air-taxiing
+
+L: ROLLE VON (Position) ZU (Zielpunkt)                     A: TAXIING FROM (significant point) TO (destination)
+
+L: ROLLE *ÜBER (Position / Rollstrecke)* ZUM /ZUR (Po-     A: TAXIING *VIA (significant point / taxi route)* TO (sig-
+sition) *VERMEIDE (Information)*                           nificant point) *AVOIDING (information)*
+
+L: SCHWEBE ZUM HUBSCHRAUBERABSTELLPLATZ /                  A: AIR-TAXIING TO HELICOPTER STAND / HELIPAD /
+HUBSCHRAUBERSTARTPLATZ / ZUR HUBSCHRAU-                    HELICOPTER PARKING POSITION (significant point)
+BERPARKPOSITION (Position)
+
+L: ÜBERQUERE PISTE (Bezeichnung) *HINTER LAN-              A: WILL CROSS RUNWAY (designator) *BEHIND LAND-
+DENDER / LANDENDEM / ABFLIEGENDER / ABFLIE-           ING / DEPARTING (type of aircraft)*
+GENDEM (Lfz.-Muster)*
+Anmerkung: "ROLLEN" wird bei Hubschrauberverkehr durch "SCHWEBEN" ersetzt, wenn der Hubschrauber schwebt.
+Note: For helicopter traffic, "TAXI" is substituted by "AIR-TAXI" if the helicopter hovers.
+
+
+1.11 Rollinformation für abfliegende Luftfahrzeuge – Taxi information for departing aircraft
+L: (Lfz.-Muster) (Position) VFR ÜBER (Abflugstrecke) /           A: (type of aircraft) (significant point) VFR VIA (departure
+NACH (Richtung) *(Absichten)*                                    route) / TO THE (direction) *(intentions)*
+B: PISTE (Bezeichnung)*ÜBER(Rollstrecke)* WIND (Rich-            G: RUNWAY (designator) *VIA (taxi route)* WIND (direc-
+tung) GRAD (Geschwindigkeit) KNOTEN *QNH (Ziffern)               tion) DEGREES (speed) KNOTS *QNH (figures) (traffic
+(Verkehrsinformation)*                                           information)*
+
+
+1.2 Abflug – Departure
+B: MELDEN SIE *ABFLUG* BEREIT                                    G: REPORT *WHEN* READY *FOR DEPARTURE*
+L: *ABFLUG* BEREIT                                               A: READY *FOR DEPARTURE*
+B: WIND (Richtung) GRAD (Geschwindigkeit) KNOTEN                 G: WIND (direction) DEGREES (speed) KNOTS (traffic
+(Verkehrshinweise)                                               information)
+L: ERBITTE RECHTSKURVE *NACH DEM ABHEBEN*                        A: REQUEST RIGHT TURN *WHEN AIRBORNE*
+B: RECHTSKURVE *NACH DEM ABHEBEN* GENEH-                         G: RIGHT TURN APPROVED *WHEN AIRBORNE*
+MIGT
+L: STARTE / STARTE HINTER                                        A: TAKING OFF / WILL TAKE OFF BEHIND LANDING /
+LANDENDERILANDENDEM / ABFLIEGENDER / AB-                         DEPARTING (type of aircraft)
+FLIEGENDEM (Lfz.-Muster)
+
+
+1.3 Anflug – Approach
+L: (Lfz.-Muster) (Position) ZUR LANDUNG / ZUM TIEF-              A: (type of aircraft) -(significant point) FOR LANDING /
+ANFLUG / AUFSETZEN UND DURCHSTARTEN                              LOW APPROACH / TOUCH AND GO
+B: PISTE (Bezeichnung) WIND (Richtung) GRAD (Ge-       G: RUNWAY (designator) WIND (direction) DEGREES
+schwindigkeit) KNOTEN *QNH (Ziffern) (Verkehrsinforma- (speed) KNOTS *QNH (figures) (traffic information)*
+tion)*
+L: ERBITTE RECHT SPLATZRUNDE / RECHTEN GE-                       A: REQUEST RIGHT TRAFFIC CIRCUIT / RIGHT
+GENANFLUG / RECHTEN QUERANFLUG / GERADE-                         DOWNWIND / RIGHT BASE / STRAIGHT-IN AP-
+AUSANFLUG                                                        PROACH
+B: RECHTSPLATZRUNDE / RECHTER GEGENANFLUG                        G: RIGHT TRAFFIC CIRCUIT / RIGHT DOWNWIND /
+/ RECHTER QUERANFLUG GENEHMIGT                                   RIGHT BASE APPROVED
+Anmerkung:       Die Luftaufsicht / Flugleitung kann im Einzelfall Ausnahmen von der vorgeschriebenen Richtung der
+                 Platzrunde zulassen. Sie ist nicht berechtigt Flugverkehrskontrolle durchzuführen.
+Note:            The aviation supervision office ("Luftaufsicht / Flugleitung") may allow exceptions to the prescribed
+                 direction of the traffic circuit in individual cases. They are not authorized to conduct air traffic control.
+1.4 Besondere Absichten des Luftfahrzeugführers – Special intentions of the pilot
+L: STARTE DURCH                                                  A: GOING AROUND
+L: MACHE TIEFANFLUG                                              A: MAKING LOW APPROACH
+L: MACHE KURZE / LANGE LANDUNG                                   A: MAKING SHORT / LONG LANDING
+L: MACHE ZIELLANDEÜBUNG                                          A: MAKING SPOT LANDING
+L: FLIEGE AN ZUR BANNERAUFNAHME                                  A: APPROACHING FOR BANNER PICK-UP
+L: FLIEGE AN ZUM BANNER- / SEILABWURF                            A: APPROACHING TO DROP BANNER / ROPE
+L: FLIEGE PLATZRUNDE(N)                                      A: FLYING TRAFFIC CIRCUIT(S)
+L: MACHE AUFSETZ- UND DURCHSTARTÜBUNG                        A: MAKING TOUCH AND GO
+L: VERLASSE IHRE FREQUENZ                                    A: LEAVING YOUR FREQUENCY
+
+
+1.5 Anweisungen zur Abwehr von Gefahren Instructions for protection from danger
+B: HALTEN SIE POSITION (Begründung)*                         G: HOLD POSITION *(reason)*
+L:HALTE                                                      A: HOLDING
+B: VERLASSEN SIE SOFORT PISTE *(Begründung)*                 G: VACATE RUNWAY IMMEDIATELY *(reason)
+L: VERLASSE SOFORT PISTE                                     A: VACATING RUNWAY IMMEDIATELY
+B: BESCHLEUNIGEN SIE START / ROLLEN                          G: EXPEDITE TAKE OFF / TAXI *(reason)*
+*(Begründung)*
+L: BESCHLEUNIGE                                              A: EXPEDITING
+B: START / LANDUNG NICHT ERLAUBT *(Begründung)*              G:TAKE OFF / LANDING NOT PERMITTED *(reason)*
+B: SOFORT ANHALTEN *(Wiederholen des                         G: STOP IMMEDIATELY *(repeat aircraft call sign) STOP
+Lfz.-Rufzeichens) SOFORT ANHALTEN*                           IMMEDIATELY*
+L: HALTE AN                                                  A: STOPPING
+B: STARTEN SIE DURCH *(Begründung)*                          G:GO AROUND *(reason)*
+L: STARTE DURCH                                              A: GOING AROUND
+Anmerkung:      Weitere Sprechgruppen für Flüge von und zu Flugplätzen ohne Flugverkehrskontrolle sind in Kapitel 3
+                dieses Anhangs zu finden.
+Note:           Further phraseologies for flights from and to aerodromes without air traffic control are to be found in
+                chapter 3 of this attachment.
+2. FLUGPLÄTZE MIT FLUGVERKEHRSKONTROLLE – AERODROMES WITH AIR TRAFFIC CONTROL
+2.1 Anlassverfahren Luftfahrzeug / Flugverkehrskontrolle – Start up procedures Aircraft / Air Traffic Control
+L: (Position) *INFORMATION (ATIS-Kennbuchstabe)* ER- A: (significant point) *INFORMATION (ATIS code letter)*
+BITTE ANLASSEN                                       REQUEST START UP
+B: ANLASSEN ERLAUBT                                          G: START UP APPROVED
+B: ANLASSEN NEGATIV (Begründung)                             G: NEGATIVE START UP (reason)
+B: *ERWARTEN SIE* ANLASSEN UM (Zeit)                         G:*EXPECT* START UP AT (time)
+B: *ERWARTEN SIE ABFLUG UM (Zeit)* ANLASSEN                  G:*EXPECT DEPARTURE (time)* START UP AT OWN
+NACH EIGENEM ERMESSEN                                        DISCRETION
+B: MELDEN SIE ANLASSBEREIT                                   G: REPORT READY TO / FOR START*UP*
+2.11 Anlassverfahren Bodenmannschaft / Pilot – Start up procedures Ground crew / Cockpit
+                                                             G: *ARE YOU* READY TO / FOR START *UP*
+                                                             A: STARTING NUMBER (engine number(s))
+Note 1: The ground crew should follow this exchange by either a reply on the intercom or a distinct visual Signal to
+        indicate that all is clear and that the Start up as indicated may proceed.
+Note 2: Unambiguous identification of the parties concerned is essential in any communications between ground crew
+        and pilots.
+2.12 Zurückdrücken / Zurückrollen – Push-back / power back
+G: ARE YOU READY FOR PUSH BACK / POWER BACK
+A: READY FOR PUSH BACK / POWER BACK
+A: (significant point) REQUEST PUSH BACK / POWER
+BACK
+G: PUSH BACK / POWER BACK APPROVED
+G: PUSH BACK / POWER BACK NEGATIVE
+G: STAND BY
+G: PUSH BACK / POWER BACK AT OWN DISCRETION
+G: EXPECT (number) MINUTES *DELAY* *DUE TO (rea-
+son)*
+G: CONFIRM BRAKES RELEASED
+A: BRAKES RELEASED
+G: COMMENCING PUSH BACK / POWER BACK
+G: PUSH BACK / POWER BACK COMPLETED
+A: STOP PUSH BACK / POWER BACK
+G: CONFIRM BRAKES SET
+A: BRAKESSET
+A: DISCONNECT
+G: DISCONNECTING STAND BY FOR VISUAL AT
+YOUR LEFT / RIGHT
+
+
+Note:   This exchange is followed by a visual Signal to the pilot to indicate that disconnect is completed and all is clear
+        for taxiing.
+
+
+2.13 Schleppzugverfahren – Tow procedures
+A: REQUEST TOW (company name) (type of aircraft)
+FROM (significant point) TO (significant point)
+G: TOW APPROVED VIA (route)
+G: HOLD POSITION G: STAND BY
+
+
+2.2 Flugplatzdaten für abfliegende Luftfahrzeuge – Aerodrome data for departing aircraft
+L: ERBITTE ABFLUGINFORMATION                                  A: REQUEST DEPARTURE INFORMATION
+B: PISTE (Bezeichnung) WIND (Richtung) GRAD (Ge-              G: RUNWAY (designator) WIND (direction) DEGREES
+schwindigkeit) KNOTEN *SICHT'(Ziffern) *METER / KI-           (speed) KNOTS *VISIBILITY (figures) *METRES / KILO-
+LOMETER*; PISTENSICHTWEITE (Ziffern) METER /                  METRES*; RVR (figures) METRES NOT REPORTED*
+KEINE ANGABEN* TEMPERATUR (Ziffern) TAUPUNKT                  TEMPERATURE (figures) DEW POINT (figures) QNH
+(Ziffern) QNH (Ziffern)                                       (figures)
+
+
+2.3 Rollverfahren – Taxi Procedures
+2.31 Abflug mit Flugplan – Departure with flight plan
+L: (Position) *INFORMATION (ATIS-Kennbuchstabe)*              A: (significant point) *INFORMATION (ATIS code letter)*
+ERBITTE ROLLEN                                                REQUEST TAXI
+2.32 Abflug ohne Flugplan – Departure without flight plan
+L: (Lfz-Muster) (Position) VFR ÜBER (Abflugstrecke) IN-       A: (type of aircraft) (significant point) VFR VIA (departure
+FORMATION (ATIS Kennbuchstabe)* ERBITTE ROLLEN                route) INFORMATION (ATIS code letter)* REQUEST
+*(Absichten)*                                                 TAXI *(intentions)*
+
+
+2.33 Rollen / Schweben – Taxi / Air-taxi
+B: ROLLEN SIE ZUM ROLLHALT PISTE (Bezeichnung)               G: TAXI TO HOLDING POINT RUNWAY (designator)
+ÜBER (Rollstrecke) *WIND (Richtung) GRAD (Geschwin-          VIA (taxi route) *WIND (direction) DEGREES (speed)
+digkeit) KNOTEN QNH (Ziffern)*                               KNOTS QNH (figures)*
+B: ROLLEN / DREHEN SIE IN DIE / DEN ERSTE(N) /               G: TAKE / TURN FIRST / SECOND / CONVENIENT (taxi
+ZWEITE(N) / PASSENDEN (Rolistrecke) LINKS /                  route) LEFT / RIGHT *AND CONTACT GROUND*
+RECHTS *UND RUFEN SIE ROLLKONTROLLE*
+B: ROLLEN SIE ÜBER (Rolistrecke)                             G: TAXI VIA (taxi route)
+B: ROLLEN SIE AUF PISTE (Bezeichnung)                        G: TAXI VIA RUNWAY (designator)
+B: ROLLEN SIE ZUM (Zielpunkt auf dem Flugplatz)              G: TAXI TO (destination on aerodrome)
+L: ERBITTE ZURÜCKROLLEN PISTE (Bezeichnung)                  A: REQUEST BACKTRACK DESIGNATOR (runway)
+B: ZURÜCKROLLEN *GENEHMIGT* PISTE (Bezeich-                  G:BACKTRACK *APPROVED* RUNWAY (designator)
+nung)
+L: (Position) ERBITTE ROLLEN (zu Zielpunkt auf dem           A: (significant point) REQUEST TAXI (to destination on
+Flugplatz)                                                   aerodrome)
+B: ROLLEN SIE GERADEAUS                                      G: TAXI STRAIGHT AHEAD
+B: WEICHEN SIE (Beschreibung und Position des Ver-           G: GIVE WAY TO (description and position of traffic)
+kehrs) AUS
+L: GEWÄHRE *(Verkehr)* VORFAHRT                              A: GIVING WAY *TO (traffic)*
+L: VERKEHR / (Luftfahrzeugmuster) IN SICHT                   A: TRAFFIC / (type of aircraft) IN SIGHT
+B: ROLLEN SIE IN DIE HALTEBUCHT                              G: TAXI INTO HOLDING BAY
+B: FOLGEN SIE (Beschreibung des Verkehrs)                    G: FOLLOW (description of traffic)
+B: VERLASSEN SIE PISTE (Bezeichnung)                         G: VACATE RUNWAY (designator)
+B: MELDEN SIE VERLASSEN                                      G: REPORT VACATED
+L: PISTE (Bezeichnung) VERLASSEN                             A: RUNWAY (designator) VACATED
+B: IHRE PARKPOSITION / IHR STANDPLATZ (Bezeich-              G: YOUR STAND / GATE (designator)
+nung)
+B: BESCHLEUNIGEN SIE ROLLEN *(Begründung)*                   G: EXPEDITE TAXI *(reason)*
+L: BESCHLEUNIGE                                              A: EXPEDITING
+B: *VORSICHT ROLLEN SIE LANGSAMER                            G:*CAUTION* TAXI SLOWER *(reason)*
+*(Begründung)*
+L: ROLLE LANGSAMER                                           A: SLOWING DOWN
+B: SCHWEBEN SIE ZUM HUBSCHRAUBERABSTELL-                     G:AIR-TAXI TO HELICOPTER STAND / HELIPAD /
+PLATZ / HUBSCHRAUBERSTARTPLATZ / ZUR                         HELICOPTER PARKING POSITION (significant point)
+HUBSCHRAOBERPARKPOSITION (Position)
+L: SCHWEBE ZUM, HUBSCHRAUBERABSTELLPLATZ /                   A: AIR-TAXIING TO HELICOPTER STAND / HELIPAD /
+HUBSCHRAUBERSTARTPLATZ / ZUR HUBSCHRAU-                      HELICOPTER PARKING POSITION (significant point)
+BERPARKPOSITION (Position)
+Anmerkung:     "ROLLEN" wird bei Hubschrauberverkehr durch "SCHWEBEN" ersetzt, wenn der Hubschrauber
+               schwebt.
+Note:          For helicopter traffic, "TAXI" is substituted by "AIR-TAXI" if the helicopter hovers.
+
+
+2.34 Halten – Holding
+B: HALTEN SIE POSITION *(Begründung)*                        G: HOLD POSITION *(reason)*
+L: HALTE                                                     A: HOLDING
+
+Anmerkung:     Grundsätzlich wird in der deutschen Sprache das Wort HALTEN nur am Boden verwendet, das Wort
+               "WARTEN" in der Luft.
+Note:           As a rule, in the German language the word HALTEN is used on the ground only, the word WARTEN
+                in the air.
+
+
+2.35 Halten vor einer Piste – To hold short of a runway
+
+
+B: HALTEN SIE (Richtung) VON (Position)                      G: HOLD (direction) OF (significant point)
+B: HALTEN SIE (Entfernung) VON / VOR (Position)              G: HOLD (distance) FROM (significant point)
+B: HALTEN SIE VOR (Position)                                 G: HOLD SHORT OF (significant point)
+L: HALTE / HALTE VOR (Position)                              A: HOLDING / HOLDING SHORT
+B: HALTEN SIE AM *CAT 11 / Ill* ROLLHALT                     G: HOLD AT *CAT 11 / Ill* HOLDING POINT
+
+
+2.36 Überqueren einer Piste – To cross a runway
+L: ERBITTE ÜBERQUEREN *DER* PISTE (Bezeichnung) A: REQUEST *TO* CROSS RUNWAY (designator)
+B: ÜBERQUEREN SIE PISTE (Bezeichnung) *MELDEN                G: CROSS RUNWAY (designator) *REPORT VACATED*
+SIE VERLASSEN*
+B: BESCHLEUNIGEN SIE ÜBERQUEREN DER PISTE                    G: EXPEDITE CROSSING RUNWAY (designator)
+(Bezeichnung) *VERKEHR (Lfz.-Muster) (Entfernung)            *TRAFFIC (type of aircraft) (distance) MILES FINAL*
+MEILEN ENDANFLUG*
+L: PISTE (Bezeichnung) VERLASSEN                             A: RUNWAY (designator) VACATED
+Anmerkung:   Wird die Meldung "Piste verlassen" angefordert, ist sie dann zu übermitteln, wenn sich das Luftfahr-
+             zeug vollständig hinter dem entsprechenden Rollhalt befindet.
+Note:        If the report "runway vacated" is requested it shall be made when the entire aircraft is beyond the rele-
+             vant holding point.
+Anmerkung 1: Wird eine Rollanweisung zu einer Freigabegrenze jenseits einer Piste erteilt, hat diese eine explizite
+             Freigabe zum Überqueren dieser Piste oder zum Halten vor dieser Piste zu enthalten.
+Note 1:      When a taxi instruction is given to a taxi limit beyond a runway, it shall contain an explicit permission to
+             cross that runway or an instruction to hold short of that runway.
+Anmerkung 2: Rollhalt
+             Ein bezeichneter Ort zum Schutz einer Piste, einer Hindernisbegrenzungsfläche oder eines ILS / MLS-
+             kritischen oder - relevanten Bereiches, an dem rollende Luftfahrzeuge und Fahrzeuge anhalten und
+             warten müssen, es sei denn sie haben von der Flugplatzkontrollstelle eine andere Genehmigung er-
+             halten.
+Note 2:      Holding point
+             A designated position intended to protect a runway, an obstacle limitation surface, or an ILS / MLS
+             critical / sensitive area at which taxiing aircraft and vehicles shall stop and hold, unless otherwise au-
+             thorized by the aerodrome control tower.
+
+2.37    Wenn eine Rollanweisung eine Freigabegrenze jenseits einer Piste beinhaltet.
+        When a taxi instruction contains a taxi limit beyond a runway
+B: ROLLEN SIE ZUM ROLLHALT PISTE (Bezeichnung)               G:       TAXI TO HOLDING POINT RUNWAY (designa-
+ÜBER (genaue Angabe der Rollstrecke) HALTEN SIE              tor) VIA (specifie taxi route to be followed) HOLD SHORT
+VOR PISTE (Bezeichnung) / ÜBERQUEREN SIE PISTE               OF RUNWAY (designator) / CROSS RUNWAY (designa-
+(Bezeichnung)                                                tor)
+B: SIND SIE BEREIT ZUM SOFORTABFLUG                          G: ARE YOU READY FOR IMMEDIATE DEPARTURE
+L: *BIN* BEREIT ZUM SOFORTABFLUG                             A: READY FOR IMMEDIATE DEPARTURE
+B: NACH DEM ABHEBEN (Anweisungen)                            G: WHEN AIRBORNE (instructions)
+
+2.4 Abfluganweisungen – Departure instructions
+L: ERBITTE ABFLUGANWEISUNGEN *(Details)*                     A: REQUEST DEPARTURE INSTRUCTIONS *(details)*
+B: VERLASSEN SIE KONTROLLZONE *SONDER-VFR* G: LEAVE CONTROL ZONE *SPECIAL VFR* VIA (route)
+ÜBER (Strecke) *IN *FLUGHÖHE* (Ziffern) FUSS / ODER *At *ALTITUDE* (figures) FEET / OR ABOVE / BELOW*
+HÖHER / TIEFER* *(Anweisungen)*                             *(instructions)*
+B: ABFLUG ÜBER (Bezeichnung) NICHT MÖGLICH                  G: UNABLE TO ISSUE DEPARTURE VIA (designator)
+*(Begründung)*                                              *(reason)*
+B: MELDEN SIE *ABFLUG-* BEREIT                              G: REPORT *WHEN* READY *FOR DEPARTURE*
+B: SIND SIE *ABFLUG-* BEREIT                                G: ARE YOU READY *FOR DEPARTURE
+L: *ABFLUG-* BEREIT                                         A: READY *FOR DEPARTURE*
+
+
+2.5 Freigabe auf die Piste zu rollen und Startfreigabe abzuwarten – Clearance to enter runway and await take-off
+clearance
+B: ROLLEN SIE ZUM ABFLUGPUNKT PISTE (Bezeich-               G: LINE UP RUNWAY (designator) *AND WAIT*
+nung) *DORT HALTEN*
+B: ROLLEN SIE ZUM ABFLUGPUNKT PISTE (Bezeich-               G: LINE UP RUNWAY (designator) *BE READY FOR /
+nung) *BEREITHALTEN FÜR / ERWARTEN SIE SO-                  EXPECT IMMEDIATE* *DEPARTURE*
+FORTABFLUG*
+
+
+2.51 Konditionelle Freigabe – Conditional clearance
+B: MELDEN SIE LANDENDE / ABFLIEGENDE (Ver-                  G: REPORT LANDING / DEPARTING (traffic information)
+kehrsinformation) IN SICHT                                  IN SIGHT
+B: LANDENDE / ABFLIEGENDE (Verkehrsinformation) IN G: LANDING / DEPARTING (traffic information) IN SIGHT
+SICHT / *NICHT IN SICHT*                           / *NOT IN SIGHT*
+B: HINTER LANDENDER / ABFLIEGENDER (Verkehrsin- G: BEHIND LANDING / DEPARTING (traffic information)
+formation) ROLLEN SIE ZUM ABFLUGPUNKT PISTE     LINE UP RUNWAY (designator) *AND WAIT* BEHIND
+(Bezeichnung) *DORT HALTEN* HINTER
+L: HINTER LANDENDER/ ABFLIEGENDER (Verkehrsin-              A: BEHIND LANDING / DEPARTING (traffic information)
+formation) ROLLE ZUM ABFLUGPUNKT PISTE (Be-                 LINING UP RUNWAY (designator) *AND WAITING* BE-
+zeichnung) *HALTE DORT* HINTER *LANDENDER /                 HIND *LANDING / DEPARTING* *(traffic information)*
+ABFLIEGENDER* *(Verkehrsinformation)*
+
+Anmerkung 2: Konditionelle Freigaben sind einschließlich der Bedingung(en) wörtlich (z.B.: HINTER LANDENDER
+             ...) zu wiederholen.
+Note 2:         Conditional clearances shall be read back verbatim including condition(s) (e.g. BEHIND LANDING …).
+
+2.6 Abflug – Take-off
+B: WIND (Richtung) GRAD (Geschwindigkeit) KNOTEN            G:WIND (direction) DEGREES (speed) KNOTS *REPORT
+*MELDEN SIE ABHEBEN* PISTE (Bezeichnung) START              AIRBORNE* RUNWAY (designator) CLEARED *FOR*
+FREI                                                        TAKE-OFF
+B: WIND (Richtung) GRAD (Geschwindigkeit) KNOTEN            G: WIND (direction) DEGREES (speed) KNOTS RUN-
+PISTE (Bezeichnung) FREI ZUM SOFORTSTART                    WAY (designator) CLEARED *FOR* IMMEDIATE TAKE-
+                                                            OFF
+
+
+2.61 Hubschrauber-Betrieb – Helicopter operation
+B: WIND (Richtung) GRAD (Geschwindigkeit) KNOTEN            G: WIND (direction) DEGREES (speed) KNOTS RUN-
+PISTE (Bezeichnung) START FREI                              WAY (designator) CLEARED FOR TAKE-OFF
+B: WIND (Richtung) GRAD (Geschwindigkeit) KNOTEN            G: WIND (direction) DEGREES (speed) KNOTS
+START FREI *VOM* HUBSCHRAUBERSTARTPLATZ /                   CLEARED FOR TAKE-OFF *FROM THE* HELIPAD /
+VON (Position, wenn nicht Piste / Hubschrauberstartplatz)   FROM (location, (if not runway / helipad)
+
+
+2.62 Wenn der Freigabe zum Start nicht nachgekommen wurde – When take-off clearance has not been complied
+with
+B: STARTEN SIE SOFORT ODER VERLASSEN SIE DIE                   G: TAKE OFF IMMEDIATELY OR VACATE RUNWAY
+PISTE *(Anweisungen)*                                          *(instructions)*
+B: STARTEN SIE SOFORT ODER HALTEN SIE                          G: TAKE OFF IMMEDIATELY OR HOLD *(significant
+*(Position) z.B.: VOR DER PISTE (Bezeichnung)*                 point) e.g. * SHORT OF RLINWAY (designator)*
+
+
+2.63 Streichen einer Startfreigabe – To cancel a take-off clearance
+B: HALTEN SIE POSITION STARFREIGABE AUFGE-                     G: HOLD POSITION CANCEL TAKE-OFF I SAY AGAIN
+HOBEN ICH WIEDERHOLE STARTFREIGABE AUFGE-                      CANCEL TAKE-OFF *(reason)
+HOBEN *(Begründung)*
+L: HALTE                                                       A: HOLDING
+
+
+2.64 Startabbruch nachdem der Startlauf begonnen wurde – To stop a take-off after an aircraft has commenced
+take-off roll
+B: SOFORT ANHALTEN *(Wiederholen des Rufzeichens               G: STOP IMMEDIATELY *(repeat aircraft call sign) STOP
+der Luftfunkstelle) SOFORT ANHALTEN*                           IMMEDIATELY*
+L: HALTE AN                                                    A: STOPPING
+
+
+2.65 Nach dem Abheben – When airborne
+L: ERBITTE LINKS- / RECHTSKURVE                                A: REQUEST LEFT / RIGHT TURN
+B: LINKS- / RECHTSKURVE NEGATIV / GENEHMIGT                    G: LEFT / RIGHT TURN NEGATIVE / APPROVED
+B: WARTEN SIE AUF LINKS- / RECHTSKURVE                         G: STAND BY FOR LEFT / RIGHT TURN
+L: LINKS- / RECHTSKURVE NICHT MÖGLICH                          A: UNABLE LEFT / RIGHT TURN *(reason)*
+*(Begründung)*
+B: NACH ERREICHEN / DURCH- / ÜBERFLIEGEN VON                   G: AFTER REACHING / PASSING (level or significant
+(Höhe oder Position) (Anweisungen)                             point) (instructions)
+B: (Standard-Abflugstreckenname und -nummer) AB-               G: (standard departure name und number) DEPARTURE
+FLUGSTRECKE
+
+
+2.67 Zu fliegender Steuerkurs – Heading to be followed
+B: STEIGEN SIE GERADEAUS / IN PISTENRICHTUNG                   G: CLIMB STRAIGHT AHEAD / ON RUNWAY HEADING
+*(Anweisungen)*                                                *(instructions)*
+B: NACH DEM ABHEBEN                                            G: WHEN AIRBORNE
+B: FLIEGEN SIE / DREHEN SIE LINKS / RECHTS                     G: FLY / TURN LEFT / RIGHT HEADING (three figures) /
+STEUERKURS (drei Ziffern) / IN PISTENRICHTUNG /                CONTINUE RUNWAY HEADING / CLIMB (instructions)
+STEIGEN SIE (Anweisungen)
+
+
+2.7 Einflug in die Kontrollzone / Platzrunde – Entering control zone / aerodrome traffic circuit
+L: (Lfz.-Muster) VFR (Position Höhe über NN)   A: (type of aircraft) VFR (significant point / altitude)
+*INFORMATION (ATIS-Kennbuchstabe)* ZUR LANDUNG *INFORMATION (ATIS code Jetter)* FOR LANDING /
+/ ZUM TIEFANFLUG / ZUM AUFSETZEN UND DURCH- LOW APPROACH /TOUCH AND GO
+STARTEN
+B: FLIEGEN SIE IN DIE KONTROLLZONE                             G: ENTER CONTROL ZONE *SPECIAL VFR* VIA (route)
+*SONDER-VFR* ÜBER (Strecke) *(Höhe über NN)* PIS-              *(altitude)* RUNWAY (designator) QNH (figures)
+TE (Bezeichnung) QNH (Ziffern) *(Anweisungen)*                 *(instructions)*
+
+
+Anmerkung:       Eine Freigabe zum Einflug in die Kontrollzone berechtigt nicht zum Einflug in die Platzrunde. Wird
+                 keine Freigabe zum Einflug in die Platzrunde erteilt, ist in die Warteschleife einzufliegen.
+Note:           A clearance to enter control zone is no authorisation to join traffic circuit. lf no clearance to join traffic
+                circuit was issued the holding pattern has to be entered.
+B: FLIEGEN SIE IN DIE *RECHTS* PLATZRUNDE /                     G: JOIN *RIGHT* TRAFFIC CIRCUIT / *DIRECT* (part of
+*DIREKT IN* DEN (Teil der Platzrunde) *PISTE (Bezeich-          traffic circuit) *RUNWAY (designator)* *WIND (direction)
+nung)* *WIND (Richtung) GRAD (Geschwindigkeit) KNO-             DEGREES (speed) KNOTS* *QNH (figures)* *(traffic in-
+TEN * *QNH (Ziffern)* *(Verkehrsinformation)                    formation)*
+
+
+Anmerkung :     Wurde das QNH bereits mit der Freigabe zum Einflug in die Kontrollzone gegeben, erübrigt sich die
+                nochmalige Angabe (außer bei Änderung des Wertes) bei der Freigabe zum Einflug in die Platzrunde.
+Note:           lf the QNH was already delivered with the clearance to enter control zone, a repetition in the clearance
+                to join traffic circuit is superfluous (except with changes of value).
+2.71 Verkürzen der Platzrunde – To shorten traffic circuit
+L: ERBITTE GERADEAUS- / DIREKTANFLUG PISTE                      A: REQUEST STRAIGHT-IN- / DIRECT APPROACH
+(Bezeichnung)                                                   RUNWAY (designator)
+B: MACHEN SIE GERADEAUS- / DIREKTANFLUG PIS-                    G: MAKE STRAIGHT-IN- / DIRECT APPROACH RUN-
+TE (Bezeichnung) *(Verkehrsinformation)*                        WAY (designator) *(traffic information)*
+
+
+2.72 Hubschrauber-Betrieb – Helicopter operation
+B:. FLIEGEN / DREHEN SIE DIREKT- ZUM / ZUR (Posi-               G: PROCEED / TURN *DIRECT* *TO* (significant point)
+tion) / PISTE (Bezeichnung) / HUBSCHRAUBERLANDE-                RUNWAY (designator) / HELIPAD *(traffic information)*
+PLATZ *(Verkehrsinformation)*
+
+
+2.73 Anfordern von Positionsmeldungen – Request for position reports
+B: MELDEN SIE PLATZ / PISTE (Bezeichnung) / AN-                 G: REPORT FIELD / RUNWAY (designator) / AP-
+FLUGBEFEUERUNG IN SICHT                                         PROACH LIGHTS IN SIGHT
+B: MELDEN SIE BEREIT FÜR SICHTFLUG                              G: REPORT VISUAL
+B: MELDEN SIE (Einzelheiten / Teil der Platzrunde)              G: REPORT (details / part of traffic circuit)
+
+
+2.74 Anweisungen für Landefolge – Instructions for landing sequence
+B: NUMMER (Ziffer) FOLGEN SIE (Lfz.-Muster, Position)           G: NUMBER (figure) FOLLOW (type of aircraft, position)
+B: MACHEN SIE KURZEN / LANGEN ANFLUG                            G: MAKE SHORT / LONG APPROACH
+B: VERLÄNGERN / VERKÜRZEN SIE GEGENANFLUG                       G: EXTEND / SHORTEN DOWNWIND (details)
+(Einzelheiten)
+B: *ANFLUG/ GEGENANFLUG / QUERANFLUG / END-                     G: CONTINUE *APPROACH * BASE / DOWNWIND /
+ANFLUG FORTSETZEN                                               FINAL
+B: FLIEGEN SIE EINE WEITERE *RECHTE* WARTE-                     G: MAKE ANOTHER *RIGHT HAND* CIRCUIT
+SCHLEIFE
+
+
+2.8 Landung – Landing
+B: WIND (Richtung) GRAD (Geschwindigkeit) KNOTEN                G: WIND (direction) DEGREES (speed) KNOTS RUN-
+PISTE (Bezeichnung) LANDUNG FREI                                WAY (designator) CLEARED TO LAND
+B: MACHEN SIE KURZE / LANGE LANDUNG                             G: MAKE SHORT / LONG LANDING
+Anmerkung:      Um die Wahrscheinlichkeit von Missverständnissen zu reduzieren hat die Landefreigabe die Bezeich-
+                nung der Piste zu beinhalten.
+Note:           To reduce the potential for misunderstanding, the landing clearance shall include the designator of the
+                landing runway.
+2.81 Hubschrauber-Betrieb – Helicopter operations
+B: WIND (Richtung) GRAD (Geschwindigkeit) KNOTEN            G: WIND (direction) DEGREES (speed) KNOTS RUN-
+PISTE (Bezeichnung) LANDUNG FREI                            WAY (designator) CLEARED TO LAND
+B: WIND (Richtung) GRAD (Geschwindigkeit) KNOTEN            G: WIND (direction) DEGREES (speed) KNOTS
+LANDUNG FREI / *AUF DEM* HUBSCHRAUBERLAN-                   CLEARED TO LAND *ON THE* HELIPAD / ON (signifi-
+DEPLATZ / AUF (Position)                                    cant point)*
+
+
+2.82 Besondere Verfahren – Special Procedures
+L: ERBITTE AUFSETZEN UND DURCHSTARTEN PISTE A: REQUEST TOUCH AND GO RUNWAY (designator)
+(Bezeichnung)
+B: PISTE (Bezeichnung) FREI *ZUM* AUFSETZEN UND             G: RUNWAY (designator) CLEARED TOUCH AND GO
+DURCHSTARTEN
+B: MACHEN SIE ABSCHLUSSLANDUNG PISTE (Be-                   G: MAKE FULL STOP *LANDING* RUNWAY (designa-
+zeichnung)                                                  tor)
+
+
+2.83 Anflug über oder entlang einer Piste – Approach over or along a runway
+L: ERBITTE TIEFANFLUG                                       A: REQUEST LOW APPROACH
+B: PISTE (Bezeichnung) FREI ZUM TIEFANFLUG                  G: RUNWAY (designator) CLEARED LOW APPROACH
+*ENTLANG* *(Höhenbeschränkung)* (Verfahren nach             *ALONG* *(level restriction)* (go around instructions)
+dem Tiefanflug)
+
+
+2.84 Sichtkontrolle durch Personen am Boden – Visual inspection by persons on the ground
+L: ERBITTE TIEFEN VORBEIFLUG                                A: REQUEST LOW PASS
+B: FREI ZUM TIEFEN VORBEIFLUG (Anweisungen)                 G: CLEARED LOW PASS (instructions)
+
+
+
+
+2.85    Verzögern von Luftfahrzeugen – To delay aircraft
+B: WARTEN SIE *ÜBER* (Position) / KREISEN SIE               G: HOLD *OVER* (significant point) / ORBIT *LEFT /
+*LINKS / RECHTS* *(Begründung)*                             RIGHT- *(reason)*
+B: MACHEN SIE VOLLKREIS LINKS / RECHTS                      G: MAKE A LEFT / RIGHT THREE SIXTY *(reason)*
+*(Begründung)*
+
+Anmerkung       In deutscher Sprache wird das Wort HALTEN nur am Boden verwendet, das Wort WARTEN in der
+                Luft.
+Note:           As a rule, in the German language the word HALTEN is used on the ground only, the word WARTEN
+                in the air.
+
+
+
+
+2.86    Fehlanflug – Missed approach
+B: STARTEN SIE DURCH *(Begründung)*                         G: GO AROUND *(reason)*
+L: STARTE DURCH *(Begründung)*                              A: GOING AROUND *(reason)*
+
+
+3. zusätzliche Sprechgruppen für Flugplatzverkehr – additional phraseologies for aerodrome traffic
+3.1     Fahrwerksstörung – Landing gear trouble
+B: (Teil(e) des Fahrwerks) SCHEINT / SCHEINEN               G: (part(s) of landing gear) *DO(ES) NOT* APPEAR(S)
+*NICHT* AUS- / EINGEFAHREN                                  DOWN / UP
+3.2      Luftfahrzeug ohne Sendegerät – Aircraft without radio transmitter
+B: BESTÄTIGEN SIE DURCH BEWEGEN DER QUER-                    G: ACKNOWLEDGE BY MOVING AILERONS / RUDDER
+RUDER / DES SEITENRUDERS
+B: BESTÄTIGEN SIE DURCH WACKELN                              G: ACKNOWLEDGE BY ROCKING WINGS
+B: BESTÄTIGEN SIE DURCH BLINKEN MIT LANDE-                   G: ACKNOWLEDGE BY FLASHING LANDING LIGHTS
+SCHEINWERFER
+
+
+3.3 Zusätzliche Verkehrsinformation – Additional traffic information
+B: (Lfz.-Muster) STARTET / LANDET AUF PISTE (Be-             G: (type of aircraft) DEPARTING / LANDING ON RUN-
+zeichnung)                                                   WAY (designator)
+B: (Lfz.-Muster) IM ANFLUG AUS / IM ABFLUG NACH              G: (type of aircraft) APPROACHING FROM / DEPARTING
+(Richtung)                                                   TO (direction)
+B: *ZUSÄTZLICHER* VERKEHR (Einzelheiten)                     G: *ADDITIONAL* TRAFFIC *IS* (details)
+
+
+3.31 Wirbelschleppenwarnung – Wake turbulence warning
+B: VORSICHT WIRBELSCHLEPPEN *VON ANFLIE-                     G: CAUTION WAKE TURBULENCE *FROM ARRIVING /
+GENDER / ABFLIEGENDER (Luftfahrzeugmuster)                   DEPARTING (type of aircraft) *(additional information, as
+*(weitere Informationen wie benötigt)*                       required)*
+B: NUMMER 2 HINTER / FOLGEN SIE (Lfz.-Muster) (Po-           G: NUMBER 2 BEHIND / FOLLOW (type of aircraft) (posi-
+sition) *(Flughöhe)*                                         tion) *(level)*
+
+
+3.32 Abgas-/Propellerstrahl – Jet blast/slipstream
+B: VORSICHT PROPELLERSTRAHL                                  G:CAUTION SLIPSTREAM
+B: VORSICHT ABGASSTRAHL                                      G: CAUTION JET BLAST
+
+
+3.33 Flugplatzinformation – Aerodrome information
+B: (Ortsname) PISTEN*OBERFLÄCHEN*ZUSTAND PIS-                G: (location) RUNWAY *SURFACE* CONDITION RUN-
+TE (Bezeichnung) (Zustand)                                   WAY (designator) (condition)
+B: (Ortsname) PISTEN*OBERFLÄCHEN*ZUSTAND PIS-                G: (location) RUNWAY *SURFACE* CONDITION RUN-
+TE (Bezeichnung) NICHT BEKANNT / LETZTE MEL-                 WAY (designator) NOT AVAILABLE / LAST REPORT
+DUNG ERHALTEN UM (Zeit)                                      RECEIVED AT (time)
+B: PISTENMELDUNG UM (Beobachtungszeit) PISTE                 G: RUNWAY REPORT AT (observation time) RUNWAY
+(Bezeichnung) (Art des Niederschlags) BIS ZU (Stärke         (designator) (type of precipitant) UP TO (depth of deposit)
+des Belags) MILLIMETER                                       MILLIMETRES
+B: VORSICHT BAUARBEITEN *BEIDERSEITS / LINKS /               G: CAUTION CONSTRUCTION WORK *BOTH SIDES /
+RECHTS VON (Teil der Bewegungsfläche)*                       LEFT / RIGHT OF (part of movement area)*
+B: (Teil der Bewegungsfläche) TROCKEN / FEUCHT /             G: (part of movement area) DRY / DAMP / WET / WATER
+NASS / WASSERPFÜTZEN / ÜBERFLUTET (Tiefe)                    PATCHES / FLOODED (depth)
+-     SCHNEE GERÄUMT (Länge und Breite wie zutref-           -   SNOW REMOVED (length and width as applicable)
+      fend)
+                                                             -   SPRAYED (length and width as applicable)
+-     GESPRÜHT (Länge und Breite wie zutreffend)
+B: (Teil der Bewegungsfläche)TROCKEN / SCHNEE GE-            G: (part of movement area) DRY / SNOW REMOVED
+RÄUMT (Länge und Breite wie zutreffend) / BEHANDELT          (length and width as applicable) / TREATED / COVERED
+/ BEDECKT MIT FLECKEN VON TROCKENEM SCHNEE                   WITH PATCHES OF DRY SNOW / WET SNOW / COM-
+/ FEUCHTEM SCHNEE / / GEPRESSTEM SCHNEE /                    PACTED SNOW / SLUSH / FROZEN SLUSH / ICE / ICE
+MATSCH / GEFRORENEM MATSCH / EIS / EIS UND                   UNDERNEATH / ICE AND SNOW / SNOWDRIFTS /
+SCHNEE / SCHNEEWEHEN / GEFRORENE SPUR-                       FROZEN RUTS AND RIDGES
+RILLEN UND GRATE
+B: (Teil der Bewegungsfläche) GLATT / SCHNEE / EIS          G: (part of movement area) SLIPPERY / SNOW / ICE RE-
+GERÄUMT / GESTREUT / GESPRÜHT                               MOVED / SANDED / SPRAYED
+B: (Teil der Bewegungsfläche) GESPERRT / AUFGE-             G: (part of movement area) CLOSED / SOFT / ROUGH
+WEICHT / UNEBEN
+B: VORSICHT VOGELSCHWARM *KREUZEND VON                      G: CAUTION FLOCK OF BIRDS *CROSSING LEFT TO
+LINKS / VON RECHTS*                                         RIGHT / RIGHT TO LEFT*
+
+
+3.34 Bremswirkung in Landerichtung – Braking action in landing direction
+B: BREMSWIRKUNG *GEMELDET VON (Luftfahrzeug-                G: BRAKING ACTION * REPORTED BY (aircraft type)*
+muster)* *UM (Zeit)* GUT / MITTEL / SCHLECHT                *AT (time)* GOOD / MEDIUM / POOR
+
+
+3.35 Bremskoeffizienten in Landerichtung – Braking coefficients in landing directibn
+B: BREMSKOEFFIZIENTEN UM (Zeit) PISTE (Bezeich-             G: BRAKING COEFFICIENTS AT (time) RUNWAY (des-
+nung) (Werte)                                               ignator) (values)
+
+
+3.36 Betriebszustand von Sicht- und anderen Anflughilfen – Operational status of visual and other landing aids
+B: (Teil der Befeuerung) AUSGEFALLEN                        G: (part of lighting system) UNSERVICEABLE
+B: (Art) BEFEUERUNG (Betriebszustand)                       G: (type) LIGHTING (status)
+B: MLS / ILS (Betriebsstufe) (Betriebszustand)              G: MLS / ILS (category) (status)
+B: (Bezeichnung der Sicht- oder anderer Anflughilfe) PIS-   G: (specify visual or non-visual aid) RUNWAY (designator)
+TE (Bezeichnung) (Beschreibung der Mängel)                  (description of deficiencies)
+
+
+3.37 Meteorologische Bedingungen – Meteorological conditions
+B: WIND (Richtung) GRAD (Geschwindigkeit) KNOTEN            G: WIND (direction) DEGREES (speed) KNOTS
+B: SICHT (Ziffern) METER / KILOMETER                        G:VISIBILITY (figures) METRES / KILOMETRES
+Angabe des Bedeckungsgrads der Bewölkung:                   Transmission of the cloud coverage:
+-   WOLKENLOS                                               -   SKY CLEAR
+-   LEICHT *BEWÖLKT/ BEDECKT* (1-2/8)                       -   FEW (1-2/8)
+-   MITTEL *BEWÖLKT/ BEDECKT* (3-4/8)                       -   SCATTERED (3-4/8)
+-   STARK *BEWÖLKT / BEDECKT* (5-7/8)                       -   BROKEN (5-7/8)
+-   GESCHLOSSEN / *VOLLSTÄNDIG* BEDECKT (8/8)               -   OVERCAST (8/8)
+-   KEINE MARKANTEN WOLKEN                                  -   NO SIGNIFICANT CLOUDS
+B: MELDEN SIE FLUGBEDINGUNGEN                               G: REPORT FLIGHT CONDITIONS
+
+
+3.4 Feststellen der Position – Deterrnining of position
+B: SCHALTEN SIE LANDESCHEINWERFER EIN                       G: SHOW LANDING LIGHTS
+
+
+3.5 Informationen über Zeiten – Information on times
+L: ERBITTE UHRZEIT / LANDEZEIT / ABFLUGZEIT                 A: REQUEST TIME CHECK / LANDING TIME / AIR-
+                                                            BORNE TIME
+B: ZEIT (Zeit)                                              G:TIME (time)
+B: ABFLUGZEIT (Zeit)                                        G: AIRBORNE *AT TIME* (time)
+4. FREQUENZWECHSEL – FREQUENCY CHANGE
+4.1 IFR-Verkehr sowie VFR in Luftraum der Klasse C vor Frequenz- / Kanalwechsel – IFR traffic and VFR in airspace
+Class C before frequency / channel change
+B: *UM / ÜBER (Zeit/Position)* RUFEN SIE *JETZT* (Bo-     G: *AT / OVER (time or significant point)* CONTACT
+denfunkstelle) *AUF* (Frequenz)                           (unit) *ON* (frequency)
+B: FALLS KEIN KONTAKT (Anweisungen)                       G: IF NO CONTACT (instructions)
+L: ERBITTE *FREQUENZ* WECHSEL *AUF (Frequenz)*            A: REQUEST *FREQUENCY* CHANGE *TO (frequency)*
+B: *FREQUENZ* WECHSEL GENEHMIGT                           G: *FREQUENCY* CHANGE APPROVED
+
+
+4.2 IFR-Verkehr nach Frequenzwechsel – IFR traffic after frequency change
+                                                          A: (level, including passed and cleared level if not main-
+                                                          taining the cleared level); *CLIMBING / DESCENDING
+                                                          (level)*
+
+Anmerkung:     Bei einem Wechsel von der Anflugkontrolle zur Flugplatzkontrolle entfällt die Angabe der Flughöhe,
+               bzw. der passierten und der freigegebenen Flughöhe;
+Note:          When changing from approach control to tower control the indication of the level resp. the passed and
+               cleared level is not required.
+
+                                                          A: RUNWAY (designator)
+
+Anmerkung:     Bei Anflügen zu Flugplätzen mit parallelen Pistensystemen ist die Pistenbezeichnung zusätzlich zum
+               Rufzeichen des Luftfahrzeugs zu übermitteln.
+Note:          For approaches to aerodromes with parallel runway systems, the runway designator shall be indicated
+               in addition to the radio call sign of the aircraft.
+
+
+                                                          A: (speed, if a speed was assigned)
+Anmerkung:     Beim ersten Kontakt mit einer Flugverkehrskontrollstelle nach einem Frequenzwechsel ist, ungeachtet
+               der Tatsache, ob eine vollständige Positionsmeldung zu übermitteln ist oder nicht, auch die angewie-
+               sene Geschwindigkeit zu übermitteln.
+Note:          The assigned speed shall also be advised on first contact with an ATC unit after a frequency change,
+               whether or not a full position report is required.
+
+
+4.3 VFR und IFR – VFR and IFR
+B: VERLASSEN *DER FREQUENZ* GENEHMIGT *FÜR                G: APPROVED TO LEAVE *FREQUENCY* *FOR (fig-
+(Ziffer) MINUTE(N)*                                       ures) MINUTE(S)*
+B: BLEIBEN SIE AUF DIESER FREQUENZ *BIS (Position G: REMAIN *ON* THIS FREQUENCY *UNTIL significant
+/ Zeit / Flughöhe) / FÜR (Ziffer) MINUTE(N)*      point / time / level) FOR (figures) MINUTE(S)*
+B: *WENN BEREIT* RUFEN SIE (Bodenfunkstelle) *AUF* G: *WHEN READY* CONTACT (unit) *ON* (frequency)
+(Frequenz)
+B: UM / ÜBER / AM (Zeit / Position) RUFEN SIE (Boden-     G: AT / OVER (time / significant point) CONTACT (unit)
+funkstelle) *AUF* (Frequenz)                              *ON* (frequency)
+B: *NACH DEM ABHEBEN* STAND BY FÜR (Bodenfunk- G:*WHEN AIRBORNE* STAND BY FOR (unit) *ON* (fre-
+stelle)*AUF* (Frequenz)                        quency)
+B: MONITOR (Bodenfunkstelle) *AUF* (Frequenz)             G: MONITOR (unit) *ON* (frequency)
+
+Anmerkung:     Ein Luftfahrzeug kann angewiesen werden
+               a) mit dem Ausdruck "STANDBY' auf eine Frequenz zu wechseln und dort auf die baldige Kontakt-
+                  aufnahme durch die Flugverkehrsdienste zu warten,
+                b) mit dem Ausdruck "MONITOR" auf eine Frequenz zu wechseln, auf der Informationen durch Flug-
+                   rundfunksendungen verbreitet werden.
+Note:           An aircraft may be requested :
+                a) to "STANDBY" on a frequency when it is intended that the ATS unit will initiate communications
+                   soon,
+                b) to "MONITOR" a frequency when information is being broadcast thereon.
+
+
+4.4 Ausrüstung mit 8,33 kHz-Kanalabstand – Equipment with 8.33 kHz channel spacing
+B: BESTÄTIGEN SIE ACHT KOMMA DREI DREI AUS-                  G: CONFIRM EIGHT POINT THREE THREE EQUIPPED
+GERÜSTET
+L: BESTÄTIGE ACHT KOMMA DREI DREI                            A: AFFIRM EIGHT POINT THREE THREE
+L: ACHT KOMMA DREI DREI NEGATIV                              A: NEGATIVE EIGHT POINT THREE THREE
+B: BESTÄTIGEN SIE ACHT KOMMA DREI DREI AUS-                  G: CONFIRM EIGHT POINT THREE THREE EXEMPTED
+NAHMEGENEHMIGUNG
+L: BESTÄTIGE / NEGATIVE ACHT KOMMA DREI DREI                 A: AFFIRM / NEGATIVE EIGHT POINT THREETHREE
+AUSNAHMEGENEHMIGUNG VORHANDEN                                EXEMPTED
+B: (Freigabe / Anweisung) WEGEN ACHT KOMMA DREI              G: (clearance / instruction) DUE *TO* EIGHT POINT
+DREI ANFORDERUNG                                             THREE THREE REQUIREMENT
+Anmerkung:      Zur Klarstellung, dass eine Freigabe erteilt wurde, um ein nicht ausgerüstetes Luftfahrzeug am Einflug
+                in ausrüstungspflichtigen Luftraum zu hindern.
+Note:           To indicate that a certain clearance is given because otherwise a non-equipped aircraft would enter
+                the airspace of mandatory carriage
+B: BESTÄTIGEN SIE ACHT KOMMA DREI DREI KANAL                 G: CONFIRM EIGHT POINT THREE THREE CHANNEL
+(Bezeichnung)                                                (name)
+L: BESTÄTIGE ACHT KOMMA DREI DREI KANAL (Be-                 A: AFFIRM EIGHT POINT THREE THREE CHANNEL
+zeichnung)                                                   (name)
+
+
+4.5 UFH Verfügbarkeit – UHF Capability
+B: BESTÄTIGEN SIE UHF                                        G: CONFIRM UHF
+L: BESTÄTIGE UHF / NEGATIVE UHF                              A: AFFIRM UHF / NEGATIVE UHF
+
+
+5. FLÜGE NACH SICHTFLUGREGELN IM LUFTRAUM DER KLASSEN C UND D (nicht Kontrollzone) – FLIGHTS
+ACCORDING TO VISUAL FLIGHT RULES IN AIRSPACE CLASSES C AND D (not control zone)
+
+
+5.1 Flüge unterhalb Flugfläche 100 – Flights below flight level 100
+5.11 Anforderung einer Freigabe Clearance request
+
+
+L: (Lfz.-Muster) (Position) VFR *IN* *FLUGHÖHE* (Zif-        A: (type of aircraft)* (significant point) VFR *AT*
+fern) FUSS FLUGFLÄCHE (Ziffern) ERBITTE DURCH-               *ALTITUDE* (figures) FEET / FLIGHT LEVEL (figures)
+FLUG DURCH LUFTRAUM CHARLIE / DELTA ÜBER                     REQUEST CROSSING AIRSPACE CHARLIE / DELTA
+(Flugstrecke) *FLUGHÖHE* (Ziffern) FUSS / FLUGFLÄ-           VIA (route) *ALTITUDE* (figures) FEET / FLIGHT LEVEL
+CHE (Ziffern)                                                (figures)
+
+
+5.12 Durchflugfreigabe – Crossing clearance
+B: DURCHFLUG GENEHMIGT ÜBER (Flugstrecke)                    G: CROSSING APPROVED VIA (route) *ALTITUDE* (fig-
+*FLUGHÖHE* (Ziffern) FUSS FLUGFLÄCHE (Ziffern)               ures) / FEET / FLIGHT LEVEL (figures)
+5.13 Einflug in den Luftraum – Entry into the airspace
+B: SIE FLIEGEN IN LUFTRAUM CHARLIE / DELTA EIN               G:YOU ARE ENTERING AIR SPACE CHARLIE / DELTA
+
+
+5.14 Streckenanweisung – Route instruction
+B: FLIEGEN SIE AUF RADIAL (drei Ziffern) VON (Name           G: PROCEED ON RADIAL (three figures) OF (name of
+der VOR) BIS (Position)                                      VOR) TO (significant point)
+
+
+5.15 Höhenanweisung – Level instruction
+B: HALTEN SIE *FLUGHÖHE* (Ziffern) FUSS / FLUG-              G: MAINTAIN *ALTITUDE* (figures) FEET / FLIGHT
+FLÄCHE (Ziffern)                                             LEVEL (figures)
+B: ÜBERFLIEGEN SIE (Position) IN *FLUGHÖHE* (Zif-            G: CROSS (significant point) AT *ALTITUDE* (figures)
+fern) FUSS / FLUGFLÄCHE (Ziffern) *ODER HÖHER /              FEET / FLIGHT LEVEL (figures) *OR ABOVE / BELOW*
+TIEFER*
+B: *NACH ÜBERFLIEGEN VON (Position)* STEIGEN /               G: *AFTER PASSING (significant point)* CLIMB / DE-
+SINKEN SIE AUF *FLUGHÖHE* (Ziffern) FUSS / FLUG-             SCEND *ALTITUDE* (figures) FEET / FLIGHT LEVEL
+FLÄCHE (Ziffern)                                             (figures)
+B: MELDEN SIE VERLASSEN / DURCHFLIEGEN / ER-                 G: REPORT LEAVING / PASSING / REACHING
+REICHEN VON *FLUGHÖHE* (Ziffern)                             *ALTITUDE* (figures) FEET / FLIGHT LEVEL FUSS /
+                                                             FLUGFLÄCHE (Ziffern) (figures)
+
+
+5.16 –Warteanweisung – Holding instructions
+B: WARTEN SIE ÜBER (Position) ERWARTEN SIE WEI-              G: HOLD OVER (significant point) EXPECT CLEARANCE
+TERE FREIGABE UM (Zeit) / IN (Minuten)                       AT (time) / IN (minutes)
+
+
+5.17 Anfordern einer geänderten Freigabe (z,B. wegen Wetter) – Request for revised clearance (e.g. due to weather)
+L: ERBITTE *FLUGHÖHE* (Ziffern) FUSS / FLUGFLÄ-              A: REQUEST *ALTITUDE* (figures) FEET / FLIGHT
+CHE (Ziffern) ÜBER (Strecke) *WEGEN (Begründung)*            LEVEL (figures) VIA (route) *DUE TO (reason)*
+
+
+5.18 Verlassen des Luftraums – Leaving the airspace
+B: VERLASSEN SIE LUFTRAUM CHARLIE / DELTA                    G: LEAVE AIRSPACE CHARLIE / DELTA DIRECTION /
+RICHTUNG STEUERKURS (drei Ziffern) / IN                      HEADING (three figures) / AT *ALTITUDE* (figures) FEET
+*FLUGHÖHE* (Ziffern) FUSS / FLUGFLÄCHE (Ziffern)             / FLIGHT LEVEL (figures) *(reason)*
+*(Begründung)*
+L: VERLASSE LUFTRAUM CHARLIE / DELTA                         A: LEAVING AIRSPACE CHARLIE / DELTA
+B: SIE VERLASSEN LUFTRAUM CHARLIE / DELTA                    G: YOU ARE LEAVING AIRSPACE CHARLIE / DELTA
+
+
+5.2 Flüge in und oberhalb Flugfläche 100 – Flights at and above flight level 100
+5.21 Anforderung einer Freigabe – Clearance request
+                                                             A: (type of aircraft) SPEED (figures) POSITION (signifi-
+                                                             cant point) *ALTITUDE* (figures) FEET / FLIGHT LEVEL
+                                                             (figures) VFR TO (destination) REQUEST ENTERING
+                                                             AIRSPACE CHARLIE AND FLIGHT LEVEL (figures) VIA
+                                                             (route)
+
+
+5.22 Freigabe –Clearance
+                                                             G: ENTER AIRSPACE CHARLIE CLIMB FLIGHT LEVEL
+                                                             (figures) PROCEED TO (significant point)
+5.23 Anweisung zum Verlassen des Luftraums – Instruction to leave airspace
+                                                           A: DESCEND BELOW FLIGHT LEVEL 100
+
+
+5.3 Anweisungen bei Radarführung – instructions for radar vectoring
+B: SQUAWK (Code)                                           G: SQUAWK (code)
+B: SQUAWK IDENT                                            G: SQUAWK IDENT
+B: IDENTIFIZIERT *(Position)*                              G: IDENTIFIED *(significant point)*
+B: RADARKONTAKT *(Position)*                               G: RADAR CONTACT *(significant point)*
+B: DREHEN SIE LINKS / RECHTS STEUERKURS (drei              G: TURN LEFT / RIGHT HEADING (three figures) *FOR
+Ziffern) *ZUR STAFFELUNG*                                  SEPARATION*
+
+
+5.31 Beendigung der Radarführung – Termination of radar vectoring
+B: RADARFÜHRUNG BEENDET ÜBERNEHMEN SIE                     G: RADAR VECTORING TERMINATED RESUME OWN
+EIGENNAVIGATION POSITION (Position)                        NAVIGATION POSITION (significant point)
+
+
+6. FLÜGE NACH INSTRUMENTENFLUGREGELN – FLIGHTS ACCORDING TO INSTRUMENT FLIGHT RULES
+6.1 Anweisungen – Instructions
+6.11 Abfluganweisungen – Departure instructions
+                                                           G: *WHEN AIRBORNE* TURN LEFT / RIGHT HEADING
+                                                           (three figures)
+                                                           G: SET HEADING TO / *PROCEED* DIRECT (significant
+                                                           point) *AT (time)*
+                                                           G: AFTER PASSING / REACHING SET HEADING TO /
+                                                           *PROCEED* DiRECT (significant point) *AT (time)*
+                                                           G: CLEARANCE EXPIRES AT (time)
+
+
+6.12 Anfluganweisungen – Approach instructions
+                                                           A: REQUEST (type of approach) *RUNWAY (designator)*
+                                                           G: CLEARED (type of approach) *RUNWAY (designator)*
+                                                           A: REQUEST (MLS / RNAV plain language designator)
+                                                           G: CLEARED (MLS / RNAV plain language designator)
+                                                           G: CLEARED (type of approach) RUNWAY (designator)
+                                                           FOLLOWED BY CIRCLING RUNWAY (designator)
+                                                           G: COMMENCE APPROACH AT (time)
+                                                           G: REPORT RUNWAY / LIGHTS / FIELD IN SIGHT
+                                                           G: REPORT COMMENCING PROCEDURE TURN
+                                                           G: MAINTAIN OWN SEPARATION (traffic)
+                                                           G: ARE YOU FAMILIAR WITH (type of approach) RUN-
+                                                           WAY (designator)
+
+
+6.2 Warteverfahren – Holding procedures
+6.21 Warteanweisungen nach Sicht – Visual holding instructions
+                                                           G: HOLD VISUAL OVER(significant point) / BE-
+                                                           TWEEN(significant points)
+6.22 Veröffentlichtes Warteverfahren über einer Funknavigationshilfe oder einem Punkt – Published holding procedure
+over a facility or a fix
+                                                            G: HOLD AT / OVER (significant point, name of facility or
+                                                            fix) MAINTAIN / CLIMB / DESCENT (level) *(additional
+                                                            instructions, if necessary)* EXPECT FURTHER CLEAR-
+                                                            ANCE AT (time) / IN (minutes) / EXPECTED APPROACH
+                                                            TIME (time)
+
+
+6.23 Wenn der Luftfahrzeugführer eine Beschreibung eines auf einer Funknavigationshilfe (VOR oder NDB) basieren-
+den Warteverfahrens wünscht – When pilot requests description of holding procedure based on a facility (VOR NDB)
+                                                            A: REQUEST HOLDING INSTRUCTIONS
+                                                            G: HOLD AT / OVER (significant point, name of facility or
+                                                            fix) *(identification / frequency)* *MAINTAIN / CLIMB /
+                                                            DESCEND (level)* *(direction)* *(specified) RADIAL /
+                                                            COURSE / INBOUND TRACK (three figures) DEGREES*
+                                                            *LEFT / RIGHT HAND PATTERN* *OUTBOUND TIME
+                                                            (figure) MINUTE(S) *(additional instructions, if necessary)*
+                                                            G: HOLD BETWEEN (figures) AND (figures) DME *AT /
+                                                            MAINTAIN / CLIMB / DESCEND (level)* *LEFT / RIGHT
+                                                            HAND PATTERN* *(additional instructions, if necessary)*
+
+
+6.24 Voraussichtlicher Anflugzeitpunkt / Expected approach time
+                                                            G: NO DELAY EXPECTED
+                                                            G: EXPECTED APPROACH TIME / EAT (figures)
+                                                            G: REVISED EXPECTED APPROACH TIME / EAT (fig-
+                                                            ures)
+                                                            G: DELAY NOT DETERMINED (reason)
+
+
+6.3 Radaranflugkontrolle Radar – approach control service
+6.31 Bereitstellung des Dienstes – Provision of service
+                                                            G: EXPECT / VECTORING *FOR* (type of approach)
+                                                            RUNWAY (designator)
+                                                            G: EXPECT / VECTORING *FOR / TO* (significant:
+                                                            point)
+                                                            G: (type of approach) NOT AVAILABLE DUE TO (reason)
+                                                            *(instructions)*
+
+
+6.32 Anweisungen und Informationen – Instructions and information
+                                                            G: YOU WILL INTERCEPT (navigational aid or track)
+                                                            (distance) FROM (significant point)
+                                                            G: - REPORT ESTABLISHED *ON ILS / LOCALIZER /
+                                                            GLIDE PATH* *(or ON GBAS / MLS APPROACH
+                                                            COURSE)*
+                                                            G: CLOSING FROM LEFT / RIGHT
+                                                            G: INTERCEPT (navigational aid)
+                                                            G: TURN LEFT / RIGHT HEADING (three figures) *TO
+                                                            INTERCEPT (navigational aid)*
+                                                             G: EXPECT VECTOR ACROSS (navigational aid)
+                                                             *(reason)*
+                                                             G: THIS TURN WILL TAKE YOU THROUGH (naviga-
+                                                             tional aid) *(reason)*
+                                                             G: TAKING YOU THROUGH (navigational aid) *(reason)*
+                                                             G: MAINTAIN (level) UNTIL GLIDE PATH
+                                                             *INTERCEPTION*
+                                                             G: REPORT RUNWAY (designator) / LIGHTS / FIELD IN
+                                                             SIGHT
+
+
+6.33 Rundsichtradaranflug – Surveillance Radar Approach
+                                                             G: THIS WILL BE A SURVEILLANCE RADAR AP-
+                                                             PROACH RUNWAY (designator) TERMINATING AT
+                                                             MISSED APPROACH POINT OBSTACLE CLEARANCE
+                                                             ALTITUDE (figures) FEET CHECK YOUR MINIMA
+                                                             G: VECTORING FOR SURVEILLANCE RADAR AP-
+                                                             PROACH RUNWAY (designator)
+                                                             G: HEADING IS GOOD
+                                                             G: TURN LEFT / RIGHT HEADING (three figures)
+                                                             G: (distance) FROM TOUCHDOWN COMMENCE DE-
+                                                             SCENT NOW
+                                                             G: (distance) FROM TOUCHDOWN ALTITUDE SHOULD
+                                                             BE (figures) FEET
+                                                             G: CHECK GEAR DOWN *AND LOCKED*
+                                                             G: PASSING MISSED APPROACH POINT
+                                                             G: OVER THRESHOLD
+                                                             G: APPROACH COMPLETED CONTACT (unit) *ON*
+                                                             (frequency / channel)
+
+
+6.34 Fehlanflugverfahren – Missed approach procedure
+                                                             G: PASSING MISSED APPROACH POINT CONTINUE
+                                                             VISUALLY OR GO AROUND *(missed approach instruc-
+                                                             tions)*
+                                                             G: GO AROUND *(missed approach instructions)*
+                                                             *(reason)*
+                                                             G: ARE YOU GOING AROUND
+                                                             G: IF GOING AROUND (instructions)
+                                                             A: GOING AROUND
+
+
+6.4 Sichtanflug – Visual approach
+6.41 Wenn Sichtanflug sofort eingeleitet werden kann – lf visual approach can be initiated promptly
+                                                             A: REQUEST VISUAL APPROACH *RUNWAY (designa-
+                                                             tor)*
+                                                             G: CLEARED VISUAL APPROACH RUNWAY (designa-
+                                                             tor)
+
+
+6.42 Wenn Sichtanflug beabsichtigt ist – lf visual approach is intended
+                                                             A: REQUEST VECTORS FOR VISUAL APPROACH
+                                                             *RUNWAY (designator)*
+                                                             G: STAND BY FOR VISUAL APPROACH *RUNWAY
+                                                             (designator)* *(reason)*
+                                                             G: ADVISE ABLE TO ACCEPT VISUAL APPROACH
+                                                             *RUNWAY (designator)*
+                                                             A: ABLE TO ACCEPT VISUAL APPROACH *RUNWAY
+                                                             (designator)*
+
+
+6.43 Übertragung der Staffelungsverpflichtung auf den Luftfahrzeugführer (nur am Tage) – Delegation of the obligation
+to provide separation to the pilot (only during daytime)
+                                                             G: NUMBER (figures) FOLLOW (type of aircraft) (position)
+                                                             MAINTAIN OWN SEPARATION
+                                                             G: MAINTAIN OWN SEPERATION FROM PRECEDING
+                                                             (type of aircraft / wake turbulence category) *CAUTION
+                                                             WAKE TURBULENCE*
+
+
+6.5 Sichtabflug – Visual departure
+6.51 Erteilung der Anweisungen für einen Sichtabflug – Issuing visual departure instructions
+                                                             A: REQUEST VISUAL DEPARTURE *DIRECT* *TO UN-
+                                                             TIL (significant point / altitude)*
+                                                             G: VISUAL DEPARTURE RUNWAY (designator) AP-
+                                                             PROVED TURN LEFT / RIGHT *DIRECT* *TO* (heading
+                                                             / significant point) *MAINTAIN VISUAL REFERENCE TO
+                                                             *THE* TERRAIN UNTIL (altitude)*
+                                                             G: ADVISE ABLE *TO ACCEPT* VISUAL DEPARTURE
+                                                             *DIRECT* *TO / UNTIL* (significant point) / altitude
+                                                             A: ABLE *TO ACCEPT* VISUAL DEPARTURE
+                                                             *RUNWAY (designator)*
+
+
+6.52 Zustimmung des Luftfahrzeugführers zu einem Sichtabflug vor dem Start durch z.B. Zurücklesen einer
+zusätzlichen Flugverkehrskontrollfreigabe – Pilot's agreement on executing a visual departure prior to take-off, i.e. read
+back of additional ATC clearance
+                                                             A: VISUALDEPARTURETO / UNTIL(significant point /
+                                                             altitude)
+
+
+6.6 Paralleibetrieb – Parallel operations
+                                                             G: CLEARED *FOR* (type of approach)-RUNWAY (des-
+                                                             ignator) LEFT / RIGHT
+                                                             G: YOU HAVE CROSSED *THE* LOCALIZER TURN
+                                                             LEFT / RIGHT *IMMEDIATELY* AND RETURN TO *THE*
+                                                             LOCALIZER
+                                                             G: ILS RUNWAY (designator) LEFT / RIGHT LOCALIZER
+                                                             FREQUENCY IS* (frequency)
+                                                             G: PENETRATION ALERT TURN LEFT / RIGHT (num-
+                                                             ber) DEGREES / HEADING (three figures) IMMEDIATELY
+                                                             TO AVOID TRAFFIC *DEVIATING FROM ADJACENT
+                                                             APPROACH* CLIMB (level)
+
+
+6.7 GPS / FMS RNAV Sprechgruppen – GPS / FMS RNAV phraseologies
+                                                                G: CLEARED (designator) TRANSITION
+                                                                G: CLEARED (designator) TRANSITION AND PROFILE
+                                                                G: CLEARED DIRECT WAYPOINT (designator)
+                                                                G: CLEARED VIA WAYPOINTS (designator) AND (des-
+                                                                ignator)
+                                                                A: UNABLE RNAV (GPS) DUE TO (reason e.g. LOSS OF
+                                                                RAIM or RAIM ALERT)
+
+
+6.8 Pistensichtweite – Runway visual range
+                                                                G: RVR *RUNWAY (designator)* *FIRST PART* (value)
+                                                                METRES / NOT AVAILABLE / NOT REPORTED
+                                                                *SECOND PART* (value) METRES / NOT AVAILABLE /
+                                                                NOT REPORTED *THIRD PART* (value) METRES / NOT
+                                                                AVAILABLE / NOT REPORTED *FOURTH PART*
+                                                                *(value) METRES / NOT AVAILABLE / NOT REPORTED*
+                                                                G: RVR *RUNWAY (designator)*
+                                                                *TOUCHDOWNZONE*(value) METRES / NOT AVAIL-
+                                                                ABLE / NOT REPORTED *MID POINT* (value) METRES /
+                                                                NOT AVAILABLE / NOT REPORTED *STOP END*
+                                                                (value) METRES / NOT AVAILABLE / NOT REPORTED
+                                                                G: TRANSMISSIOMETER (significant point) UNSERV-
+                                                                ICEABLE
+Note 1:         Multiple RVR observations are always representative of touchdown zone, midpoint and stop end re-
+                spectively.
+Anmerkung 1: Mehrfache RVR-Angaben werden immer für Aufsetzzone, mittleren Bereich und Stop-Ende der Piste
+             angegeben.
+Note 2:         Where reports for three or more locations are given, the indication of these locations may be omitted,
+                if the reports are passed in the order of touchdown zone, midpoint and stop end.
+Anmerkung 2: Werden Angaben für drei oder mehr Transmissometer übermittelt kann die Angabe der Positionen
+             entfallen wenn die Reihenfolge Aufsetzzone, mittlerer Bereich und Stop-Ende eingehalten wird.
+6.9 Flugregelwechsel – Change of flight rules
+6.91 Wechsel von IFR nach VFR – Change from IFR to VFR
+                                                                A: CANCELLING *MY* IFR *FLIGHT*
+                                                                G: IFR *FLIGHT* CANCELLED AT (time) *(instructions)*
+                                                                G: UNABLE TO ACCEPT CANCELLATION *DUE TO
+                                                                (reason)*
+
+
+Anmerkung:      Nur der IFR-Teil des Flugplans ist aufgehoben, der Flugplan besteht weiter, Landemeldung ist erfor-
+                derlich.
+Note:           Only the IFR portion of the flight plan is cancelled, the flight plan is still active, report of arrival required.
+
+
+6.92 Wechsel von VFR nach IFR – Change from VFR to IFR
+                                                                A: REQUEST IFR CLEARANCE
+                                                                G: CLEARED *TO* (clearance limit) VIA (route) CLIMB
+                                                                (level) IFR STARTS AT (significant point / time) / WHEN,
+                                                                PASSING / REACHING (level) / NOW *(instructions)
+
+
+7. KONTROLLIERTE FLÜGE – CONTROLLED FLIGHTS
+Anmerkung:      Nicht in deutsch veröffentlichte Sprechgruppen werden von der Flugverkehrskontrolle auf der Basis
+                der hier veröffentlichten Sprechgruppen für kontrollierten Flugverkehr, der nur die deutsche Sprache
+                beherrscht, angewendet.
+Note:           Phraseologies not published in German will be used by ATC for pilots only familiar with the German
+                language on the basis of the phraseologies for controlled flights published here.
+
+
+7.1 Erteilung einer Streckenfreigabe – Issuance,of enroute clearance
+                                                            G: CLEARED / PROCEED *TO* (clearance limit) VIA (de-
+                                                            tails of route to be followed / instructions) FLIGHT
+                                                            PLANNED ROUTE (or description of route) *CLIMB
+                                                            (level)* SQUAWK (four figures) *(instructions)*
+                                                            G: CLEARED *TO* (clearance limit) *VIA (route ) (level)
+                                                            (details)* SQUAWK (four figures)
+                                                            G: RECLEARED (amended clearance details) *REST OF
+                                                            CLEARANCE UNCHANGED*
+                                                            G: RECLEARED (amended route portion) TO (significant:
+                                                            point of original route) *REST OF CLEARANCE LIN-
+                                                            CHANGED*
+
+
+7.11 Wenn die Freigabe nicht sofort bei Anforderung gegeben werden kann – lf clearance cannot be issued
+immediately upon request
+                                                            G: EXPECT CLEARANCE AT (time) / IN (figures) MIN-
+                                                            UTES
+
+
+7.12 Wenn die Freigabe zur Abweichung nicht gegeben werden kann – when clearance for deviation cannot be issued
+                                                            G: UNABLE, TRAFFIC (direction) BOUND (type of air-
+                                                            craft) (level) ESTIMATED / OVER (significant point) AT
+                                                            (time) CALL SIGN (call sign) ADVISE INTENTIONS
+
+
+7.13 Wenn ein Pilot einer Freigabe bzw. einer Anweisung nicht folgen kann – When a pilot is unable to comply with a
+clearance or instruction
+                                                            A: UNABLE
+
+
+7.2 Flugverkehrskontrollfreigaben ohne den Zusatz "Freigegeben" – Air traffic control clearances without prefix
+"cleared"
+7.21 Strecke – Route
+                                                            G: JOIN (specify) AT (significant point) AT (level) *AT
+                                                            (time)*
+                                                            G: *PROCEED* FROM (significant point) TO (significant
+                                                            point)
+                                                            G: PROCEED (followed as necessary by)
+                                                                - TO (location)
+                                                                - DIRECT (significant point)
+                                                                - VIA (route and / or significant point(s)
+                                                                - VIA FLIGHT PLANNED. ROUTE
+                                                                - VIA (distance) DME ARC (direction) OF (name of
+                                                                  DME station)
+                                                            G: (level / route) NOT AVAILABLE *DUE TO (reason)*
+                                                            ALTERNATIVE(S) IS / ARE (levels / routes) *ADVISE
+                                                           INTENTIONS*
+
+
+7.22 Flughöhe – Level
+                                                           G: FLIGHT LEVEL (number)
+                                                           G: *ALTITUDE* (figures) FEET
+Anmerkung:      Der Ausdruck FLUGHÖHE kann sowohl FLUGFLÄCHE als auch FLUGHÖHE ÜBER NN bedeuten.
+Note:           The term level may be variously FLIGHT LEVEL or ALTITUDE
+
+
+                                                           G: MAINTAIN (leyel) (followed as necessary, by)
+                                                               - TO (significant point)
+                                                               - UNTIL PASSING (significant point)
+                                                               - UNTIL (time)
+                                                               - UNTIL ADVISED BY (unit)
+                                                               - UNTIL FURTHER ADVISED
+                                                               - WHILE IN CONTROLLED AIRSPACE
+
+
+Anmerkung:      Der Ausdruck MAINTAIN ist bei Anweisungen an Luftfahrzeuge zu Höhenwechseln nicht anstelle von
+                DESCEND oder CLIMB zu nutzen.
+Note:           The term MAINTAIN shall not be used instead of DESCEND or CLIMB when instructing an aircraft to
+                change level.
+7.23 Flughöhenwechsel, Sink- / Steigraten – Level changes, rates of climb / descent
+                                                           G: CLIMB / DESCEND (followed as necessary by)
+                                                               - (level) - IMMEDIATELY
+                                                               - TO REACH (level) AT (time or significant point)
+                                                               - AT (figures) FEET PER MINUTE OR GREATER /
+                                                                 LESS *(restrictions)*
+                                                               - AND MAINTAIN BLOCK (level) UNTIL (level)
+                                                           G: CLIMB (level) LEVEL RESTRICTION(S) (SID designa-
+                                                           tor) CANCELLED / LEVEL RESTRICTION(S) (SID desig-
+                                                           nator) AT (point) CANCELLED
+                                                           G: DESCEND (level) LEVEL RESTRICTION(S) (STAR
+                                                           designator) CANCELLED / LEVEL RESTRICTION (STAR
+                                                           designator) AT (point) CANCELLED
+                                                           G: RESUME NORMAL RATE OF DESCENT / CLIMB
+                                                           G: REPORT LEAVING / REACHING / PASSING (level)
+                                                           A: REQUEST LEVEL CHANGE / CLIMB / DESCENT AT
+                                                           (time or significant point)
+                                                           G: EXPECT LEVEL CHANGE / CLIMB / DESCENT
+                                                               - FROM (unit)
+                                                               - AT (time or significant point)
+                                                               - AFTER PASSING (significant point)
+                                                               - IN (figures) MINUTES
+                                                           G: STOP CLIMB / DESCENT AT (level)
+                                                           G: CONTINUE CLIMB / DESCENT (level)
+                                                           G: EXPEDITE CLIMB / DESCENT UNTIL PASSING
+                                                           (level)
+                                                           Wenn Steig-/Sinkflug nicht sofort nach Erhalt der Freigabe
+                                                             eingeleitet werden muß:
+                                                             lf climb/descent need not be started immediately after
+                                                             receipt of clearance:
+                                                             G: WHEN READY CLIMB / DESCEND *REPORT LEAV-
+                                                             ING (level)*
+                                                             A: CLIMB / DESCEND (level) MAINTAINING (level)
+                                                             *WILCO*
+
+
+7.24 Wenn ein Sink- / Steigflug unter Einhaltung eigener Staffelung und Sichtflugwetterbedingungen gewünscht wird –
+To require an aircraft to climb or descend maintaining own separation and VMC
+                                                             G: MAINTAIN OWN SEPARATION AND VMC (limitation)
+                                                             (traffic)
+                                                             A: REQUEST VMC DESCENT / CLIMB
+
+
+7.25 Spezifizierung von Reiseflughöhen – Specification of cruising levels
+                                                             G: CROSS (significant point) AT / ABOVE / BELOW
+                                                             (level)
+                                                             G: CROSS (significant point) AT (time) OR LATER / BE-
+                                                             FORE AT (level)
+                                                             G: CROSS (distance) MILES DME *(direction)* OF
+                                                             (name of DME station) AT / ABOVE / BELOW (level)
+                                                             G: CROSS (distance) MILES GNSS *(direction)* OF (sig-
+                                                             nificant point) AT / ABOVE / BELOW (level)
+                                                             G. ADVISE IF ABLE TO CROSS (significant point) AT
+                                                             (time) / (level)
+
+
+7.3 Anweisungen – Instructions
+7.31 Kursanweisungen – Heading instructions
+                                                             G: LEAVE (significant point) HEADING (three figures)
+                                                             *e.g. : AT (time)*
+                                                             G: CONTINUE HEADING (three figures)
+                                                             G: CONTINUE PRESENT HEADING
+                                                             G: FLY HEADING (three figures)
+                                                             G: TURN LEFT / RIGHT (figures) DEGREES / HEADING
+                                                             (three figures)
+                                                             G: MAKE A LEFT / RIGHT THREE SIXTY *(reason)*
+                                                             G: ORBIT LEFT / RIGHT *(reason)*
+                                                             G: STOP TURN HEADING (three figures)
+
+
+Anmerkung:       Bei der Notwendigkeit einer Begründung der obigen Anweisungen sollten die folgenden Sprechgrup-
+                 pen genutzt werden:
+Note:            When it is necessary to specify a reason for the above instructions, the following phraseologies should
+                 be used :
+             -   DUE *TO* TRAFFIC
+             -   FOR SPACING
+             -   FOR SEPARATION
+             -   FOR DOWNWIND / BASE / FINAL
+
+
+7.32 Geschwindigkeiten – Speeds
+                                                                A: SPEED (figures) KNOTS / MACH (number)
+                                                                G: REPORT INDICATED AIRSPEED / MACH NUMBER /
+                                                                SPEED
+                                                                G: MAINTAIN (figures) KNOTS / MACH (number) *UNTIL
+                                                                (significant point)* *OR GREATER / OR LESS*
+                                                                G: MAINTAIN PRESENT SPEED
+                                                                G: DO NOT EXCEED MACH (number) / (figures) KNOTS
+                                                                G: INCREASE / REDUCE SPEED *TO* (figures) KNOTS /
+                                                                MACH (number)
+                                                                G: INCREASEIREDUCE SPEED BY (figures) KNOTS /
+                                                                MACH (number)
+                                                                G: RESUME NORMAL SPEED
+                                                                G: NO SPEED RESTRICTIONS
+                                                                A: UNABLE TO COMPLY INDICATED AIRSPEED WILL
+                                                                BE (figures) KNOTS / MACH (number)
+Anmerkung:       Wurde eine Geschwindigkeit angewiesen, ist diese Geschwindigkeit mit der Positionsmeldung zu
+                 übermitteln. Die angewiesene Geschwindigkeit ist auch regelmäßig, unabhängig von der Tatsache, ob
+                 eine Positionsmeldung zu übermitteln ist oder nicht, mit dem ersten Anruf nach einem Frequenzwech-
+                 sel zu übermitteln.
+Note:            When assigned a speed to maintain, the flight crew shall include this speed in their position reports.
+                 The assigned speed shall also be advised on first contact with an ATC unit after a frequency / channel
+                 change, whether or not a full position report is required.
+
+
+7.33 Kurs über Grund (abgesetzt) parallel zur freigegebenen Strecke – Track (offset) parallel to the cleared route
+                                                                G: ADVISE IF ABLE TO PROCEED PARALLEL OFFSET
+                                                                G: PROCEED OFFSET (distance) RIGHT / LEFT OF
+                                                                (route) (track) *CENTRE LINE* AT (significant point / time)
+                                                                *UNTIL (significant point / time)*
+                                                                G: CANCEL OFFSET (instructions to rejoin cleared flight
+                                                                route other information)
+
+
+7.4 Identifizierung von Luftfahrzeugen – ldentification of aircraft
+                                                                G: SQUAWK *(code)* *IDENT*
+                                                                G: REPORT HEADING *AND FLIGHT LEVEL / ALTI-
+                                                                TUDE
+                                                                G: FOR IDENTIFICATION TURN LEFT / RIGHT HEAD-
+                                                                ING (three figures) FOR (maximum time 2 minutes) MIN-
+                                                                UTE(S) / SECONDS
+                                                                G: TRANSMIT FOR IDENTIFICATION AND REPORT
+                                                                HEADING
+                                                                G: IDENTIFIED *(significant point)*
+                                                                G: RADAR CONTACT *(significant point)*
+                                                                G: NOT IDENTIFIED CONTINUE OWN NAVIGATION
+7.5 Position – Position
+7.51 Positionsmeldungen durch Flugverkehrskontrolle Position – reports by Air Traffic Control
+                                                             G: POSITION (distance) (direction) OF (significant point)
+                                                             G: POSITION OVER / ABEAM (significant point)
+
+
+7.52    Positionsmeidungen durch Luftfahrzeugführer – Position reports by pilots
+                                                             1. Flüge nach Instrumentenflugregeln – IFR flights
+                                                             A:       a) (significant point)
+                                                                      b) (actual time over)
+                                                                      c) level, including passed level and cleared levil if
+                                                                      not maintaining the cleared level)
+                                                                      d) (next significant point and estimated time over)
+                                                                      e) (ensuing significant point)
+                                                                      f) (speed, if a speed was assigned
+                                                             1.1      Teile c), d) und e): Können bei Positionsmeldun-
+                                                                      gen über Funk ausgelassen werden
+                                                                      Elements c), d) und e): May be omitted from posi-
+                                                                      tion reports transmitted bei voice
+                                                             1.2      Teil f): Wurde eine Geschwindigkeit angewiesen,
+                                                                      ist diese Geschwindigkeit mit der Positionsmel-
+                                                                      dung zu übermitteln
+
+
+Flüge nach Sichtflugregeln                                   VFR flights
+L:      a) (Position)                                        A:       a) (significant point)
+        b) (Oberflugzeit)                                             b) (actual time over)
+        c) (Flughöhe)                                                 c) (level)
+Anmerkung:       Die Angabe der Überflugzeit kann entfallen, wenn die gemeldete Position zum Zeitpunkt der Meldung
+                 erreicht wird.
+Note:            The announcement of the actual time over may be omitted if the significant point is reached at the
+                 moment of the report.
+Flüge in der Platzrunde                                      Flights in the traffic pattern
+L: (Teil der Platzrunde)                                     A: (part of traffic circuit)
+
+
+7.53 Wenn Positionsmeldungen während der Radarkontrolle unterbleiben sollen – To omit position reports when under
+radar control
+                                                             G: OMIT POSITION REPORTS *UNTIL (specify)*
+                                                             G: NEXT REPORT AT (significant point)
+                                                             G: REPORT(S) REQUIRED ONLY AT (significant point(s)
+                                                             G: RESUME POSITION REPORTING
+
+
+7.6 Beendigung des Dienstes – Termination of service
+                                                             G: RADAR CONTROL TERMINATED *DUE TO (reason)*
+                                                             G: RADAR SERVICE TERMINATED *(instructions)*
+                                                             G: RESUME OWN NAVIGATION (position)
+                                                             *(instructions)*
+                                                      G: WILL SHORTLY LOSE IDENTIFICATION (instructions
+                                                      information)
+                                                      G: IDENTIFICATION LOST *(reasons)* *(instructions)*
+
+
+7.7 Transponder – Transponder
+B: HABEN SIE TRANSPONDER                              G: ARE YOU TRANSPONDER EQUIPPED
+L: TRANSPONDER NEGATIV / POSITIV                      A: NEGATIVE TRANSPONDER / AFFIRM
+B: MELDEN SIE TYP / MODE / CODE DES TRANSPON-         G: ADVISE TYPE / MODE / CODE OFTRANSPONDER
+DERS
+B: *NACH DEM ABHEBEN* SQUAWK (Code)                   G: *WHEN AIRBORNE* SQUAWK (code)
+B: RESET SQUAWK *(Mode)* (Code)                       G: RESET SQUAWK *(mode)* (code)
+L: RECYCLE / RESETTING (Code)                         A: RECYCLE / RESETTING (code)
+B: BESTÄTIGEN SIE SQUAWK                              G:CONFIRM SQUAWK
+L: SQUAWK (Code)                                      A: SQUAWKING (code)
+B: SQUAWK (nach Bedarf gefolgt von)                   G: SQUAWK (followed als necessary by)
+    - *(Code)* *UND* IDENT                                - *(code* *AND* IDENT
+    - CHARLIE                                             - CHARLIE
+    - STANDBY                                             - STANDBY
+B: SQUAWK MODE 3 ALFA ONLY                            B: SQUAWK MODE 3 ALFA ONLY
+B: ÜBERPRÜFEN SIE HÖHENMESSEREINSTELLUNG              G: CHECK ALTIMETER SETTING AND CONFIRM
+UND BESTÄTIGEN SIE FLUGHÖHE / (Flughöhe)              LEVEL / (level)
+B: STOP SQUAWK CHARLIE FALSCHE ANZEIGE                G: STOP SQUAWK CHARLIE WRONG INDICATION
+B: STOP SQUAWK                                        G: STOP SQUAWK
+B: ÜBERPRÜFEN SIE MODE S AIRCRAFT ID                  G: CHECK MODE S AIRCRAFT ID
+B: RESET MODE S AIRCRAFT ID                           G: RESET MODE S AIRCRAFT ID
+
+
+7.8 Besondere Sprechgruppen – Special phraseologies
+7.81 TCAS (ACAS) Sprechgruppen – TCAS (ACAS) phraseologies
+                                                      A: TCAS RA
+                                                      G: ROGER
+                                                      A: CLEAR OF CONFLICT, RETURNING TO (assigned
+                                                      clearance)
+                                                      G: ROGER (or alternative instructions)
+                                                      A: CLEAR OF CONFLICT (assigned clearance) RE-
+                                                      SUMED
+                                                      G: ROGER (or alternative instructions)
+                                                      A: UNABLE, TCAS RA
+                                                      G: ROGER
+
+
+7.82 RVSM Sprechgruppen – RVSM phraseologies
+                                                      G: CONFIRM RVSM APPROVED
+                                                      A: NEGATIVE RVSM STATE AIRCRAFT
+                                                      A: NEGATIVE RVSM *(status)*
+                                                        G: NEGATIVE RVSM
+                                                        G: UNABLE ISSUE CLEARANCE INTO RVSM AIR-
+                                                        SPACE MAINTAIN / DESCEND / CLIMB FLIGHT LEVEL
+                                                        (number)
+                                                        A: UNABLE RVSM DUE *TO* TURBULENCE / EQUIP-
+                                                        MENT
+                                                        A: READY TO RESUME RVSM
+                                                        G: REPORT WHEN ABLE TO RESUME RVSM
+                                                        G: CONFIRM ABLE TO RESUME RVSM
+                                                        G: NEGATIVE MM / NEGATIVE RVSM STATE AIR-
+                                                        CRAFT
+                                                        G: UNABLE RVSM DUE *TO* TURBULENCE / EQUIP-
+                                                        MENT
+
+
+7.83 Allgemeine ADS Sprechgruppen – General ADS phraseologies
+                                                        G: ADS / AUTOMATIC DEPENDENT SURVEILLANCE
+                                                        OUT OF SERVICE (appropriate information, as neces-
+                                                        sary)
+
+
+7.84 ATFCM-Sprechgruppen – AFTCM phraseologies
+                                                        G: SLOT *IS* (time)
+                                                        G: REVISED SLOT *IS* (time)
+                                                        G: SLOT CANCELLED *REPORT READY*
+                                                        G: FLIGHT SUS.PENDED *UNTIL (time) / UNTIL FUR-
+                                                        THER NOTICEI DUE *TO* (reason)
+                                                        G: FLIGHT SUSPENDED NEW RVR (distance) METRES
+                                                        G: SUSPENSION CANCELLED REPORT READY
+                                                        G: UNABLE TO APPROVE START UP *CLEARANCE*
+                                                        DUE *TO* SLOT EXPIRED REQUEST A NEW SLOT
+                                                        G: SLOT EXPIRES AT (time)
+                                                        G: UNABLE TO APPROVE START UP *CLEARANCE*
+                                                        DUE *TO* SLOT (time) REQUEST START UP AT (time)
+                                                        G: FLIGHT SHIFTED UNTIL (time) DUE *TO* (reason)
+
+
+8. FLUGINFORMATIONSDIENST (erteilt lediglich Informationen und Empfehlungen) – FLIGHT INFORMATION
+SERVICE (issues information and recommendations only)
+8.1 Wetterinformationen – Weather information
+8.11 Informationen über besondere Wettererscheinungen (Radarbeobachtung) – Information about special weather
+phenomena (radar observation)
+B: FLUGSICHERUNGSRADAR ZEIGT STARKES NIE-               G: ATC RADAR SHOWS HEAVY PRECIPITATION AREA
+DERSCHLAGSGEBIET (Ziffern) UHR (Entfernung) MEI-        (figures) O'CLOCK (distance) MILES AREA (figures)
+LEN GEBIET IST (Ziffern) MEILEN TIEF UND ER-            MILES DEEP EXTENDING FROM (direction) TO (direc-
+STRECKT SICH VON (Richtung) NACH (Richtung) ÜBER        tion) FOR (figures) MILES
+(Entfernung) MEILEN
+B: (Lfz.-Muster) MELDET (Beschreibung) VEREISUNG /      G: (aircraft type) REPORTED (description) ICING / TUR-
+TURBULENZ *IN WOLKEN* (Gebiet) (Zeit)                   BULENCE *IN CLOUDS* (area) (time)
+B: *KONTROLL*TURM BEOBACHTET (Wetterinformati-          G: TOWER OBSERVES (weather information)
+on)
+B: LUFTFAHRZEUGFÜHRER BERICHTET (Wetterinfor-                G: PILOT REPORTS (weather information)
+mation)
+
+
+8.12 Von offizieller Wettermeldung abweichende Beobachtung – Observation deviating from official weather report
+B: TURMBEOBACHTUNG SICHT NACH (Richtung) (Zif-               G: TOWER OBSERVATION VISIBILITY TO (direction)
+fern) METER                                                  (distance) METRES
+
+
+8.2 Verkehrsinformation – Traffic information
+B: *UNBEKANNTER* VERKEHR (Richtung, Entfernung               G: *UNKNOWN* TRAFFIC (direction, distance and other
+und andere Informationen)                                    information)
+B: *UNBEKANNTER* VERKEHR (Ziffer) UHR (Entfer-               G: *UNKNOWN* TRAFFIC (figure) O'CLOCK (bearing by
+nung) MEILEN (Flugrichtung) (Informationen)                  clock reference and distance) MILES (direction of flight)
+                                                             (information)
+B: (Verkehr) (Position)                                      G: (traffic) (significant point)
+    - SCHNELL / LANGSAM FLIEGEND                                  - SLOW / FAST MOVING
+    - KOMMT NÄHER                                                 - CLOSING
+    - VON VORNE / SELBE RICHTUNG                                  - OPPOSITE / SAME DIRECTION
+    - ÜBERHOLT                                                    - OVERTAKING
+    - KREUZT VON LINKS / VON RECHTS                               - CROSSING LEFT TO RIGHT / RIGHT TO LEFT
+    Falls bekannt:                                                lf known:
+    - (Lfz.-Muster)                                               - (type of aircraft)
+    - (Flughöhe) / (Flughöhenunterschied) (Ziffern)               - (level) / (relative level) (figures) * NOT CONFIRMED
+      *NICHT BESTÄTIGT*                                           - CLIMBING / DESCENDING
+    - STEIGT / SINKT
+L: HALTE AUSSCHAU                                            A: LOOKING OUT
+L: VERKEHR / (Lfz.-Muster) IN SICHT                          A: TRAFFIC / (type of aircraft) IN SIGHT
+L: KEIN *SICHT* KONTAKT                                      A: NEGATIVE CONTACT
+L: ERBITTE AUSWEICHEMPFEHLUNG /                              A: REQUEST AVOIDANCE ADVICE / VECTORS
+KURSFUHRUNG
+B: EMPFEHLE *LINKS- / RECHTSKURVE*                           G: SUGGEST *LEFT / RIGHT TURN* HEADING (three
+STEUERKURS (drei Ziffern)                                    figures)
+B: FREI VON VERKEHR                                          G: CLEAR OF TRAFFIC
+B: KEIN GEMELDETER VERKEHR                                   G: NO REPORTED TRAFFIC
+
+
+8.3 Navigatorische Unterstützung – Navigational assistance
+L: *POSITION UNBEKANNT* ERBITTE NAVIGATORI-                  A: *POSITION UNKNOWN* REQUEST NAVIGATIONAL
+SCHE UNTERSTÜTZUNG *NACH (Position)*                         ASSISTANCE *TO (significant point)*
+B: SENDEN SIE FÜR PEILUNG                                    G: TRANSMIT FOR DF
+B: QDM / QDR (drei Ziffern)                                  G: QDM / QDR (three figures)
+B: SQUAWK (Code)                                             G: SQUAWK (code)
+B: IDENTIFIZIERT *(Position)*                                G: IDENTIFIED *(significant point)*
+B: RADARKONTAKT *(Position)*                                 G: RADAR CONTACT *(significant point)*
+B: BLEIBEN SIE VMC                                           G: MAINTAIN VMC
+B: ACHTEN SIE AUF SICHERHEITSMINDESTHÖHE /                   G: OBSERVE MINIMUM SAFE HEIGHT / OBSTACLE
+HINDERNISFREIHEIT                                            CLEARANCE
+B: EMPFEHLE *LINKS- / RECHTSKURVE* STEUER-                     G: SUGGEST *LEFT / RIGHT TURN* HEADING (three
+KURS (drei Ziffern)                                            figures)
+B: NAVIGATORISCHE UNTERSTÜTZUNG BEENDET                        G: NAVIGATIONAL ASSISTANCE TERMINATED RE-
+ÜBERNEHMEN SIE EIGENNAVIGATION POSITION                        SUME OWN NAVIGATION POSITION (significant point or
+(Position oder navigatorische Hinweise)                        navigational information)
+
+
+8.4 Anweisung zum Schalten des Transponders – To instruct setting of transponder
+B: RESET SQUAWK *(Mode)* (Code)                                G: RESET SQUAWK *(mode)* (code)
+L: RECYCLE / RESETTING (Code)                                  A: RECYCLING / RESETTING (code)
+B: BESTÄTIGEN SIE SQUAWK                                       G: CONFIRM SQUAWIK
+L: SQUAWK (Code)                                               A: SQUAWKING (code)
+B: SQUAWK (nach Bedarf gefolgt von)                            G: SQUAWK (followed as necessary by)
+    - IDENT                                                        - IDENT
+    - CHARLIE                                                      - CHARLIE
+    - STANDBY                                                      - STANDBY
+B: STOP SQUAWK                                                 G: STOP SQUAWK
+
+
+8.5 VFR-Übungsanflug – VFR-Practise Approach
+L: ERBITTE (Art des IFR Anfluges) ÜBUNGSANFLUG                 A: REQUEST (type of IFR approach) PRACTISE AP-
+VFR                                                            PROACH VFR
+B: (Art des IFR Anfluges) ÜBUNGSANFLUG VFR GE-                 G: (type of IFR approach) PRACTISE APPROACH VFR
+NEHMIGT / NICHT GENEHMIGT                                      APPROVED / NOT APPROVED
+
+
+9. AUFHEBEN UND SCHLIESSEN DES FLUGPLANS – CANCELLING AND CLOSING OF FLIGHT PLAN
+9.1 Aufheben – Cancelling
+L: ICH HEBE MEINEN FLUGPLAN AUF                                A: CANCELLING MY FLIGHTPLAN
+B: FLUGPLAN AUFGEHOBEN UM (Zeit)                               G: FLIGHT PLAN CANCELLED AT (time)
+Anmerkung:      Der Flugplan ist aufgehoben, Landemeidung nicht erforderlich.
+Note:           Flight plan is cancelled, report of arrival not necessary.
+
+
+9.2 Aufheben des IFR-Teiles des Flugplans – Cancelling the IFR part of the flight plan
+                                                               A: CANCELLING *MY* IFR *FLIGHT*
+                                                               G: IFR *FLIGHT* CANCELLED AT (time) *(instructions)*
+                                                               G: UNABLE TO ACCEPT CANCELLATION *DUE TO
+                                                               (reason)*
+Anmerkung:      Der IFR-Teil des Flugplans ist aufgehoben, der VFR-Teil besteht immer noch. Landemeldung erfor-
+                derlich.
+Note:           The IFR part of the flight plan is cancelled, the VFR part is still valid. Report of arrival required.
+
+
+9.3 Schließen des Flugplans – Closing of flight plan
+L: *LANDEZEIT (Ziffern)* ERBITTE SCHLIESSUNG MEI-              A: *LANDING TIME (figures)* REQUEST TO CLOSE MY
+NES FLUGPLANS                                                  FLIGHTPLAN
+B: FLUGPLAN GESCHLOSSEN UM (Ziffern)                           G: FLIGHT PLAN CLOSED AT (figures)
+Anmerkung:      Anstelle der Landemeldung kann die Schließung des Flugplans durch die Obermittlung der voraus-
+                sichtlichen Landezeit erfolgen, sofern das Luftfahrzeug sich bereits in der Platzrunde befindet und die
+                Landung sichergestellt erscheint.
+Note:           Instead of the report of arrival the flight plan may be closed by transmission of the estimated time of
+                landing, provided the aircraft is already in the traffic circuit and a safe landing may be expected.
+
+
+10. NOTVERFAHREN – EMERGENCY PROCEDURES
+10.1 Funkausfall – Radio failure
+B: FALLS SIE HÖREN BESTÄTIGEN SIE DURCH WA-                  G: IF YOU READ ROCK YOUR WINGS / SHOW LAND-
+CKELN / EINSCHALTEN DER LANDESCHEINWERFER                    ING LIGHTS
+B: FALLS SIE HOREN DREHEN SIE LINKS / RECHTS         G: IF YOU READ TURN LEFT / RIGHT HEADING (three
+STEUERKURS (drei Ziffern) FÜR (Zeit: maximum 2 Minu- figures) FOR (maximum time 2 minutes) MINUTE(S) /
+ten) MINUTE(N) / SEKUNDEN                            SECONDS
+B: (Manöver) / SQUAWK BEOBACHTET *POSITION                   G: (manoeuvre) / SQUAWK OBSERVED *POSITION
+(Position)* WERDE MIT RADARKONTROLLE FORT-                   (position)* WILL CONTINUE RADAR CONTROL
+FAHREN
+B: FALLS FUNKVERBINDUNG UNTERBROCHEN (An-                    G: IF RADIO CONTACT LOST (instructions)
+weisungen)
+B: FALLS KEINE SENDUNG EMPFANGEN WURDE FÜR G: IF NO TRANSMISSIONS RECEIVED FOR (number)
+(Ziffer(n) MINUTE(N) / SEKUNDEN (Anweisungen) MINUTES / SECONDS (instructions)
+B: ANTWORT NICHT EMPFANGEN (Anweisungen)                     G: REPLY NOT RECEIVED (instructions)
+B: FALLS SIE HÖREN (Anweisungen)                             G: IF YOU READ (instructions)
+
+
+10.11 Blindsendung – Blind transmission
+B: BLINDSENDUNG (Anweisungen / Information)                  G: TRANSMITTING BLIND (instructions / information)
+
+
+10.2 Notsinkflug – Emergency descent
+                                                             A: EMERGENCY DESCENT (intentions / actions)
+                                                             G: EMERGENCY DESCENT ALL STATIONS (unit) IN
+                                                             THE VICINITY OF / AT (significant point or location)
+                                                             EMERGENCY DESCENT IN PROGRESS FROM (level)
+                                                             (followed as necessary by specific instructions, clear-
+                                                             ances, traffic information, etc.)
+Anmerkung:      Diese Meldung wird im Falle eines Notsinkflugs auf der Kontroll- und ggf. auf der Fluginformationsfre-
+                quenz abgestrahlt.
+Note:           In the event of an emergency descent this message will be broadcast on the control and if necessary
+                on the flight information frequency.
+10.3 Verfahren bei Ausfall des Kurskreisels – No gyro procedures
+                                                             G: THIS WILL BE A NO GYRO VECTOR FOR (type of
+                                                             approach) TO (runway or other limit) MAKE ALL TURNS
+                                                             RATE ONE / HALF / (number) DEGREES PER SECOND
+                                                             START AND STOP ALL TURNS ON THE COMMAND
+                                                             NOW
+                                                             G: TURN LEFT / RIGHT NOW
+                                                             G: STOP TURN NOW
+
+
+10.31 Nach Erreichen des Endanflugs – When established on final
+                                                             G: MAKE ALL TURNS RATE HALF
+10.4 Transponderschaltung – Transponder setting
+10.41 Wenn der Notfalicode gesendet werden soll – To request emergency code
+                                                          G: SQUAWK MAYDAY / *CODE SEVEN SEVEN ZERO
+                                                          ZERO*
+
+
+10.5 Treibstoffschnellablaß unter FL 130 (FL 160 im Alpengebiet) – Fuel dumping below FL 130 (FL 160 in the alpine
+area)
+B: AN ALLE (Bodenfunkstelle) VORSICHT TREIB-              ALL STATIONS (unit) USE CAUTION FUEL DUMPING IN
+STOFFSCHNELLABLASS WIRD DURCHGEFÜHRT                      PROGRESS BY (type of aircraft) AT (significant point) ON
+VON (Lfz.-Muster) ÜBER (Position) MIT KURS (Richtung)     COURSE (direction) FROM (level) AVOID FLIGHT
+VON (Flughöhe) DER LUFTRAUM BIS 10 MEILEN UM              WITHIN 10 MILES OF FUEL DUMPING AREA
+DAS GEBIET DES TREIBSTOFFSCHNELLABLASSES
+IST ZU MEIDEN
+B: AN ALLE (Bodenfunkstelle) TREIBSTOFFSCHNELL-           G: ALL STATIONS (unit) FUEL DUMPING HAD BEEN IN
+ABLASS WURDE DURCHGEFÜHRT ÜBER (Position)                 PROGRESS AT (significant point) FROM (level) AVOID
+VON (Flughöhe) DIESES GEBIET IST BIS (Zeit) ZU MEI-       THIS AREA UNTIL (time)
+DEN
+
+
+10.6 Unterstützung von VFR-Flügen in navigatorischen Schwierigkeiten – Assistance for VFR flights encountering
+navigational difficulties
+L: HABE ORIENTIERUNGSVERLUST ERBITTE UN-                  A: LOSS OF POSITION REQUEST ASSISTANCE
+TERSTÜTZUNG
+B: ERBITTE VERBLEIBENDE FLUGZEIT                          G: REQUEST REMAINING FLIGHT TIME
+B: KÖNNEN SIE NACH SICHT WEITERFLIEGEN                    G: ARE YOU ABLE TO CONTINUE VISUALLY
+B: SIE KÖNNEN AUF *FLUGHÖHE* (Ziffern) FUSS /             G:YOU MAY DESCEND *ALTITUDE* (figures) FEET /
+FLUGFLÄCHE (Ziffern) SINKEN                               FLIGHT LEVEL (figures)
+B: EMPFEHLE (Ziffern) GRAD NACH LINKS / RECHTS            G: SUGGEST TO TURN (figures) DEGREES TO THE
+DREHEN                                                    LEFT / RIGHT
+
+
+10.7 Ausfall von Radar – Radar equipment degradation
+B: SEKUNDÄRRADAR AUSGEFALLEN (weitere Informa- G: SECONDARY RADAR OUT OF SERVICE (appropriate
+tion wie benötigt)                             information as necessary)
+B: PRIMÄRRADAR AUSGEFALLEN (weitere Information           G: PRIMARY RADAR OUT OF SERVICE (appropriate
+wie benötigt)                                             information as necessary)
+
+
+10.8 Sprechgruppen für Warnanzeigen – Alerting phraseologies
+10.81 Warnanzeige für Unterschreitung der Mindestflughöhe – Low altitude warning
+                                                          G: LOW ALTITUDE WARNING CHECK YOUR ALTI-
+                                                          TUDE IMMEDIATELY QNH (number) *MINIMUM FLIGHT
+                                                          ALTITUDE IS (altitude)*
+
+
+10.82 Warnanzeige für Bodenannäherung – Terrain alert
+                                                          G: TERRAIN ALERT (suggested pilot action, if possible)
+
+
+10.83 Warnanzeige für Luftfahrzeugannäherung – Collision alert
+                                                          G: COLLISION ALERT (appropriate information or instruc-
+                                                          tions, as necessary)
+10.9 Übertragbare Krankheiten – Communicable disease
+                                                           A: REQUEST THE FOLLOWING INFORMATION ABOUT
+                                                           SUSPECTED CASE(S) OF COMMUNICABLE DISEASE
+                                                           ON BOARD THIS AIRCRAFT TO BE FORWARDED.
+                                                           ADVISE READY TO COPY
+                                                           G: READY TO COPY
+                                                           A: ADVISE (destination aerodrome) TOWER THAT (call
+                                                           sign), DEPARTURE AERODROME (departure aero-
+                                                           drome) ESTIMATING (destination aerodrome) AT (esti-
+                                                           mated time of arrival) PERSONS ON BOARD (number)
+                                                           REPORTING (number) CASE(S) OF COMMUNICABLE
+                                                           DISEASE ON BOARD
+                                                           G: ROGER
+
+
+Diese Bekanntmachung tritt mit sofortiger Wirkung in Kraft. Gleichzeitig wird die „Bekanntmachung über die Sprech-
+funkverfahren“ vom 05.11.2009 (NfL I-229/09) hiermit aufgehoben.
+Langen, den 15.10.2010
+Der Direktor des
+Bundesaufsichtsamtes für Flugsicherung
+SOP/11.1.1/0001-004/10
+Im Auftrag
+Dr. Baumann
+
