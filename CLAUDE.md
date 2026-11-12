@@ -233,6 +233,7 @@ bestehenden Target. Inline in `CMakeLists.txt` dokumentiert.
 xp_wellys_vfr_atc/
 ├── CLAUDE.md
 ├── README.md, THIRD_PARTY.md, LICENSE
+├── packaging/                     # Endnutzer-README + THIRD_PARTY_LICENSES.md + ONNXRUNTIME_THIRD_PARTY_NOTICES.txt — von CI/`make skunkcrafts` mit RELEASE.md + LICENSE (GPL-3.0) ins Plugin-Root kopiert
 ├── CMakeLists.txt
 ├── Makefile
 ├── VERSION.txt

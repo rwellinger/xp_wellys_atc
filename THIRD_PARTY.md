@@ -11,14 +11,16 @@ all dependencies are GPLv3-compatible.
 |---|---|---|---|
 | [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | v1.9.1 | MIT | Static library inside the `.xpl` |
 | [llama.cpp](https://github.com/ggml-org/llama.cpp) | b9733 | MIT | Static library inside the `.xpl` |
-| [Piper](https://github.com/OHF-Voice/piper1-gpl) | v1.4.2 | MIT (libpiper); GPL-3.0 (espeak-ng) | `libpiper.dylib` next to the `.xpl` |
+| [Piper](https://github.com/OHF-Voice/piper1-gpl) | v1.4.2 | GPL-3.0 (whole repo, incl. libpiper) | `libpiper.dylib` / `piper.dll` next to the `.xpl` |
 | [onnxruntime](https://github.com/microsoft/onnxruntime) | 1.22.0 | MIT | `libonnxruntime.1.22.0.dylib` next to the `.xpl` (prebuilt vendor binary) |
 | [espeak-ng](https://github.com/espeak-ng/espeak-ng) | bundled with Piper | GPL-3.0-or-later | Statically linked inside `libpiper.dylib`; data dir bundled |
 | [Dear ImGui](https://github.com/ocornut/imgui) | v1.92.8 | MIT | Compiled into the `.xpl` |
 | [nlohmann/json](https://github.com/nlohmann/json) | v3.12.0 | MIT | Header-only, compiled into the `.xpl` |
 | [xp_wellys_about](https://github.com/rwellinger/xp_wellys_about) | v1.0.0 | MIT (code); profile photo all rights reserved | Compiled into the `.xpl` (About window) |
 | [Catch2](https://github.com/catchorg/Catch2) | v3.15.1 | BSL-1.0 | Test-only; not shipped with the release |
-| libcurl | system (`/usr/lib/libcurl.4.dylib`) | curl/MIT-style | macOS-system; dynamically loaded |
+| [miniaudio](https://github.com/mackron/miniaudio) | v0.11.25 | Public domain or MIT-0 | Header-only, compiled into the Windows `.xpl` |
+| libcurl | macOS: system; Windows: 8.23.0 (vcpkg) | curl license | macOS: system `/usr/lib/libcurl.4.dylib`, not shipped; Windows: statically linked |
+| [zlib](https://zlib.net) | 1.3.2 (vcpkg) | zlib license | Windows only, statically linked (libcurl dependency) |
 | X-Plane SDK | XPSDK430 | freely redistributable for plugin development | Headers only at build time |
 
 ## Per-component detail
@@ -52,21 +54,21 @@ same license + attribution. The plugin neither redistributes nor
 modifies the weights — it downloads them straight from HuggingFace
 to the user's disk.
 
-### Piper — MIT (libpiper) + GPL-3.0 (espeak-ng inside)
+### Piper — GPL-3.0 (espeak-ng inside)
 
-Neural TTS used for the ATC voice. `libpiper` itself is MIT-licensed;
-its phonemizer dependency `espeak-ng` is GPL-3.0-or-later and is
-statically linked into `libpiper.dylib`. Because espeak-ng is GPLv3
-and is linked into a binary we ship, the combined Piper artifact is
-effectively GPLv3 — same license as this plugin, so no conflict.
+Neural TTS used for the ATC voice. `piper1-gpl` is GPL-3.0 as a whole
+(single `COPYING` at the repo root; `libpiper` carries no separate
+license). Its phonemizer dependency `espeak-ng` is GPL-3.0-or-later and
+is statically linked into `libpiper.dylib` / `piper.dll` — same license
+family as this plugin, so no conflict.
 
 Source is vendored under
 `spikes/spike_piper/third_party/piper1-gpl/libpiper`. The build
 configuration uses libpiper's own CMake which fetches espeak-ng via
 ExternalProject and downloads the prebuilt onnxruntime arm64 release.
 
-The bundled *voice model* (`en_US-lessac-medium.onnx` + `.onnx.json`)
-comes from the [rhasspy/piper-voices](https://huggingface.co/rhasspy/piper-voices)
+The *voice model* (`de_DE-thorsten-medium.onnx` + `.onnx.json`,
+downloaded in-sim, not shipped) comes from the [rhasspy/piper-voices](https://huggingface.co/rhasspy/piper-voices)
 collection. The Piper voices are licensed under MIT
 (see <https://github.com/rhasspy/piper/blob/master/VOICES.md>). The
 underlying voice recordings are CC0 / public-domain.
@@ -114,6 +116,13 @@ under `sdk/`, populated by `make setup`. The SDK is freely
 redistributable as part of plugins per
 <https://developer.x-plane.com/sdk/>; the plugin links the
 `XPLM.framework` and `XPWidgets.framework` directly.
+
+## Shipped license texts
+
+The release ZIP and the SkunkCrafts update tree carry `LICENSE` (GPL-3.0),
+`THIRD_PARTY_LICENSES.md` (full license texts of every shipped component)
+and `ONNXRUNTIME_THIRD_PARTY_NOTICES.txt` at the plugin root. Sources:
+`packaging/` and `LICENSE` in this repo.
 
 ## Why GPL-3.0 for the plugin?
 

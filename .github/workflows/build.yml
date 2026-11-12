@@ -426,6 +426,19 @@ jobs:
 
           cp -r docs "$STAGE/docs"
 
+          # End-user docs + license texts at the tree root, so they ship in
+          # the ZIP AND reach updater users (generate.py tracks the root).
+          # GPL-3.0 requires LICENSE next to the binaries; the third-party
+          # texts cover everything statically linked or bundled.
+          cp packaging/README.md \
+             packaging/THIRD_PARTY_LICENSES.md \
+             packaging/ONNXRUNTIME_THIRD_PARTY_NOTICES.txt \
+             RELEASE.md LICENSE "$STAGE/"
+          for doc in README.md THIRD_PARTY_LICENSES.md \
+                     ONNXRUNTIME_THIRD_PARTY_NOTICES.txt RELEASE.md LICENSE; do
+            test -s "$STAGE/$doc"
+          done
+
           # Generate the SkunkCrafts Updater control files into the staged
           # tree BEFORE zipping, so the GitHub-release ZIP also carries
           # skunkcrafts_updater.cfg — manual installers then become
